@@ -1,136 +1,547 @@
 {
+
   "users": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "name": "Juan Perez",
+
       "role": "admin",
+
       "email": "juan@terratech.com"
+
     },
+
     {
-      "id": 2,
+
+      "id": "2",
+
       "name": "Melisa Gomez",
+
       "role": "admin",
+
       "email": "melisa@terratech.com"
+
     }
+
   ],
 
   "lots": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "name": "Lote Norte",
-      "location": "Cusco",
-      "size": 2.5,
-      "crop": "Maíz"
+
+      "cropType": "Maíz",
+
+      "humidity": 35,
+
+      "npkStatus": "Alto",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
     },
+
     {
-      "id": 2,
+
+      "id": "2",
+
       "name": "Lote Sur",
-      "location": "Arequipa",
-      "size": 3.2,
-      "crop": "Papa"
+
+      "cropType": "Papa",
+
+      "humidity": 45,
+
+      "npkStatus": "Medio",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
     },
+
     {
-      "id": 3,
-      "name": "Lote Norte",
-      "location": "Ica",
-      "size": 4.2,
-      "crop": "Maíz Morado"
+
+      "id": "3",
+
+      "name": "Lote Este",
+
+      "cropType": "Arroz",
+
+      "humidity": 28,
+
+      "npkStatus": "Bajo",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
+    },
+
+    {
+
+      "id": "4",
+
+      "name": "Lote Oeste",
+
+      "cropType": "Trigo",
+
+      "humidity": 50,
+
+      "npkStatus": "Óptimo",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
+    },
+
+    {
+
+      "id": "5",
+
+      "name": "Sector A1",
+
+      "cropType": "Vid",
+
+      "humidity": 32,
+
+      "npkStatus": "Medio",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
+    },
+
+    {
+
+      "id": "6",
+
+      "name": "Sector B2",
+
+      "cropType": "Algodón",
+
+      "humidity": 38,
+
+      "npkStatus": "Bajo",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
+    },
+
+    {
+
+      "name": "Lote Central",
+
+      "cropType": "Higo",
+
+      "humidity": 35,
+
+      "npkStatus": "Bajo",
+
+      "id": "YIniQVDLcJU"
+
+    },
+
+    {
+
+      "name": "Lote Sur-2",
+
+      "cropType": "Quinua",
+
+      "humidity": 35,
+
+      "npkStatus": "Medio",
+
+      "id": "BPid6guTuUY",
+
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+
     }
+
   ],
 
   "sensors": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "type": "humidity",
+
       "lotId": 1,
+
       "status": "active"
+
     },
+
     {
-      "id": 2,
+
+      "id": "2",
+
       "type": "temperature",
+
       "lotId": 1,
+
       "status": "active"
+
     },
+
     {
-      "id": 3,
+
+      "id": "3",
+
       "type": "nutrients",
+
       "lotId": 2,
+
       "status": "active"
+
     }
+
   ],
 
   "readings": [
+
     {
-      "id": 1,
-      "sensorId": 1,
-      "value": 65,
-      "unit": "%",
-      "timestamp": "2026-05-10T10:00:00Z"
+
+      "id": "1",
+
+      "sensorId": "1",
+
+      "value": 45,
+
+      "unit": "%"
+
     },
+
     {
-      "id": 2,
-      "sensorId": 2,
+
+      "id": "2",
+
+      "sensorId": "2",
+
       "value": 22,
-      "unit": "°C",
-      "timestamp": "2026-05-10T10:00:00Z"
+
+      "unit": "%"
+
     },
+
     {
-      "id": 3,
-      "sensorId": 3,
+
+      "id": "3",
+
+      "sensorId": "3",
+
       "value": 40,
-      "unit": "NPK",
-      "timestamp": "2026-05-10T10:00:00Z"
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "id": "4",
+
+      "sensorId": "4",
+
+      "value": 30,
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "id": "5",
+
+      "sensorId": "5",
+
+      "value": 55,
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "id": "6",
+
+      "sensorId": "6",
+
+      "value": 15,
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "id": "7",
+
+      "sensorId": "YIniQVDLcJU",
+
+      "value": 42,
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "id": "8",
+
+      "sensorId": "BPid6guTuUY",
+
+      "value": 38,
+
+      "unit": "%"
+
+    },
+
+    {
+
+      "sensorId": "ID-1778517068805",
+
+      "value": 45,
+
+      "unit": "%",
+
+      "timestamp": "2026-05-11T16:31:08.829Z",
+
+      "id": "Ro-rTWlpAO4"
+
+    },
+
+    {
+
+      "sensorId": "ID-1778517367006",
+
+      "value": 50,
+
+      "unit": "%",
+
+      "timestamp": "2026-05-11T16:36:07.021Z",
+
+      "id": "5NabvxruWkc"
+
+    },
+
+    {
+
+      "sensorId": "ID-1778517421474",
+
+      "value": 45,
+
+      "unit": "%",
+
+      "timestamp": "2026-05-11T16:37:01.535Z",
+
+      "id": "jZHqee-9Onw"
+
     }
+
   ],
 
   "dashboard": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "lotId": 1,
+
       "avgHumidity": 64,
+
       "avgTemperature": 23,
+
       "nutrientLevel": 45,
+
       "status": "optimal"
+
     }
+
   ],
 
   "weather": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "location": "Cusco",
+
       "temperature": 21,
+
       "humidity": 60,
+
       "condition": "cloudy",
+
       "timestamp": "2026-05-10T10:00:00Z"
+
     }
+
   ],
 
   "fertilityMaps": [
+
     {
-      "id": 1,
+
+      "id": "1",
+
       "lotId": 1,
+
       "zones": [
-        { "x": 0, "y": 0, "value": 80 },
-        { "x": 1, "y": 0, "value": 60 },
-        { "x": 0, "y": 1, "value": 30 }
+
+        {
+
+          "x": 0,
+
+          "y": 0,
+
+          "value": 80
+
+        },
+
+        {
+
+          "x": 1,
+
+          "y": 0,
+
+          "value": 60
+
+        },
+
+        {
+
+          "x": 0,
+
+          "y": 1,
+
+          "value": 30
+
+        }
+
       ]
+
     }
+
   ],
 
   "recommendations": [
+
     {
-      "id": 1,
-      "lotId": 1,
+
+      "id": "1",
+
+      "lotId": "1",
+
       "type": "irrigation",
-      "message": "Aumentar riego en zona norte",
-      "priority": "high"
-    },
-    {
-      "id": 2,
-      "lotId": 2,
-      "type": "fertilization",
-      "message": "Aplicar fertilizante NPK",
+
+      "message": "Aumentar riego en este lote. Humedad moderada (umbral preventivo)",
+
       "priority": "medium"
+
+    },
+
+    {
+
+      "id": "2",
+
+      "lotId": "2",
+
+      "type": "fertilization",
+
+      "message": "¡CRÍTICO! Humedad baja. Iniciar sistema de riego automático inmediatamente.",
+
+      "priority": "medium"
+
+    },
+
+    {
+
+      "id": "3",
+
+      "lotId": "3",
+
+      "type": "irrigation",
+
+      "message": "Aumentar riego en este lote. Humedad moderada (umbral preventivo)",
+
+      "priority": "high"
+
+    },
+
+    {
+
+      "id": "4",
+
+      "lotId": "4",
+
+      "type": "general",
+
+      "message": "¡CRÍTICO! Humedad baja. Iniciar sistema de riego automático inmediatamente.",
+
+      "priority": "low"
+
+    },
+
+    {
+
+      "id": "5",
+
+      "lotId": "5",
+
+      "type": "irrigation",
+
+      "message": "Aumentar riego en este lote. Humedad moderada (umbral preventivo).",
+
+      "priority": "high"
+
+    },
+
+    {
+
+      "id": "6",
+
+      "lotId": "6",
+
+      "type": "irrigation",
+
+      "message": "¡CRÍTICO! Humedad baja. Iniciar sistema de riego automático inmediatamente.",
+
+      "priority": "high"
+
+    },
+
+    {
+
+      "id": "7",
+
+      "lotId": "YIniQVDLcJU",
+
+      "type": "fertilization",
+
+      "message": "Aumentar riego en este lote. Humedad moderada (umbral preventivo).",
+
+      "priority": "medium"
+
+    },
+
+    {
+
+      "id": "8",
+
+      "lotId": "BPid6guTuUY",
+
+      "type": "general",
+
+      "message": "¡CRÍTICO! Humedad baja. Iniciar sistema de riego automático inmediatamente.",
+
+      "priority": "low"
+
     }
-  ]
+
+  ],
+
+  "$schema": "./node_modules/json-server/schema.json"
+
 }
