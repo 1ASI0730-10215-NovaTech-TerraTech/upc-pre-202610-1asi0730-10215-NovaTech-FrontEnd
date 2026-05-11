@@ -1,30 +1,46 @@
 <script setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-
 </script>
 
 <template>
-  <div class="grid bg-primary mt-4 p-4 align-content-start">
-    <div class="col-12 ml-3 align-items-center justify-content-center">
-      <p>Copyright &copy; 2026. ACME Studios. All rights reserved.</p>
-    </div>
-    <div class="col-12 ml-3 mt-3 align-items-center justify-content-center">
-      <p>
-        {{t('authoring-phrase.intro')}} <i class="pi pi-heart"/>
-        {{t('authoring-phrase.use')}} <a href="https://primevue.org/" target="_blank">
-        PrimeVue</a>
-        {{t('authoring-phrase.author', {brand:'ACME'})}}
-      </p>
-      <p>
-        {{t('footer.powered-by')}} <a href="https://www.newsapi.org">NewsAPI.org</a>
-        {{t('footer.and')}} <a href="https://logo.dev">Logo.dev Logo API</a>
-      </p>
-    </div>
-  </div>
+  <footer class="footer">
+    <p>{{ t('footer.description') }}</p>
+    <p>{{ t('footer.copyright') }}</p>
+    <p class="footer-links">
+      <router-link to="/about">{{ t('footer.about-link') }}</router-link>
+      <span>|</span>
+      <router-link to="/monitoring">{{ t('footer.monitoring-link') }}</router-link>
+    </p>
+  </footer>
 </template>
 
 <style scoped>
+.footer {
+  background: #0e2a15;
+  color: #d9f4de;
+  text-align: center;
+  padding: 1rem;
+  border-top: 2px solid #2f8a46;
+}
+
+.footer p {
+  margin: 0.2rem 0;
+}
+
+.footer-links {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.footer a {
+  color: #b5efc2;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
 
 </style>

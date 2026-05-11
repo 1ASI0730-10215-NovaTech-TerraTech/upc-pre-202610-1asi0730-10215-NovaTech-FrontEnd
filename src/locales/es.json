@@ -1,0 +1,121 @@
+{
+  "nav": {
+	"home": "Inicio",
+	"about": "Sobre nosotros",
+	"monitoring": "Monitoreo",
+	"subscription": "Suscripcion"
+  },
+  "about": {
+	"title": "TerraTech",
+	"content": "Panel de monitoreo de campos de cultivo.",
+	"page-title": "Sobre TerraTech",
+	"page-content": "TerraTech ayuda a los agricultores a monitorear lotes, tendencias de humedad y salud del campo en un solo lugar."
+  },
+  "page-not-found": {
+	"title": "Pagina no encontrada",
+	"content": "La ruta {unavailable-route} no esta disponible.",
+	"go-home": "Ir al inicio"
+  },
+  "authoring-phrase": {
+	"intro": "Hecho con",
+	"use": "usando",
+	"author": "por {brand}."
+  },
+  "footer": {
+	"description": "TerraTech - Plataforma de monitoreo inteligente para campos de cultivo.",
+	"copyright": "Copyright 2026 TerraTech. Todos los derechos reservados.",
+	"about-link": "Sobre TerraTech",
+	"monitoring-link": "Ir a Monitoreo"
+  },
+  "monitoring": {
+	"title": "Monitoreo de Lotes",
+	"search-placeholder": "Buscar lote por nombre (ejm: norte, sur...)",
+	"new-lot-btn": "Nuevo lote",
+	"save-lot-btn": "Guardar lote",
+	"cancel-btn": "Cancelar",
+	"lot-name-placeholder": "Nombre del lote",
+	"humidity-placeholder": "Humedad (0-100)",
+	"loading": "Cargando datos...",
+	"error-connection": "Sin conexion con API mock. Inicia json-server con npm run server",
+	"error-save": "Error al guardar lote. Verifica que json-server este activo.",
+	"no-lots": "No hay lotes para mostrar.",
+	"validation-complete-data": "Completa todos los datos del lote",
+	"validation-humidity-range": "La humedad debe estar entre 0 y 100",
+	"lot-saved": "Lote guardado correctamente.",
+	"system-status": "Estado del Sistema",
+	"network-connected": "Conectado a la red de sensores",
+	"network-disconnected": "Sin conexion con sensores",
+	"total-lots": "Total lotes:",
+	"critical-alerts": "Alertas criticas:",
+	"satellite-view": "Vista satelital general",
+	"detail-prefix": "Detalle:",
+	"recommended-label": "Recomendado para"
+  },
+  "recommendations": {
+	"stable-default": "Estado estable. Sin acciones urgentes.",
+	"type-irrigation": "Riego",
+	"type-fertilization": "Fertilizacion",
+	"type-general": "General",
+	"priority-low": "Bajo",
+	"priority-medium": "Medio",
+	"priority-high": "Alto"
+  },
+  "recommendation-messages": {
+	"increase-irrigation": "Aumentar riego en este lote. Humedad moderada (umbral preventivo)",
+	"critical-low-humidity": "¡CRÍTICO! Humedad baja. Iniciar sistema de riego automático inmediatamente.",
+	"increase-irrigation-preventive": "Aumentar riego en este lote. Humedad moderada (umbral preventivo)."
+  },
+  "humidity-guides": {
+	"maiz": {
+	  "min": 35,
+	  "max": 60,
+	  "note": "Mantener humedad media para evitar estres hidrico."
+	},
+	"papa": {
+	  "min": 40,
+	  "max": 70,
+	  "note": "Necesita humedad estable, sin encharcamientos."
+	},
+	"arroz": {
+	  "min": 60,
+	  "max": 85,
+	  "note": "Requiere humedad alta y constante."
+	},
+	"trigo": {
+	  "min": 30,
+	  "max": 55,
+	  "note": "Prefiere humedad moderada."
+	},
+	"vid": {
+	  "min": 25,
+	  "max": 45,
+	  "note": "Controlar exceso de agua para proteger la raiz."
+	},
+	"algodon": {
+	  "min": 35,
+	  "max": 55,
+	  "note": "Rango medio para un buen desarrollo vegetativo."
+	},
+	"quinua": {
+	  "min": 25,
+	  "max": 45,
+	  "note": "Cultivo resistente, no requiere alta humedad."
+	},
+	"higo": {
+	  "min": 30,
+	  "max": 50,
+	  "note": "Humedad moderada para fructificacion estable."
+	},
+	"cafe": {
+	  "min": 45,
+	  "max": 70,
+	  "note": "Prefiere humedad media-alta y ambiente fresco."
+	},
+	"cacao": {
+	  "min": 55,
+	  "max": 80,
+	  "note": "Requiere humedad alta para buen rendimiento."
+	}
+  }
+}
+
