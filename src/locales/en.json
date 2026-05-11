@@ -26,6 +26,96 @@
 	"copyright": "Copyright 2026 TerraTech. All rights reserved.",
 	"about-link": "About TerraTech",
 	"monitoring-link": "Go to Monitoring"
+  },
+  "monitoring": {
+	"title": "Lot Monitoring",
+	"search-placeholder": "Search lot by name (e.g.: north, south...)",
+	"new-lot-btn": "New lot",
+	"save-lot-btn": "Save lot",
+	"cancel-btn": "Cancel",
+	"lot-name-placeholder": "Lot name",
+	"humidity-placeholder": "Humidity (0-100)",
+	"loading": "Loading data...",
+	"error-connection": "No connection with API mock. Start json-server with npm run server",
+	"error-save": "Error saving lot. Check that json-server is active.",
+	"no-lots": "No lots to display.",
+	"validation-complete-data": "Complete all lot data",
+	"validation-humidity-range": "Humidity must be between 0 and 100",
+	"lot-saved": "Lot saved successfully.",
+	"system-status": "System Status",
+	"network-connected": "Connected to sensor network",
+	"network-disconnected": "No sensor connection",
+	"total-lots": "Total lots:",
+	"critical-alerts": "Critical alerts:",
+	"satellite-view": "General satellite view",
+	"detail-prefix": "Details:",
+	"recommended-label": "Recommended for"
+  },
+  "recommendations": {
+	"stable-default": "Stable status. No urgent actions required.",
+	"type-irrigation": "Irrigation",
+	"type-fertilization": "Fertilization",
+	"type-general": "General",
+	"priority-low": "Low",
+	"priority-medium": "Medium",
+	"priority-high": "High"
+  },
+  "recommendation-messages": {
+	"increase-irrigation": "Increase irrigation in this lot. Moderate humidity (preventive threshold)",
+	"critical-low-humidity": "CRITICAL! Low humidity. Start automatic irrigation system immediately.",
+	"increase-irrigation-preventive": "Increase irrigation in this lot. Moderate humidity (preventive threshold)."
+  },
+  "humidity-guides": {
+	"maiz": {
+	  "min": 35,
+	  "max": 60,
+	  "note": "Keep moderate humidity to avoid hydric stress."
+	},
+	"papa": {
+	  "min": 40,
+	  "max": 70,
+	  "note": "Needs stable humidity without waterlogging."
+	},
+	"arroz": {
+	  "min": 60,
+	  "max": 85,
+	  "note": "Requires high and constant humidity."
+	},
+	"trigo": {
+	  "min": 30,
+	  "max": 55,
+	  "note": "Prefers moderate humidity."
+	},
+	"vid": {
+	  "min": 25,
+	  "max": 45,
+	  "note": "Control excess water to protect the root."
+	},
+	"algodon": {
+	  "min": 35,
+	  "max": 55,
+	  "note": "Middle range for good vegetative development."
+	},
+	"quinua": {
+	  "min": 25,
+	  "max": 45,
+	  "note": "Resistant crop, does not require high humidity."
+	},
+	"higo": {
+	  "min": 30,
+	  "max": 50,
+	  "note": "Moderate humidity for stable fructification."
+	},
+	"cafe": {
+	  "min": 45,
+	  "max": 70,
+	  "note": "Prefers medium-high humidity and cool environment."
+	},
+	"cacao": {
+	  "min": 55,
+	  "max": 80,
+	  "note": "Requires high humidity for good yield."
+	}
   }
 }
 
