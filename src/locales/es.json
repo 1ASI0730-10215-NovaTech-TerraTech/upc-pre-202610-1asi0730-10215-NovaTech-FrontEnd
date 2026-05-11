@@ -1,0 +1,31 @@
+{
+  "nav": {
+	"home": "Inicio",
+	"about": "Sobre nosotros",
+	"monitoring": "Monitoreo",
+	"subscription": "Suscripcion"
+  },
+  "about": {
+	"title": "TerraTech",
+	"content": "Panel de monitoreo de campos de cultivo.",
+	"page-title": "Sobre TerraTech",
+	"page-content": "TerraTech ayuda a los agricultores a monitorear lotes, tendencias de humedad y salud del campo en un solo lugar."
+  },
+  "page-not-found": {
+	"title": "Pagina no encontrada",
+	"content": "La ruta {unavailable-route} no esta disponible.",
+	"go-home": "Ir al inicio"
+  },
+  "authoring-phrase": {
+	"intro": "Hecho con",
+	"use": "usando",
+	"author": "por {brand}."
+  },
+  "footer": {
+	"description": "TerraTech - Plataforma de monitoreo inteligente para campos de cultivo.",
+	"copyright": "Copyright 2026 TerraTech. Todos los derechos reservados.",
+	"about-link": "Sobre TerraTech",
+	"monitoring-link": "Ir a Monitoreo"
+  }
+}
+
