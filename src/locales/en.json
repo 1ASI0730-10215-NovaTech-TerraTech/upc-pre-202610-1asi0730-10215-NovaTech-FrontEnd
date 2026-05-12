@@ -2,7 +2,25 @@
   "nav": {
 	"home": "Home",
 	"monitoring": "Monitoring",
-	"subscription": "Subscription"
+	"payment": "Payment",
+	"settings": "Settings"
+  },
+  "home": {
+	"welcome": "Dashboard Overview",
+	"subtitle": "Monitor your crop lots at a glance",
+	"total-lots": "Total Lots",
+	"alerts": "Critical Alerts",
+	"lot-name": "Lot Name",
+	"crop-type": "Crop Type",
+	"humidity": "Humidity",
+	"npk": "NPK",
+	"status": "Status",
+	"critical": "Critical",
+	"ok": "Normal",
+	"view-all": "View All Lots"
+  },
+  "app": {
+	"panel-title": "TerraTech - Control Panel"
   },
   "page-not-found": {
 	"title": "Page not found",

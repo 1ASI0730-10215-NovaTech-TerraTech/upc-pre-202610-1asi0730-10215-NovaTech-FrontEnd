@@ -246,91 +246,139 @@ export default {
 </template>
 
 <style scoped>
+:root {
+  --primary: #1A2B4C;
+  --success: #00BB31;
+  --white: #FFFFFF;
+  --black: #000000;
+  --border: #E0E0E0;
+}
+
 .monitoring-dashboard {
   display: grid;
-  grid-template-columns: 1.9fr 1fr;
-  gap: 1.25rem;
-  padding: 1rem 1.2rem;
-  background: #182b42;
-  color: #e5f3ff;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  background: var(--white);
+  color: var(--black);
 }
 
 .title {
-  margin: 0 0 0.7rem;
-  color: #67db88;
-  font-size: 1.9rem;
+  margin: 0 0 1rem;
+  color: var(--primary);
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-bottom: 0.7rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .controls input {
-  background: #23364f;
-  border: 1px solid #376385;
-  color: #e6f4ff;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--black);
   border-radius: 6px;
-  padding: 0.5rem 0.65rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 200px;
 }
 
-.controls input {
-  flex: 1;
-  min-width: 260px;
+.controls input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .btn {
-  border: 1px solid #5bbf7f;
-  background: #2d945b;
-  color: #fff;
+  background: var(--success);
+  border: none;
+  color: var(--white);
   border-radius: 6px;
-  padding: 0.5rem 0.8rem;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #00A027;
+  transform: translateY(-1px);
 }
 
 .status-info,
 .error-box {
-  border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  margin-bottom: 0.7rem;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
-.status-info { background: #21364d; border: 1px solid #497292; }
-.error-box { background: #482029; border: 1px solid #ff5b77; }
+.status-info {
+  background: #E3F2FD;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.error-box {
+  background: #FFEBEE;
+  border: 1px solid #DC3545;
+  color: #DC3545;
+}
 
 .lot-list {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.75rem;
 }
 
 .lot-card {
   display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 100px 1fr;
+  gap: 1rem;
   align-items: center;
-  background: #5cbf87;
-  border: 1px solid #66cf92;
-  border-radius: 10px;
-  padding: 0.5rem;
-  color: #102527;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  color: var(--black);
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.lot-card.critical { border-left: 6px solid #ff4966; }
-.lot-card.selected { box-shadow: 0 0 0 2px #8bf5ab inset; }
+.lot-card:hover {
+  border-color: var(--success);
+  box-shadow: 0 2px 8px rgba(0, 187, 49, 0.15);
+}
+
+.lot-card.critical {
+  border-left: 4px solid #DC3545;
+  padding-left: calc(1rem - 3px);
+}
+
+.lot-card.selected {
+  border-color: var(--success);
+  background: #F0FFF4;
+}
 
 .lot-image {
-  width: 96px;
+  width: 100%;
   height: 72px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
-.lot-main h3 { margin: 0; }
-.lot-main small { font-size: 0.72rem; opacity: 0.8; }
+.lot-main h3 {
+  margin: 0 0 0.25rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.lot-main small {
+  font-size: 0.8rem;
+  color: #999;
+}
 
 .lot-row {
   display: flex;
@@ -340,81 +388,157 @@ export default {
 }
 
 .pill {
-  font-size: 0.72rem;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 999px;
-  padding: 0.15rem 0.55rem;
+  font-size: 0.8rem;
+  background: #F9F9F9;
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+  color: var(--primary);
+  font-weight: 500;
 }
 
-.metric-line { margin: 0.2rem 0 0; font-size: 0.9rem; }
+.metric-line {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
 
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .system-card,
 .satellite-card,
 .details {
-  background: #21364d;
-  border: 1px solid #3f6d82;
-  border-radius: 12px;
-  padding: 0.9rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
 }
 
-.system-card h2 { margin-top: 0; }
+.system-card h2 {
+  margin: 0 0 1rem;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
 
-.network-status { color: #ff9fb2; }
-.network-status.connected { color: #7df0a8; }
+.network-status {
+  color: #DC3545;
+  font-weight: 600;
+}
+
+.network-status.connected {
+  color: var(--success);
+}
 
 .totals {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.45rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
 }
 
-.totals.alert { color: #ff7a91; }
+.totals span:first-child {
+  color: #666;
+}
+
+.totals strong {
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.totals.alert strong {
+  color: #DC3545;
+}
 
 .satellite-card p {
+  margin: 0 0 1rem;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: #79dfa0;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  color: var(--primary);
   text-align: center;
+  font-weight: 600;
 }
 
 .satellite-card img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 .details h3 {
-  margin: 0 0 0.4rem;
-  color: #9ef3ba;
+  margin: 0 0 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.details p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
 }
 
 .rec-meta {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .rec-type,
 .rec-priority {
-  font-size: 0.75rem;
-  background: rgba(158, 243, 186, 0.15);
-  color: #7df0a8;
-  border: 1px solid #5bbf7f;
+  font-size: 0.8rem;
+  background: #E8F5E9;
+  color: var(--success);
+  border: 1px solid var(--success);
   border-radius: 4px;
-  padding: 0.25rem 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1024px) {
   .monitoring-dashboard {
     grid-template-columns: 1fr;
+  }
+
+  .right-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .monitoring-dashboard {
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input,
+  .btn {
+    width: 100%;
+  }
+
+  .lot-card {
+    grid-template-columns: 80px 1fr;
+    gap: 0.75rem;
+  }
+
+  .system-card,
+  .satellite-card,
+  .details {
+    padding: 1rem;
   }
 }
 </style>

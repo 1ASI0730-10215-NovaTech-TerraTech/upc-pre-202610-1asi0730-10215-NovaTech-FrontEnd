@@ -2,7 +2,25 @@
   "nav": {
 	"home": "Inicio",
 	"monitoring": "Monitoreo",
-	"subscription": "Suscripcion"
+	"payment": "Pago",
+	"settings": "Configuración"
+  },
+  "home": {
+	"welcome": "Resumen del Dashboard",
+	"subtitle": "Monitorea tus lotes de cultivo de un vistazo",
+	"total-lots": "Total de Lotes",
+	"alerts": "Alertas Críticas",
+	"lot-name": "Nombre del Lote",
+	"crop-type": "Tipo de Cultivo",
+	"humidity": "Humedad",
+	"npk": "NPK",
+	"status": "Estado",
+	"critical": "Crítico",
+	"ok": "Normal",
+	"view-all": "Ver Todos los Lotes"
+  },
+  "app": {
+	"panel-title": "TerraTech - Panel de Control"
   },
   "page-not-found": {
 	"title": "Pagina no encontrada",
