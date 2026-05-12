@@ -83,6 +83,20 @@
       "npkStatus": "Optimo",
       "id": "ID-1778535253263",
       "image": "https://picsum.photos/seed/Algodon-ID-1778535253263/640/360"
+    },
+    {
+      "name": "sdsd",
+      "cropType": "Arroz",
+      "npkStatus": "Optimo",
+      "id": "ID-1778562200746",
+      "image": "https://picsum.photos/seed/Arroz-ID-1778562200746/640/360"
+    },
+    {
+      "name": "Lote medio",
+      "cropType": "Arroz",
+      "npkStatus": "Optimo",
+      "id": "ID-1778576867313",
+      "image": "https://picsum.photos/seed/Arroz-ID-1778576867313/640/360"
     }
   ],
   "sensors": [
@@ -181,6 +195,20 @@
       "unit": "%",
       "timestamp": "2026-05-11T21:34:13.472Z",
       "id": "ZFaksWC"
+    },
+    {
+      "sensorId": "ID-1778562200746",
+      "value": 50,
+      "unit": "%",
+      "timestamp": "2026-05-12T05:03:20.767Z",
+      "id": "SnVFOhz"
+    },
+    {
+      "sensorId": "ID-1778576867313",
+      "value": 10,
+      "unit": "%",
+      "timestamp": "2026-05-12T09:07:47.432Z",
+      "id": "LGUio06"
     }
   ],
   "weather": [

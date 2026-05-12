@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       service: new MonitoringStore(),
+      allLots: [],
       lots: [],
       readings: [],
       isLoading: false,
@@ -21,10 +22,10 @@ export default {
   },
   computed: {
     totalLots() {
-      return this.lots.length;
+      return this.allLots.length;
     },
     criticalAlerts() {
-      return this.lots.filter((lot) => {
+      return this.allLots.filter((lot) => {
         const guide = this.humidityGuides[lot.cropType];
         const humidity = this.getHumidity(lot.id);
         return guide ? humidity < guide.min : humidity < 30;
@@ -42,22 +43,24 @@ export default {
       if (!guide) return 'ok';
       return humidity < guide.min ? 'critical' : 'ok';
     },
-    async loadAll() {
-      this.isLoading = true;
-      this.connectionError = '';
-      try {
-        const data = await this.service.getAllData();
-        this.lots = data.lots.slice(0, 5);
-        this.readings = data.readings;
-      } catch (err) {
-        console.error(err);
-        this.lots = [];
-        this.readings = [];
-        this.connectionError = this.t('monitoring.error-connection');
-      } finally {
-        this.isLoading = false;
-      }
-    }
+     async loadAll() {
+       this.isLoading = true;
+       this.connectionError = '';
+       try {
+         const data = await this.service.getAllData();
+         this.allLots = data.lots;
+         this.lots = data.lots.slice(0, 5);
+         this.readings = data.readings;
+       } catch (err) {
+         console.error(err);
+         this.allLots = [];
+         this.lots = [];
+         this.readings = [];
+         this.connectionError = this.t('monitoring.error-connection');
+       } finally {
+         this.isLoading = false;
+       }
+     }
   },
   mounted() {
     this.loadAll();
@@ -129,7 +132,7 @@ export default {
 
     <div class="action-bar">
       <router-link to="/monitoring" class="btn-primary">
-        Ver todos los lotes →
+        {{ t('home.view-all') }} →
       </router-link>
     </div>
   </section>
@@ -137,8 +140,8 @@ export default {
 
 <style scoped>
 :root {
-  --primary: #1A2B4C;
-  --success: #00BB31;
+  --primary: #4A6FA5;
+  --success: #5BA89C;
   --white: #FFFFFF;
   --black: #000000;
   --border: #E0E0E0;
@@ -312,9 +315,9 @@ export default {
 }
 
 .btn-primary:hover {
-  background: #00A027;
+  background: #4A9683;
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 187, 49, 0.3);
+  box-shadow: 0 2px 6px rgba(91, 168, 156, 0.3);
 }
 
 @media (max-width: 768px) {
