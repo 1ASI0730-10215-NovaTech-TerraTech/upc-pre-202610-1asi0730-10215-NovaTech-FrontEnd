@@ -247,8 +247,8 @@ export default {
 
 <style scoped>
 :root {
-  --primary: #1A2B4C;
-  --success: #00BB31;
+  --primary: #4A6FA5;
+  --success: #5BA89C;
   --white: #FFFFFF;
   --black: #000000;
   --border: #E0E0E0;
@@ -304,7 +304,7 @@ export default {
 }
 
 .btn:hover {
-  background: #00A027;
+  background: #4A9683;
   transform: translateY(-1px);
 }
 
@@ -349,7 +349,7 @@ export default {
 
 .lot-card:hover {
   border-color: var(--success);
-  box-shadow: 0 2px 8px rgba(0, 187, 49, 0.15);
+  box-shadow: 0 2px 8px rgba(91, 168, 156, 0.15);
 }
 
 .lot-card.critical {

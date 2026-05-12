@@ -84,9 +84,9 @@ const humidityGuideTranslated = computed(() => {
 
 .batch-form input,
 .batch-form select {
-  background: #23364f;
-  border: 1px solid #376385;
-  color: #e6f4ff;
+  background: #EEF4F8;
+  border: 1px solid #A5C9E0;
+  color: #2C4A66;
   border-radius: 6px;
   padding: 0.5rem 0.65rem;
 }
@@ -97,24 +97,38 @@ const humidityGuideTranslated = computed(() => {
 }
 
 .btn {
-  border: 1px solid #5bbf7f;
+  border: 1px solid #7FB3D5;
   background: transparent;
-  color: #fff;
+  color: #2C4A66;
   border-radius: 6px;
   padding: 0.5rem 0.8rem;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #E8F1F5;
+  border-color: #4A6FA5;
 }
 
 .btn-primary {
-  background: #2d945b;
+  background: #5BA89C;
+  color: #FFFFFF;
+  border-color: #5BA89C;
+}
+
+.btn-primary:hover {
+  background: #4A9683;
+  border-color: #4A9683;
 }
 
 .guide {
   border-radius: 8px;
   padding: 0.6rem 0.75rem;
   margin: 0.7rem 0 0;
-  background: #203a29;
-  border: 1px solid #57c27f;
+  background: #E8F1F5;
+  border: 1px solid #A5C9E0;
+  color: #2C4A66;
 }
 </style>
 
