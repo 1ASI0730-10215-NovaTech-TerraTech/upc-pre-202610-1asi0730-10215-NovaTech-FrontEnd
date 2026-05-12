@@ -9,8 +9,6 @@ const { t } = useI18n();
     <p>{{ t('footer.description') }}</p>
     <p>{{ t('footer.copyright') }}</p>
     <p class="footer-links">
-      <router-link to="/about">{{ t('footer.about-link') }}</router-link>
-      <span>|</span>
       <router-link to="/monitoring">{{ t('footer.monitoring-link') }}</router-link>
     </p>
   </footer>

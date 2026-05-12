@@ -1,15 +1,26 @@
 {
   "nav": {
 	"home": "Inicio",
-	"about": "Sobre nosotros",
 	"monitoring": "Monitoreo",
-	"subscription": "Suscripcion"
+	"payment": "Pago",
+	"settings": "Configuración"
   },
-  "about": {
-	"title": "TerraTech",
-	"content": "Panel de monitoreo de campos de cultivo.",
-	"page-title": "Sobre TerraTech",
-	"page-content": "TerraTech ayuda a los agricultores a monitorear lotes, tendencias de humedad y salud del campo en un solo lugar."
+  "home": {
+	"welcome": "Resumen del Dashboard",
+	"subtitle": "Monitorea tus lotes de cultivo de un vistazo",
+	"total-lots": "Total de Lotes",
+	"alerts": "Alertas Críticas",
+	"lot-name": "Nombre del Lote",
+	"crop-type": "Tipo de Cultivo",
+	"humidity": "Humedad",
+	"npk": "NPK",
+	"status": "Estado",
+	"critical": "Crítico",
+	"ok": "Normal",
+	"view-all": "Ver Todos los Lotes"
+  },
+  "app": {
+	"panel-title": "TerraTech - Panel de Control"
   },
   "page-not-found": {
 	"title": "Pagina no encontrada",
@@ -24,7 +35,6 @@
   "footer": {
 	"description": "TerraTech - Plataforma de monitoreo inteligente para campos de cultivo.",
 	"copyright": "Copyright 2026 TerraTech. Todos los derechos reservados.",
-	"about-link": "Sobre TerraTech",
 	"monitoring-link": "Ir a Monitoreo"
   },
   "monitoring": {
