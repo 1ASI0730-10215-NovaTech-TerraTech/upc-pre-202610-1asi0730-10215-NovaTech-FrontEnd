@@ -1,15 +1,8 @@
 {
   "nav": {
 	"home": "Home",
-	"about": "About us",
 	"monitoring": "Monitoring",
 	"subscription": "Subscription"
-  },
-  "about": {
-	"title": "TerraTech",
-	"content": "Field monitoring dashboard for crop lots.",
-	"page-title": "About TerraTech",
-	"page-content": "TerraTech helps farmers monitor crop lots, humidity trends and field health in one place."
   },
   "page-not-found": {
 	"title": "Page not found",
@@ -24,7 +17,6 @@
   "footer": {
 	"description": "TerraTech - Smart monitoring platform for crop fields.",
 	"copyright": "Copyright 2026 TerraTech. All rights reserved.",
-	"about-link": "About TerraTech",
 	"monitoring-link": "Go to Monitoring"
   },
   "monitoring": {

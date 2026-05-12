@@ -10,8 +10,8 @@ const { t } = useI18n();
 
     <div class="hero-content">
       <img src="/terratech-logo.png" alt="TerraTech Logo" class="hero-logo" />
-      <h1>{{ t('about.title') }}</h1>
-      <p>{{ t('about.content') }}</p>
+      <h1>TerraTech</h1>
+      <p>{{ t('footer.description') }}</p>
     </div>
   </section>
 </template>
