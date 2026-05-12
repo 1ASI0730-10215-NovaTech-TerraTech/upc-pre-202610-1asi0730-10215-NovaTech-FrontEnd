@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './shared/presentation/views/home.vue'
 import BatchListView from './monitoring/presentation/views/batch-list.vue'
-import PaymentView from './shared/presentation/views/payment.vue'
+import PaymentView from './payment/presentation/views/payment.vue'
 import PageNotFoundView from './shared/presentation/views/page-not-fond.vue'
 
 const routes = [
