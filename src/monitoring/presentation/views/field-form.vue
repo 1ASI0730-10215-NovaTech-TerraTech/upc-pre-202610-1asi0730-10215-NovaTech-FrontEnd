@@ -52,7 +52,7 @@ function submit() {
   const field = new Field({ ...form.value });
 
   if (isEdit.value) {
-    field.id = parseInt(route.params.id);
+    field.id = isNaN(Number(route.params.id)) ? route.params.id : Number(route.params.id);
     updateField(field);
   } else {
     addField(field);
@@ -279,4 +279,3 @@ function cancel() {
   }
 }
 </style>
-

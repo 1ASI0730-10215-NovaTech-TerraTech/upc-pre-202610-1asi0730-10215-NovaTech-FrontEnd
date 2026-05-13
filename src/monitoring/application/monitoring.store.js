@@ -1,4 +1,3 @@
-
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import {MonitoringApi} from "../infrastructure/monitoring-api.js";
@@ -56,11 +55,23 @@ const useMonitoringStore = defineStore('monitoring', () => {
     }
 
     function getDeviceById(id) {
-        let idNum = parseInt(id);
-        return devices.value.find(device => device["id"] === idNum);
+        return devices.value.find(device => String(device.id) === String(id));
+    }
+
+    function __generateId(collection, prefix) {
+        const existingIds = collection.value.map(item => item.id).filter(id => typeof id === 'string' && id.startsWith(prefix));
+        let maxNum = 0;
+        existingIds.forEach(id => {
+            const num = parseInt(id.replace(prefix, ''), 10);
+            if (!isNaN(num) && num > maxNum) maxNum = num;
+        });
+        return `${prefix}${(maxNum + 1).toString().padStart(3, '0')}`;
     }
 
     function addDevice(device) {
+        if (!device.id || String(device.id).trim() === '') {
+            device.id = __generateId(devices, 'dev_');
+        }
         monitoringApi.createDevice(device).then(response => {
             const resource = response.data;
             const newDevice = DeviceAssembler.toEntityFromResource(resource);
@@ -74,7 +85,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
         monitoringApi.updateDevice(device).then(response => {
             const resource = response.data;
             const updatedDevice = DeviceAssembler.toEntityFromResource(resource);
-            const index = devices.value.findIndex(c => c["id"] === updatedDevice.id);
+            const index = devices.value.findIndex(c => String(c["id"]) === String(updatedDevice.id));
             if (index !== -1) devices.value[index] = updatedDevice;
         }).catch(error => {
             errors.value.push(error);
@@ -83,7 +94,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
 
     function deleteDevice(device) {
         monitoringApi.deleteDevice(device.id).then(() => {
-            const index = devices.value.findIndex(c => c["id"] === device.id);
+            const index = devices.value.findIndex(c => String(c["id"]) === String(device.id));
             if (index !== -1) devices.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);
@@ -91,11 +102,13 @@ const useMonitoringStore = defineStore('monitoring', () => {
     }
 
     function getFieldById(id) {
-        let idNum = parseInt(id);
-        return fields.value.find(field => field["id"] === idNum);
+        return fields.value.find(field => String(field.id) === String(id));
     }
 
     function addField(field) {
+        if (!field.id || String(field.id).trim() === '') {
+            field.id = __generateId(fields, 'field_');
+        }
         monitoringApi.createField(field).then(response => {
             const resource = response.data;
             const newField = FieldAssembler.toEntityFromResource(resource);
@@ -109,7 +122,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
         monitoringApi.updateField(field).then(response => {
             const resource = response.data;
             const updatedField = FieldAssembler.toEntityFromResource(resource);
-            const index = fields.value.findIndex(t => t["id"] === updatedField.id);
+            const index = fields.value.findIndex(t => String(t["id"]) === String(updatedField.id));
             if (index !== -1) fields.value[index] = updatedField;
         }).catch(error => {
             errors.value.push(error);
@@ -118,7 +131,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
 
     function deleteField(field) {
         monitoringApi.deleteField(field.id).then(() => {
-            const index = fields.value.findIndex(t => t["id"] === field.id);
+            const index = fields.value.findIndex(t => String(t["id"]) === String(field.id));
             if (index !== -1) fields.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);

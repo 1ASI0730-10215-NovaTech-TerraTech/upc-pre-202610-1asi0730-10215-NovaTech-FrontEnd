@@ -50,7 +50,7 @@ function submit() {
   const device = new Device({ ...form.value });
 
   if (isEdit.value) {
-    device.id = parseInt(route.params.id);
+    device.id = isNaN(Number(route.params.id)) ? route.params.id : Number(route.params.id);
     updateDevice(device);
   } else {
     addDevice(device);
