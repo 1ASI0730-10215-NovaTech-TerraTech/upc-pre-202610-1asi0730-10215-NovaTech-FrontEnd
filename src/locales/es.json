@@ -27,6 +27,23 @@
 		"intro": "Creado con",
 		"use": "usando",
 		"author": "por {brand}"
+	},
+
+	"profiles": {
+		"title": "Gestión de Perfiles Agrícolas",
+		"new-title": "Nuevo Perfil Agrícola",
+		"edit-title": "Configuración de Perfil (Fundo)",
+		"new": "Nuevo Perfil",
+		"id": "ID",
+		"fundoName": "Nombre del Fundo",
+		"contactPhone": "Teléfono de Contacto",
+		"moistureThreshold": "Umbral de Humedad (%)",
+		"tempThreshold": "Umbral de Temperatura (°C)",
+		"actions": "Acciones",
+		"confirm-delete": "¿Estás seguro de eliminar el perfil de {name}?",
+		"delete-header": "Confirmar Eliminación",
+		"create-button": "Crear nuevo perfil",
+		"update-button": "Actualizar datos"
 	}
 }
 

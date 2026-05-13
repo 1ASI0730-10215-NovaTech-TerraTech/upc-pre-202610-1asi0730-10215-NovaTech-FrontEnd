@@ -27,6 +27,22 @@
 		"intro": "Built with",
 		"use": "using",
 		"author": "by {brand}"
+	},
+	"profiles": {
+		"title": "Agricultural Profiles Management",
+		"new-title": "New Agricultural Profile",
+		"edit-title": "Profile Configuration (Fundo)",
+		"new": "New Profile",
+		"id": "ID",
+		"fundoName": "Fundo Name",
+		"contactPhone": "Contact Phone",
+		"moistureThreshold": "Moisture Threshold (%)",
+		"tempThreshold": "Temp Threshold (°C)",
+		"actions": "Actions",
+		"confirm-delete": "Are you sure you want to delete {name}?",
+		"delete-header": "Confirm Deletion",
+		"create-button": "Create new profile",
+		"update-button": "Update data"
 	}
 }
 
