@@ -6,7 +6,7 @@ import monitoringRoutes from './monitoring/presentation/monitoring-routes.js'
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/home', name: 'home', component: HomeView },
-    { path: '/monitoring', component: RouterView, children: monitoringRoutes },
+    { path: '/commercial', component: RouterView, children: commercialRoutes},
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 

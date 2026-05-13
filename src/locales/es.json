@@ -1,7 +1,7 @@
 {
 	"app": {
 		"brand": "TerraTech",
-		"panel-title": "TerraTech - Panel de control"
+		"panel-title": "TerraTech - Panel de Control"
 	},
 	"nav": {
 		"home": "Inicio",
@@ -75,4 +75,3 @@
 		"form-validation-error": "Por favor complete todos los campos requeridos"
 	}
 }
-
