@@ -29,6 +29,19 @@
 		"use": "usando",
 		"author": "por {brand}"
 	},
+	"commercial": {
+		"catalog-title": "Catálogo",
+		"total-pay": "Pago Total: {amount}",
+		"payment-method": "Método de Pago: {method}",
+		"confirm": "Confirmar",
+		"cancel": "Cancelar",
+		"order-summary": "Resumen del Pedido",
+		"no-products": "No hay productos en el catálogo.",
+		"success-title": "Compra Exitosa",
+		"success-msg": "¡Gracias por su compra! Su pedido ha sido procesado exitosamente",
+		"finish": "Finalizar",
+		"buy": "Comprar"
+	},
 	"monitoring": {
 		"devices": "Dispositivos",
 		"fields": "Zonas de Cultivo",

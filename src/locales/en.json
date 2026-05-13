@@ -29,6 +29,19 @@
 		"use": "using",
 		"author": "by {brand}"
 	},
+	"commercial": {
+		"catalog-title": "Catalog",
+		"total-pay": "Total Pay: {amount}",
+		"payment-method": "Payment Method: {method}",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"order-summary": "Order Summary",
+		"no-products": "No products in the catalog.",
+		"success-title": "Purchase Successful",
+		"success-msg": "Thank you for your purchase! Your order has been processed successfully",
+		"finish": "Finish",
+		"buy": "Buy"
+	},
 	"monitoring": {
 		"devices": "Devices",
 		"fields": "Fields",
