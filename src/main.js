@@ -13,6 +13,7 @@ import {
     ConfirmationService,
     ConfirmDialog, DataTable, Dialog,
     DialogService, Drawer, FileUpload, FloatLabel, IconField, InputIcon, InputNumber, InputText, Menu,
+    ProgressSpinner,
     Rating, Row, Select, SelectButton, Tag, Textarea, Toast,
     ToastService, Toolbar, Tooltip
 } from "primevue";
@@ -51,5 +52,6 @@ createApp(App)
     .component('pv-textarea', Textarea)
     .component('pv-toast', Toast)
     .component('pv-toolbar', Toolbar)
+    .component('pv-progress-spinner', ProgressSpinner)
     .directive('tooltip', Tooltip)
     .mount('#app')
