@@ -1,32 +1,31 @@
 {
 	"app": {
 		"brand": "TerraTech",
-		"panel-title": "TerraTech - Panel de control"
+		"panel-title": "TerraTech - Panel de Control"
 	},
 	"nav": {
 		"home": "Inicio",
-		"settings": "Configuración"
+		"settings": "Configuración",
+		"monitoring": "Monitoreo",
+		"payment": "Pagos",
+		"products": "Productos"
 	},
 	"home": {
 		"title": "Inicio",
 		"content": "Bienvenido a la aplicación web de TerraTech."
 	},
-	"navigation": {
-		"home": "Inicio",
-		"settings": "Configuración"
-	},
-	"language": {
-		"label": "Idioma"
-	},
-	"page-not-found": {
-		"title": "Página no encontrada",
-		"content": "La ruta {unavailable-route} no está disponible.",
-		"go-home": "Ir al Inicio"
-	},
-	"authoring-phrase": {
-		"intro": "Creado con",
-		"use": "usando",
-		"author": "por {brand}"
+	"commercial": {
+		"catalog-title": "Catálogo de Productos y Planes",
+		"price": "Precio",
+		"buy": "Comprar",
+		"no-products": "No se encontraron productos",
+		"order-summary": "Resumen de Orden",
+		"total-pay": "Total a Pagar",
+		"cancel": "Cancelar",
+		"confirm": "Confirmar Pago",
+		"payment-method": "Método de Pago",
+		"success-title": "Proceso Completado",
+		"success-msg": "Factura generada y enviada a su correo.",
+		"finish": "Finalizar"
 	}
 }
-

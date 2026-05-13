@@ -271,4 +271,8 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
+  :root {
+
+    --primary-color: #4ade80;
+  }
 }

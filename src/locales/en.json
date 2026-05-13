@@ -27,6 +27,22 @@
 		"intro": "Built with",
 		"use": "using",
 		"author": "by {brand}"
+	},
+
+	"commercial": {
+		"catalog-title": "Product and Plan Catalog",
+		"price": "Price",
+		"buy": "Buy",
+		"no-products": "No products found on server",
+		"order-summary": "Order Summary",
+		"total-pay": "Total to Pay",
+		"cancel": "Cancel",
+		"confirm": "Confirm Payment",
+		"payment-method": "Payment Method",
+		"success-title": "Process Completed",
+		"success-msg": "Invoice generated and sent to your email.",
+		"finish": "Finish"
 	}
+
 }
 
