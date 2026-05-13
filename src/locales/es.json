@@ -1,10 +1,11 @@
 {
 	"app": {
 		"brand": "TerraTech",
-		"panel-title": "TerraTech - Panel de control"
+		"panel-title": "TerraTech - Panel de Control"
 	},
 	"nav": {
 		"home": "Inicio",
+		"monitoring": "Monitoreo",
 		"settings": "Configuración"
 	},
 	"home": {
@@ -27,6 +28,50 @@
 		"intro": "Creado con",
 		"use": "usando",
 		"author": "por {brand}"
+	},
+	"monitoring": {
+		"devices": "Dispositivos",
+		"fields": "Zonas de Cultivo",
+		"device-id": "ID del Dispositivo",
+		"field-id": "ID de la Zona",
+		"mac-address": "Dirección MAC",
+		"mac-address-placeholder": "Ingrese la dirección MAC",
+		"name": "Nombre",
+		"field-name-placeholder": "Ingrese el nombre de la zona",
+		"size-m2": "Tamaño (m²)",
+		"size-placeholder": "Ingrese el tamaño en metros cuadrados",
+		"soil-type": "Tipo de Suelo",
+		"soil-type-loamy": "Arcilloso",
+		"soil-type-sandy": "Arenoso",
+		"soil-type-clay": "Arcilla",
+		"soil-type-silty": "Limoso",
+		"select-soil-type": "Seleccione tipo de suelo",
+		"location": "Ubicación (Lat/Long)",
+		"location-placeholder": "Ej. 10.5°N, 20.3°O",
+		"location-format-hint": "Formato: Latitud°Dirección, Longitud°Dirección",
+		"status": "Estado",
+		"status-active": "Activo",
+		"status-inactive": "Inactivo",
+		"status-error": "Batería Baja",
+		"select-status": "Seleccione un estado",
+		"last-sync": "Última Sincronización",
+		"last-sync-placeholder": "Fecha de última sincronización",
+		"new-device": "Nuevo Dispositivo",
+		"new-field": "Nueva Zona de Cultivo",
+		"edit-device": "Editar Dispositivo",
+		"edit-field": "Editar Zona de Cultivo",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"update": "Actualizar",
+		"create": "Crear",
+		"cancel": "Cancelar",
+		"yes": "Sí",
+		"no": "No",
+		"loading": "Cargando...",
+		"confirm-delete-device": "¿Está seguro de que desea eliminar este dispositivo?",
+		"confirm-delete-field": "¿Está seguro de que desea eliminar esta zona de cultivo?",
+		"delete-device-title": "Eliminar Dispositivo",
+		"delete-field-title": "Eliminar Zona de Cultivo",
+		"form-validation-error": "Por favor complete todos los campos requeridos"
 	}
 }
-

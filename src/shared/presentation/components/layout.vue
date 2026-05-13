@@ -17,7 +17,8 @@ const toggleDrawer = () => {
 const items = [
   { label: "nav.home", to: "/home", icon: "📊" },
   { label: "nav.monitoring", to: "/monitoring", icon: "🌾" },
-  { label: "nav.payment", to: "/payment", icon: "💳" }
+  { label: "nav.payment", to: "/payment", icon: "💳" },
+  { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" }
 ];
 </script>
 
@@ -103,6 +104,7 @@ const items = [
     </main>
 
   </div>
+  <pv-confirm-dialog></pv-confirm-dialog>
 </template>
 
 <style scoped>
