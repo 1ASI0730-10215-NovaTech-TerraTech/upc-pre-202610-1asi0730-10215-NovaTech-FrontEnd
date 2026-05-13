@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import HomeView from './shared/presentation/views/home.vue'
 import PageNotFoundView from './shared/presentation/views/page-not-found.vue'
-import { commercialRoutes } from './commercial/presentation/commercial-management-routes'
+import monitoringRoutes from './monitoring/presentation/monitoring-routes.js'
 
 const routes = [
     { path: '/', redirect: '/home' },
