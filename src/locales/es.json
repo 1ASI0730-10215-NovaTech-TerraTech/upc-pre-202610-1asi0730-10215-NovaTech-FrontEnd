@@ -52,7 +52,7 @@
 		"status": "Estado",
 		"status-active": "Activo",
 		"status-inactive": "Inactivo",
-		"status-error": "Error",
+		"status-error": "Batería Baja",
 		"select-status": "Seleccione un estado",
 		"last-sync": "Última Sincronización",
 		"last-sync-placeholder": "Fecha de última sincronización",
