@@ -1,0 +1,32 @@
+{
+	"app": {
+		"brand": "TerraTech",
+		"panel-title": "TerraTech - Control Panel"
+	},
+	"nav": {
+		"home": "Home",
+		"settings": "Settings"
+	},
+	"home": {
+		"title": "Welcome",
+		"content": "Welcome to TerraTech App Web."
+	},
+	"navigation": {
+		"home": "Home",
+		"settings": "Settings"
+	},
+	"language": {
+		"label": "Language"
+	},
+	"page-not-found": {
+		"title": "Page Not Found",
+		"content": "The path {unavailable-route} is not available.",
+		"go-home": "Go Home"
+	},
+	"authoring-phrase": {
+		"intro": "Built with",
+		"use": "using",
+		"author": "by {brand}"
+	}
+}
+
