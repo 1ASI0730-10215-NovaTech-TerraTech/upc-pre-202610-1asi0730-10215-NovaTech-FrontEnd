@@ -1,5 +1,5 @@
 import axios from 'axios';
-const platformApi = import.meta.env.VITE_LEARNING_PLATFORM_API_URL;
+const platformApi = import.meta.env.VITE_TERRATECH_API_URL;
 
 /**
  * Shared infrastructure API client factory for bounded contexts.
@@ -13,6 +13,7 @@ export class BaseApi {
      * Creates an Axios HTTP client configured for the platform API.
      */
     constructor() {
+        console.log('🌐 BaseApi: Inicializando con baseURL:', platformApi);
         this.#http = axios.create({
             baseURL: platformApi,
             headers: { 'Content-Type': 'application/json',
