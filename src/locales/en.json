@@ -5,6 +5,7 @@
 	},
 	"nav": {
 		"home": "Home",
+		"inventory": "Inventory",
 		"settings": "Settings"
 	},
 	"home": {
@@ -29,4 +30,3 @@
 		"author": "by {brand}"
 	}
 }
-

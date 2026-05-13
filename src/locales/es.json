@@ -5,6 +5,7 @@
 	},
 	"nav": {
 		"home": "Inicio",
+		"inventory": "Inventario",
 		"settings": "Configuración"
 	},
 	"home": {
@@ -29,4 +30,3 @@
 		"author": "por {brand}"
 	}
 }
-

@@ -5,41 +5,69 @@ import AddProductForm from '../components/add-product-form.vue';
 import DiscountProductForm from '../components/discount-product-form.vue';
 
 const selectedProduct = ref(null);
+const inventoryListRef = ref(null);
 
 const handleDiscount = (product) => {
-    selectedProduct.value = product;
+  selectedProduct.value = product;
 };
 
 const closeModal = () => {
-    selectedProduct.value = null;
+  selectedProduct.value = null;
+};
+
+const refreshInventory = () => {
+  if (inventoryListRef.value) {
+    inventoryListRef.value.fetchInventory();
+  }
 };
 </script>
 
 <template>
-    <div class="inventory-page">
-        <h1>Gestión de Inventario</h1>
-        <div class="inventory-grid">
-            <AddProductForm @product-added="$refs.inventoryList.fetchInventory()" />
-            <InventoryList ref="inventoryList" @discount="handleDiscount" />
-        </div>
-        <DiscountProductForm 
-            :product="selectedProduct" 
-            @discount-completed="$refs.inventoryList.fetchInventory()"
-            @close="closeModal"
-        />
+  <div class="inventory-page">
+    <div class="inventory-header">
+      <h1>Gestión de Inventario</h1>
     </div>
+
+    <div class="inventory-content">
+      <AddProductForm @product-added="refreshInventory" />
+      <InventoryList ref="inventoryListRef" @discount="handleDiscount" />
+    </div>
+
+    <DiscountProductForm
+        :product="selectedProduct"
+        @discount-completed="refreshInventory"
+        @close="closeModal"
+    />
+  </div>
 </template>
 
 <style scoped>
 .inventory-page {
-    padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
 }
-.inventory-grid {
-    display: grid;
-    gap: 2rem;
-    margin-top: 2rem;
+
+.inventory-header {
+  margin-bottom: 1.5rem;
 }
-h1 {
-    margin: 0 0 1rem 0;
+
+.inventory-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.inventory-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .inventory-page {
+    padding: 1rem;
+  }
 }
 </style>
