@@ -18,24 +18,24 @@ onMounted(() => {
   }
 });
 
-function navigateToCreate() {
+const navigateToCreate = () => {
   router.push({ name: 'monitoring-device-new' });
 }
 
-function navigateToEdit(device) {
+const navigateToEdit = (device) => {
   router.push({ name: 'monitoring-device-edit', params: { id: device.id } });
 }
 
-function confirmDelete(device) {
+const confirmDelete = (device) => {
   confirm.require({
-    message: t('monitoring.confirm-delete-device'),
+    message: t('monitoring.confirm-delete-device', {name: device.name}),
     header: t('monitoring.delete-device-title'),
     icon: 'pi pi-exclamation-triangle',
     accept: () => {
       deleteDevice(device);
-    }
+    },
   });
-}
+};
 
 const columns = [
   { field: 'id', header: t('monitoring.device-id'), sortable: true },
@@ -222,4 +222,3 @@ const columns = [
   }
 }
 </style>
-

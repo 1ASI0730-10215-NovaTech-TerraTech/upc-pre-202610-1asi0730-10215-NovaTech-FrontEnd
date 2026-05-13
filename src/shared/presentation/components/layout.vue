@@ -103,6 +103,7 @@ const items = [
     </main>
 
   </div>
+  <pv-confirm-dialog></pv-confirm-dialog>
 </template>
 
 <style scoped>
