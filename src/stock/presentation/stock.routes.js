@@ -1,10 +1,10 @@
-import StockView from './presentation/views/stock-view.vue';
+import StockForm from './views/stock-form.vue';
 
 const stockRoutes = [
     {
         path: '/inventory',
         name: 'inventory',
-        component: StockView
+        component: StockForm
     }
 ];
 

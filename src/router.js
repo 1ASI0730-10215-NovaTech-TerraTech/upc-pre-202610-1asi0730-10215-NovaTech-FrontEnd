@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './shared/presentation/views/home.vue'
 import PageNotFoundView from './shared/presentation/views/page-not-found.vue'
-import StockView from './stock/presentation/views/stock-view.vue'
+import StockForm from './stock/presentation/views/stock-form.vue'
 
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/home', name: 'home', component: HomeView },
-    { path: '/inventory', name: 'inventory', component: StockView },
+    { path: '/inventory', name: 'inventory', component: StockForm },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
