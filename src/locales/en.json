@@ -5,8 +5,35 @@
 	},
 	"nav": {
 		"home": "Home",
+		"inventory": "Inventory",
 		"monitoring": "Monitoring",
 		"settings": "Settings"
+	},
+	"stock": {
+		"title": "Inventory Management",
+		"add_title": "Add new product",
+		"product": "Product",
+		"product_placeholder": "Ex: Tomato, Lettuce, Corn",
+		"quantity": "Quantity",
+		"unit": "Unit",
+		"unit_und": "units",
+		"minimum_stock": "Minimum stock",
+		"optional": "Optional",
+		"add_button": "Add",
+		"adding": "Adding...",
+		"product_list": "Products in inventory",
+		"loading": "Loading...",
+		"empty": "No products registered",
+		"actions": "Actions",
+		"discount": "Discount",
+		"discount_title": "Discount product",
+		"current_stock": "Current stock",
+		"discount_placeholder": "Quantity to discount",
+		"cancel": "Cancel",
+		"success": "Product added successfully",
+		"error_name": "Enter the product name",
+		"error_quantity": "Enter a valid quantity",
+		"error_general": "Error adding product"
 	},
 	"home": {
 		"title": "Welcome",
@@ -87,6 +114,7 @@
 		"delete-field-title": "Delete Field",
 		"form-validation-error": "Please fill in all required fields"
 	}
+}
 
 }
 
