@@ -65,6 +65,8 @@
 		"update": "Actualizar",
 		"create": "Crear",
 		"cancel": "Cancelar",
+		"yes": "Sí",
+		"no": "No",
 		"loading": "Cargando...",
 		"confirm-delete-device": "¿Está seguro de que desea eliminar este dispositivo?",
 		"confirm-delete-field": "¿Está seguro de que desea eliminar esta zona de cultivo?",
