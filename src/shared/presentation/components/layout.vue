@@ -18,6 +18,8 @@ const items = [
   { label: "nav.home", to: "/home", icon: "📊" },
   { label: "nav.inventory", to: "/inventory", icon: "📦" },
   { label: "nav.monitoring", to: "/monitoring", icon: "🌾" },
+  { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
+  { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
   { label: "nav.payment", to: "/payment", icon: "💳" }
 ];
 </script>
@@ -104,6 +106,7 @@ const items = [
     </main>
 
   </div>
+  <pv-confirm-dialog></pv-confirm-dialog>
 </template>
 
 <style scoped>
