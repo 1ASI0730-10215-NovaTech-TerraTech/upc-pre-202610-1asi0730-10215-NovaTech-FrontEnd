@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { StockApi } from '../infrastructure/stock-api.js';
-import { ProductAssembler } from '../infrastructure/product.assembler.js';
+import { InventoryAssembler } from '../infrastructure/inventory.assembler.js';
 
 const stockApi = new StockApi();
 
 export const useStockStore = defineStore('stock', () => {
-    const products = ref([]);
+    const inventory = ref([]);
     const loading = ref(false);
 
-    const fetchProducts = async () => {
+    const fetchInventory = async () => {
         loading.value = true;
         try {
-            const response = await stockApi.getAll();
-            products.value = response.data.map(ProductAssembler.toEntity);
+            const response = await stockApi.getInventory();
+            inventory.value = InventoryAssembler.toEntitiesFromResponse(response);
         } finally {
             loading.value = false;
         }
@@ -22,10 +22,8 @@ export const useStockStore = defineStore('stock', () => {
     const addProduct = async (productData) => {
         loading.value = true;
         try {
-            const dto = ProductAssembler.toDto(productData);
-            const response = await stockApi.addProduct(dto);
-            await fetchProducts();
-            return response.data;
+            await stockApi.createInventory(productData);
+            await fetchInventory();
         } finally {
             loading.value = false;
         }
@@ -34,18 +32,21 @@ export const useStockStore = defineStore('stock', () => {
     const discountProduct = async (id, quantity) => {
         loading.value = true;
         try {
-            const response = await stockApi.discountProduct(id, quantity);
-            await fetchProducts();
-            return response.data;
+            const item = inventory.value.find(i => i.id === id);
+            if (item) {
+                const updatedStock = item.stock_quantity - quantity;
+                await stockApi.updateInventory({ id, stock_quantity: updatedStock });
+                await fetchInventory();
+            }
         } finally {
             loading.value = false;
         }
     };
 
     return {
-        products,
+        inventory,
         loading,
-        fetchProducts,
+        fetchInventory,
         addProduct,
         discountProduct
     };
