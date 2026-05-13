@@ -25,7 +25,7 @@ const useIamStore = defineStore('iam', () => {
             if (!user) {
                 isSignedIn.value = false;
                 errors.value.push(new Error('Invalid email'));
-                router.push({name: 'iam-sign-in'});
+                router.push({name: 'sign-in'});
                 return;
             }
 
@@ -33,7 +33,7 @@ const useIamStore = defineStore('iam', () => {
             if (user.password_hash !== hashInput) {
                 isSignedIn.value = false;
                 errors.value.push(new Error('Invalid password'));
-                router.push({name: 'iam-sign-in'});
+                router.push({name: 'sign-in'});
                 return;
             }
 
@@ -59,7 +59,7 @@ const useIamStore = defineStore('iam', () => {
                     isSignedIn.value = false;
                     console.error(error);
                     errors.value.push(error);
-                    router.push({ name: 'iam-sign-in' });
+                    router.push({ name: 'sign-in' });
                 });
         }
     }
@@ -74,13 +74,13 @@ const useIamStore = defineStore('iam', () => {
             .then(response => {
                 console.log('user created', response.data);
                 errors.value = [];
-                router.push({ name: 'iam-sign-in' });
+                router.push({ name: 'sign-in' });
             })
             .catch(error => {
                 console.error('Error in create user', error);
                 const messageError = error.response?.data?.message || error.message || 'Error creating user';
                 errors.value.push(new Error(messageError));
-                router.push({ name: 'iam-sign-in' });
+                router.push({ name: 'sign-in' });
             });
     }
 
