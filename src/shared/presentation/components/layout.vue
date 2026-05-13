@@ -16,9 +16,9 @@ const toggleDrawer = () => {
 
 const items = [
   { label: "nav.home", to: "/home", icon: "📊" },
-  { label: "nav.monitoring", to: "/monitoring", icon: "🌾" },
-  { label: "nav.payment", to: "/payment", icon: "💳" },
-  { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" }
+  { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
+  { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
+  { label: "nav.payment", to: "/payment", icon: "💳" }
 ];
 </script>
 
