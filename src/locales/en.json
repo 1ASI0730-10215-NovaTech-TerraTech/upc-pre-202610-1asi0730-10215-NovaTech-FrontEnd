@@ -7,7 +7,7 @@
 		"home": "Home",
 		"inventory": "Inventory",
 		"monitoring": "Monitoring",
-		"settings": "Settings"
+		"settings": "Perfil"
 	},
 	"stock": {
 		"title": "Inventory Management",
@@ -115,6 +115,3 @@
 		"form-validation-error": "Please fill in all required fields"
 	}
 }
-
-}
-
