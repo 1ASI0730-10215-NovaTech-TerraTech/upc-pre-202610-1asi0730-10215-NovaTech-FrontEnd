@@ -4,7 +4,10 @@ import PageNotFoundView from './shared/presentation/views/page-not-found.vue'
 import StockForm from './stock/presentation/views/stock-form.vue'
 import iamRoutes from './iam/presentation/iam-routes.js'
 import monitoringRoutes from './monitoring/presentation/monitoring-routes.js'
-import {commercialRoutes} from "./commercial/presentation/commercial-management-routes.js";
+import { commercialRoutes } from "./commercial/presentation/commercial-management-routes.js"
+import notificationRoutes from './notification-management/presentation/notification-management-routes.js'
+
+console.log('notificationRoutes:', notificationRoutes)
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -13,6 +16,7 @@ const routes = [
     ...iamRoutes,
     { path: '/monitoring', component: RouterView, children: monitoringRoutes },
     { path: '/commercial', component: RouterView, children: commercialRoutes },
+    { path: '/notifications', component: RouterView, children: notificationRoutes },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
@@ -22,6 +26,3 @@ const router = createRouter({
 })
 
 export default router
-
-
-
