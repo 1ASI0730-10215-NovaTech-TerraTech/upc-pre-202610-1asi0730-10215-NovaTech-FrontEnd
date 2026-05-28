@@ -1,29 +1,41 @@
 import {User} from "../domain/model/user.entity.js";
+import {UserResource} from "./user.response.js";
 
 /**
- * Transforming data from external source, in this case MockUp
+ * User assembler transforms the data to transfer to other layers.
+ * @class
  */
 export class UserAssembler {
     /**
-     * Converts a plain object into an instance of the User entity.
-     * @param  resource - The raw user data.
-     * @returns {User} A new instance of the User entity.
+     * Transform resource to entity.
+     * Useful to register or update credentials of User.
+     * @param {Object} resource - The resource to be transformed.
+     * @returns {User|null} An instance of user entity.
      */
     static toEntityFromResource(resource) {
-        return new User({...resource});
+        if (!resource) {
+            return null;
+        }
+        return new User({
+            id: resource.id,
+            email: resource.email,
+            password: resource.password
+        });
     }
 
     /**
-     * Processes a complete HTTP response to extract and convert multiple users.
-     * @param {import('axios').AxiosResponse<Object>} response - HTTP response from users endpoint.
-     * @returns {User[]} An array of User.
+     * Transform user to resource.
+     * This is to prevent the leakage of sensitive data.
+     * @param {Object} user - The entity to be transformed.
+     * @returns {UserResource|null} And instance of user resource.
      */
-    static toEntitiesFromResponse(response) {
-        if (response.status !== 200) {
-            console.error(`${response.status}, ${response.statusText}`);
-            return [];
+    static toResourceFromEntity(user) {
+        if (!user) {
+            return null;
         }
-        const resources = response.data instanceof Array ? response.data : (response.data['users'] || []);
-        return resources.map(resource=>this.toEntityFromResource(resource));
+        return new UserResource({
+            id: user.id,
+            email: user.email,
+        });
     }
 }
