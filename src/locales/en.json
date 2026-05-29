@@ -7,6 +7,7 @@
 		"home": "Home",
 		"inventory": "Inventory",
 		"monitoring": "Monitoring",
+		"analytics": "Analytics",
 		"settings": "Settings"
 	},
 	"stock": {
@@ -113,8 +114,27 @@
 		"delete-device-title": "Delete Device",
 		"delete-field-title": "Delete Field",
 		"form-validation-error": "Please fill in all required fields"
+	},
+	"analytics": {
+		"title": "Analytics Dashboard - TerraTech",
+		"subtitle": "Advanced visualization of metrics, agricultural projections, and yield maps.",
+		"sys-alert-title": "System Notification:",
+		"sys-alert-desc": "Critical humidity threshold detected in the North Zone - Sector 2.",
+		"fertility-map": "Generated Fertility Map (Plot View)",
+		"dashboard-metrics": "Updated Dashboard Metrics (Average Humidity)",
+		"records-title": "Comprehensive Record of Analyzed Reports",
+		"control-metrics": "Control Metrics",
+		"tech-interpretation": "Technical Interpretation:",
+		"variance": "Variance:",
+		"deviation": "Deviation:",
+		"recommendations": "Generated Irrigation Recommendations:",
+		"recommendations-desc": "Optimize drip irrigation cycles as a priority in sectors controlled by dev_003 and dev_004 devices due to humidity readings below the tolerated critical threshold.",
+		"export-btn": "Monthly Report Exported",
+		"optimal": "Optimal",
+		"warning": "Warning",
+		"critical": "Critical"
 	}
 }
 
-}
+
 
