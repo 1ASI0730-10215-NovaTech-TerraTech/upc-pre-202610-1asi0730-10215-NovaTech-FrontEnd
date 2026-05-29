@@ -20,7 +20,8 @@ const items = [
   { label: "nav.monitoring", to: "/monitoring", icon: "🌾" },
   { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
   { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
-  { label: "nav.payment", to: "/payment", icon: "💳" }
+  { label: "nav.payment", to: "/payment", icon: "💳" },
+  { label: "nav.analytics", to: "/analytics/dashboard", icon: "📈" }
 ];
 </script>
 
