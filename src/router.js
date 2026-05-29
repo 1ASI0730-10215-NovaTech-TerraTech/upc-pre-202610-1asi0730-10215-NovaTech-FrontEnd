@@ -5,6 +5,7 @@ import StockForm from './stock/presentation/views/stock-form.vue'
 import iamRoutes from './iam/presentation/iam-routes.js'
 import monitoringRoutes from './monitoring/presentation/monitoring-routes.js'
 import {commercialRoutes} from "./commercial/presentation/commercial-management-routes.js";
+import { analyticsRoutes } from "./analytics/presentation/analytics-management-routes.js";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -13,6 +14,7 @@ const routes = [
     ...iamRoutes,
     { path: '/monitoring', component: RouterView, children: monitoringRoutes },
     { path: '/commercial', component: RouterView, children: commercialRoutes },
+    { path: '/analytics', component: RouterView, children: analyticsRoutes },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
