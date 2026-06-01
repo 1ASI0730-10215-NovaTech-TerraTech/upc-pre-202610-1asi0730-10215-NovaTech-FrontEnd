@@ -113,5 +113,24 @@
 		"delete-device-title": "Eliminar Dispositivo",
 		"delete-field-title": "Eliminar Zona de Cultivo",
 		"form-validation-error": "Por favor complete todos los campos requeridos"
+	},
+	"analytics": {
+		"title": "Dashboard de Analíticas - TerraTech",
+		"subtitle": "Visualización avanzada de métricas, proyecciones agrícolas y mapas de rendimiento.",
+		"sys-alert-title": "Notificación de Sistema:",
+		"sys-alert-desc": "Humedad en umbral crítico detectada en la Zona Norte - Sector 2.",
+		"fertility-map": "Mapa de Fertilidad Generado (Vista de Parcelas)",
+		"dashboard-metrics": "Métricas de Dashboard Actualizado (Humedad Promedio)",
+		"records-title": "Registro Integral de Reportes Analizados",
+		"control-metrics": "Métricas de Control",
+		"tech-interpretation": "Interpretación Técnica:",
+		"variance": "Varianza:",
+		"deviation": "Desviación:",
+		"recommendations": "Recomendaciones de Riego Generadas:",
+		"recommendations-desc": "Optimizar los ciclos de irrigación por goteo de manera prioritaria en los sectores controlados por los dispositivos dev_003 y dev_004 debido a lecturas de humedad por debajo del umbral crítico tolerado.",
+		"export-btn": "Reporte Mensual Exportado",
+		"optimal": "Óptimo",
+		"warning": "Advertencia",
+		"critical": "Crítico"
 	}
 }
