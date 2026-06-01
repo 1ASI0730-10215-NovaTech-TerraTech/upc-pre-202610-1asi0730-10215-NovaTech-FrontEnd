@@ -7,8 +7,7 @@
 		"home": "Home",
 		"inventory": "Inventory",
 		"monitoring": "Monitoring",
-		"analytics": "Analytics",
-		"settings": "Settings"
+		"settings": "Perfil"
 	},
 	"stock": {
 		"title": "Inventory Management",
@@ -135,6 +134,3 @@
 		"critical": "Critical"
 	}
 }
-
-
-

@@ -1,10 +1,12 @@
 <script setup>
 import LanguageSwitcher from "./language-switcher.vue";
-import {ref} from "vue";
-import {useI18n} from "vue-i18n";
+import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 
-
-const { t } = useI18n();
+const router = useRouter()
+const route  = useRoute()
+const { t }  = useI18n()
 
 const drawer = ref(false);
 const toggleDrawer = () => {
@@ -19,7 +21,7 @@ const items = [
   { label: "nav.inventory", to: "/inventory", icon: "📦" },
   { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
   { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
-  { label: "nav.analytics", to: "/analytics/dashboard", icon: "📈" }
+  { label: "nav.settings", to: "/settings", icon: "👤" },
 ];
 </script>
 
@@ -29,61 +31,47 @@ const items = [
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-    <header class="header">
-      <aside class="sidebar">
+    <aside class="sidebar">
 
-        <!-- LOGO / BRAND -->
-        <div class="sidebar-header">
-          <router-link to="/home" class="logo-brand">
-            <img
-                src="/terratech-logo.png"
-                alt="TerraTech"
-                class="logo"
-            />
-          </router-link>
+      <!-- LOGO / BRAND -->
+      <div class="sidebar-header">
+        <router-link to="/home" class="logo-brand">
+          <img
+              src="/terratech-logo.png"
+              alt="TerraTech"
+              class="logo"
+          />
+        </router-link>
 
-          <h2 class="brand-name">TerraTech</h2>
-        </div>
+        <h2 class="brand-name">TerraTech</h2>
+      </div>
 
-        <!-- NAVIGATION -->
-        <nav class="nav-menu">
-          <router-link
-              v-for="item in items"
-              :key="item.label"
-              :to="item.to"
-              class="nav-item"
-          >
-            <span class="nav-icon">
-              {{ item.icon }}
-            </span>
+      <!-- NAVIGATION -->
+      <nav class="nav-menu">
+        <router-link
+            v-for="item in items"
+            :key="item.label"
+            :to="item.to"
+            class="nav-item"
+        >
+          <span class="nav-icon">
+            {{ item.icon }}
+          </span>
 
-            <span class="nav-label">
-              {{ t(item.label) }}
-            </span>
-          </router-link>
-        </nav>
-
-        <!-- BOTTOM SECTION -->
-        <div class="nav-bottom">
-          <router-link to="/settings" class="nav-item">
-            <span class="nav-icon">⚙️</span>
-
-            <span class="nav-label">
-              {{ t('nav.settings') }}
-            </span>
-          </router-link>
-        </div>
-
-      </aside>
-    </header>
+          <span class="nav-label">
+            {{ t(item.label) }}
+          </span>
+        </router-link>
+      </nav>
+    </aside>
 
     <!-- =====================================================
-         MAIN CONTENT
+         MAIN AREA
     ====================================================== -->
-    <main class="main-content">
+    <div class="main-area">
 
       <!-- TOPBAR -->
-      <section class="topbar">
+      <header class="topbar">
 
         <div class="topbar-left">
           <h1 class="page-title">
@@ -95,17 +83,17 @@ const items = [
           <language-switcher />
         </div>
 
-      </section>
-
-      <!-- DYNAMIC ROUTE CONTENT -->
-      <section class="content">
+      </header>
+      <!-- =====================================================
+           PAGE CONTENT
+      ====================================================== -->
+      <main class="content">
         <router-view />
-      </section>
-
-    </main>
-
+      </main>
+    </div>
   </div>
-  <pv-confirm-dialog></pv-confirm-dialog>
+
+  <pv-confirm-dialog />
 </template>
 
 <style scoped>
@@ -121,6 +109,7 @@ const items = [
    GLOBAL LAYOUT
 ========================================================= */
 .layout {
+  display: flex;
   min-height: 100vh;
   background: var(--color-light);
 }
@@ -128,11 +117,6 @@ const items = [
 /* =========================================================
    SIDEBAR
 ========================================================= */
-.header {
-  width: 240px;
-  flex-shrink: 0;
-}
-
 .sidebar {
   position: fixed;
   top: 0;
@@ -151,6 +135,8 @@ const items = [
 
   border-right: 1px solid var(--color-border);
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -230,16 +216,9 @@ const items = [
 }
 
 /* =========================================================
-   SIDEBAR BOTTOM SECTION
+   MAIN AREA
 ========================================================= */
-.nav-bottom {
-  padding-top: 1rem;
-}
-
-/* =========================================================
-   MAIN CONTENT AREA
-========================================================= */
-.main-content {
+.main-area {
   flex: 1;
 
   margin-left: 240px;
@@ -297,12 +276,11 @@ const items = [
 ========================================================= */
 @media (max-width: 768px) {
 
-  .header,
   .sidebar {
     width: 200px;
   }
 
-  .main-content {
+  .main-area {
     margin-left: 200px;
   }
 
@@ -320,12 +298,11 @@ const items = [
 ========================================================= */
 @media (max-width: 600px) {
 
-  .header,
   .sidebar {
     width: 90px;
   }
 
-  .main-content {
+  .main-area {
     margin-left: 90px;
   }
 
