@@ -95,7 +95,7 @@ export const useProfileManagementStore = defineStore('profileManagement', () => 
      * @param {Object} profile - Profile entity with updated data.
      */
     function updateProfile(profile) {
-        // CORRECCIÓN: Se cambió profileManagementApi por api
+
         return api.updateProfile(profile.id, profile)
             .then(response => {
                 const resource = response.data;
@@ -116,19 +116,19 @@ export const useProfileManagementStore = defineStore('profileManagement', () => 
     /**
      * Deletes a profile and removes it from the local state.
      * @param {Object} profile - Profile entity to remove.
-     *
+     */
     function deleteProfile(profile) {
-        /
-        api.deleteProfile(profile.id).then(() => {
-            const index = profiles.value.findIndex(p => p.id === profile.id); //
+        return api.deleteProfile(profile.id).then(() => {
+            const index = profiles.value.findIndex(p => p.id === profile.id);
             if (index !== -1) {
-                /
-                profiles.value.splice(index, 1); //
+                profiles.value.splice(index, 1);
             }
+            return true;
         }).catch(error => {
-            errors.value.push(error); //
+            errors.value.push(error);
+            return false;
         });
-    }*/
+    }
 
     return {
         profiles,
@@ -139,6 +139,6 @@ export const useProfileManagementStore = defineStore('profileManagement', () => 
         getProfileById,
         addProfile,
         updateProfile,
-        /**deleteProfile*/
+        deleteProfile
     };
 });
