@@ -7,7 +7,9 @@
 		"home": "Home",
 		"inventory": "Inventory",
 		"monitoring": "Monitoring",
-		"settings": "Perfil"
+		"settings": "Profile",
+		"analytics": "Analytics",
+		"notifications": "Notifications"
 	},
 	"stock": {
 		"title": "Inventory Management",

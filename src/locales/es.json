@@ -7,7 +7,9 @@
 		"home": "Inicio",
 		"inventory": "Inventario",
 		"monitoring": "Monitoreo",
-		"settings": "Perfil"
+		"settings": "Perfil",
+		"analytics": "Analíticas",
+		"notifications": "Notificaciones"
 	},
 	"stock": {
 		"title": "Gestión de Inventario",
