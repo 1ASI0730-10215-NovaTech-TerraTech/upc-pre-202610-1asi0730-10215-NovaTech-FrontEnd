@@ -134,5 +134,22 @@
 		"optimal": "Óptimo",
 		"warning": "Advertencia",
 		"critical": "Crítico"
+	},
+	"profiles": {
+		"title": "Perfiles Agrícolas",
+		"new": "Nuevo Perfil",
+		"new-title": "Crear Nuevo Perfil",
+		"edit-title": "Editar Perfil",
+		"id": "ID",
+		"fundoName": "Nombre del Fundo",
+		"contactPhone": "Teléfono de Contacto",
+		"moistureThreshold": "Umbral de Humedad (%)",
+		"tempThreshold": "Umbral de Temp (°C)",
+		"actions": "Acciones",
+		"create-button": "Crear Perfil",
+		"update-button": "Actualizar Perfil",
+		"cancel-button": "Cancelar",
+		"delete-header": "Confirmar Eliminación",
+		"confirm-delete": "¿Estás seguro de que deseas eliminar {name}?"
 	}
 }
