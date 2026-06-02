@@ -61,10 +61,10 @@ const handleSave = async () => {
   let isSuccess = false;
 
   if (isEdit.value) {
-    // Llama a la función de actualización si hay un ID en la ruta
+
     isSuccess = await store.updateProfile(profileData.value);
   } else {
-    // Llama a la función de creación para perfiles nuevos
+
     isSuccess = await store.addProfile(profileData.value);
   }
 
@@ -75,7 +75,6 @@ const handleSave = async () => {
       detail: 'Operación exitosa',
       life: 2000
     });
-    // Redirige a la lista después de un breve delay
     setTimeout(() => router.push({ name: 'profile-list' }), 2000);
   } else {
     toast.add({
@@ -85,6 +84,10 @@ const handleSave = async () => {
       life: 3000
     });
   }
+};
+
+const handleCancel = () => {
+  router.push({ name: 'profile-list' });
 };
 
 </script>
@@ -97,37 +100,44 @@ const handleSave = async () => {
 
     <div class="form-card">
       <div class="p-fluid">
-        <!-- Fundo Name -->
+
         <div class="field-group">
           <label for="fundoName" class="field-label">{{ t('profiles.fundoName') }}</label>
           <InputText id="fundoName" v-model="profileData.fundo_name" class="full-width" />
         </div>
 
-        <!-- Contact Phone -->
+
         <div class="field-group">
           <label for="contactPhone" class="field-label">{{ t('profiles.contactPhone') }}</label>
           <InputText id="contactPhone" v-model="profileData.contact_phone" class="full-width" />
         </div>
 
-        <!-- Moisture Threshold -->
+
         <div class="field-group">
           <label for="moisture" class="field-label">{{ t('profiles.moistureThreshold') }}</label>
           <InputText id="moisture" v-model.number="profileData.moisture_threshold" type="number" step="0.1" class="full-width" />
         </div>
 
-        <!-- Temp Threshold -->
+
         <div class="field-group">
           <label for="temp" class="field-label">{{ t('profiles.tempThreshold') }}</label>
           <InputText id="temp" v-model.number="profileData.temp_threshold" type="number" step="0.1" class="full-width" />
         </div>
 
-        <!-- Action Button -->
+
         <div class="button-container">
           <Button
               :label="isEdit ? t('profiles.update-button') : t('profiles.create-button')"
               :icon="isEdit ? 'pi pi-save' : 'pi pi-plus'"
               @click="handleSave"
               class="save-button"
+          />
+          <Button
+              :label="t('profiles.cancel-button')"
+              icon="pi pi-times"
+              @click="handleCancel"
+              class="cancel-button"
+              severity="danger"
           />
         </div>
       </div>
@@ -169,6 +179,9 @@ const handleSave = async () => {
 
 .button-container {
   margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .save-button {
@@ -180,6 +193,11 @@ const handleSave = async () => {
 
 .save-button:hover {
   background-color: #38b2ac;
+}
+
+.cancel-button {
+  width: auto;
+  padding: 0.75rem 1.5rem;
 }
 </style>
 

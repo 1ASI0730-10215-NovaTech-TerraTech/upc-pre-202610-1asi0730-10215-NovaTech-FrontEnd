@@ -39,19 +39,18 @@ const navigateToEdit = (id) => {
 /**
  * Confirm deletion of a profile and execute deletion if confirmed.
  * @param {Object} profile - The profile object to delete.
-
+ */
 const confirmDelete = (profile) => {
   confirm.require({
-
-    message: t('profiles.confirm-delete', { name: profile.fundo_name }), //
-    header: t('profiles.delete-header'), //
-    icon: 'pi pi-exclamation-triangle', //
+    message: t('profiles.confirm-delete', { name: profile.fundo_name }),
+    header: t('profiles.delete-header'),
+    icon: 'pi pi-exclamation-triangle',
     accept: () => {
-
-      store.deleteProfile(profile); //
+      store.deleteProfile(profile);
     },
   });
-};*/
+};
+
 </script>
 
 <template>
