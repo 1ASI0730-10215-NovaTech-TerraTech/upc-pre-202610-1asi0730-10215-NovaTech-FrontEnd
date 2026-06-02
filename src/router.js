@@ -6,8 +6,9 @@ import iamRoutes from './iam/presentation/iam-routes.js'
 import monitoringRoutes from './monitoring/presentation/monitoring-routes.js'
 import {commercialRoutes} from "./commercial/presentation/commercial-management-routes.js";
 import { analyticsRoutes } from "./analytics/presentation/analytics-management-routes.js";
-import { commercialRoutes } from "./commercial/presentation/commercial-management-routes.js"
 import notificationRoutes from './notification-management/presentation/notification-management-routes.js'
+import profileRoutes from "./profile-management/presentation/profile-management-routes.js";
+
 
 console.log('notificationRoutes:', notificationRoutes)
 
@@ -20,6 +21,7 @@ const routes = [
     { path: '/commercial', component: RouterView, children: commercialRoutes },
     { path: '/analytics', component: RouterView, children: analyticsRoutes },
     { path: '/notifications', component: RouterView, children: notificationRoutes },
+    { path: '/settings', component: RouterView, children: profileRoutes },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
