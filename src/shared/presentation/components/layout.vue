@@ -21,7 +21,10 @@ const items = [
   { label: "nav.inventory", to: "/inventory", icon: "📦" },
   { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
   { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
+  { label: "nav.analytics", to: "/analytics/dashboard", icon: "🛍" },
   { label: "nav.settings", to: "/settings", icon: "👤" },
+  { label: "nav.notifications", to: "/notifications", icon: "🔔" },
+
 ];
 </script>
 
