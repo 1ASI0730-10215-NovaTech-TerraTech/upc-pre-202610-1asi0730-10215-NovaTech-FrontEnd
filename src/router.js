@@ -8,7 +8,7 @@ import {commercialRoutes} from "./commercial/presentation/commercial-management-
 import { analyticsRoutes } from "./analytics/presentation/analytics-management-routes.js";
 import notificationRoutes from './notification-management/presentation/notification-management-routes.js'
 import profileRoutes from "./profile-management/presentation/profile-management-routes.js";
-
+import communityRoutes from './community-management/presentation/community-routes.js';
 
 console.log('notificationRoutes:', notificationRoutes)
 
@@ -22,6 +22,7 @@ const routes = [
     { path: '/analytics', component: RouterView, children: analyticsRoutes },
     { path: '/notifications', component: RouterView, children: notificationRoutes },
     { path: '/settings', component: RouterView, children: profileRoutes },
+    { path: '/community', component: RouterView, children: communityRoutes },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
