@@ -24,6 +24,7 @@ const items = [
   { label: "nav.analytics", to: "/analytics/dashboard", icon: "🛍" },
   { label: "nav.settings", to: "/settings", icon: "👤" },
   { label: "nav.notifications", to: "/notifications", icon: "🔔" },
+  { label: "nav.community", to: "/community", icon: "👥" }
 
 ];
 </script>
