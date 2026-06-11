@@ -98,34 +98,26 @@
 </template>
 
 <script>
-import { ReportAssembler } from '../../infrastructure/report.assembler.js';
+import { useAnalyticsStore } from '../../application/analytics-management.store.js';
 
 export default {
   name: "ReportList",
-  data() {
-    return {
-      reportsList: []
-    };
+  setup() {
+    // Inicializamos el Store de Pinia en la capa de presentación
+    const analyticsStore = useAnalyticsStore();
+    return { analyticsStore };
+  },
+  computed: {
+
+    reportsList() {
+      return this.analyticsStore.reportsList;
+    }
   },
   mounted() {
-    this.fetchAnalyticsData();
+
+    this.analyticsStore.fetchReports();
   },
   methods: {
-    fetchAnalyticsData() {
-      const mockAxiosResponse = {
-        status: 200,
-        statusText: "OK",
-        data: [
-          { "id": "rep_001", "device_id": "dev_001", "generated_at": "2026-05-13", "mean_value": 66.046, "variance": 12.5, "standard_deviation": 3.53, "technical_interpretation": "The average humidity of 66% indicates well-hydrated soil." },
-          { "id": "rep_002", "device_id": "dev_003", "generated_at": "2026-05-13", "mean_value": 22.1, "variance": 5.2, "standard_deviation": 2.28, "technical_interpretation": "Critical moisture levels detected; immediate irrigation required." },
-          { "id": "rep_003", "device_id": "dev_004", "generated_at": "2026-05-13", "mean_value": 28.5, "variance": 1.8, "standard_deviation": 1.34, "technical_interpretation": "Thermal stability observed within the expected range for tomatoes." },
-          { "id": "rep_004", "device_id": "dev_005", "generated_at": "2026-05-12", "mean_value": 45.2, "variance": 20.1, "standard_deviation": 4.48, "technical_interpretation": "High variability in data; sensor review is recommended." },
-          { "id": "rep_005", "device_id": "dev_001", "generated_at": "2026-05-12", "mean_value": 65.8, "variance": 10.3, "standard_deviation": 3.21, "technical_interpretation": "Stable data behavior compared to the previous day." }
-        ]
-      };
-
-      this.reportsList = ReportAssembler.toEntitiesFromResponse(mockAxiosResponse);
-    },
     triggerExportReport() {
       let reportContent = "========================================================\n";
       reportContent += "             TERRATECH - REPORTE MENSUAL CONSOLIDADO     \n";
@@ -166,6 +158,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .analytics-container {
