@@ -1,9 +1,11 @@
-const signIn = () => import('./views/sign-in-view.vue');
-const signUp = () => import('./views/sign-up-view.vue');
-
+const loginForm = () => import( './components/login-form.vue');
+const registerForm = () => import( './components/register-form.vue');
+/**
+ * Child routes exposed by the Identity and Access Management (IAM) bounded context.
+ */
 const iamRoutes = [
-    { path: '/sign-in', name: 'sign-in', component: signIn, meta: { title: 'Sign-In' } },
-    { path: '/sign-up', name: 'sign-up', component: signUp, meta: { title: 'Sign-Up' } },
-]
+    { path: 'login',    name: 'login',    component: loginForm,    meta: { title: 'Sign In - TerraTech' } },
+    { path: 'register', name: 'register', component: registerForm, meta: { title: 'Sign Up - TerraTech' } }
+];
 
 export default iamRoutes;

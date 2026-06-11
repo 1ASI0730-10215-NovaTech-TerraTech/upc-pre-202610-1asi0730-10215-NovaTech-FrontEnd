@@ -1,34 +1,45 @@
-import {BaseApi} from "../../shared/infrastructure/base-api.js";
 import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
-
-const usersEndpointPath = import.meta.env.VITE_USERS_ENDPOINT_PATH;
+import {BaseApi} from "../../shared/infrastructure/base-api.js";
+const userPath = import.meta.env.VITE_USERS_ENDPOINT_PATH;
 
 /**
- * Infrastructure gateway for IAM bounded-context
- * Only interacts with the user endpoint.
+ * API client for the IAM module.
+ * This class provides methods to perform operations on users through a REST api.
+ * Extends BaseApi and uses BaseEndpoint to handle routes generically.
+ *
+ * @class IamApi
+ * @extends BaseApi
+ *
+ * @property {BaseEndpoint} #userPath
+ * Private endpoint for user operations.
  */
-export class IamApi extends BaseApi{
-    #usersEndpoint;
+export class IamApi extends BaseApi {
+    #userPath;
 
-    constructor(){
+    /**
+     * Create a new instance of IamApi.
+     * Initializes the endpoint for users using the route configured in the environment variables.
+     */
+    constructor() {
         super();
-        this.#usersEndpoint = new BaseEndpoint(this, usersEndpointPath);
+        this.#userPath = new BaseEndpoint(this, userPath);
     }
 
     /**
-     * Retrieves all users from the API via GET
-     * @returns {Promise<import('axios').AxiosResponse<Array<Object>>>}
+     * Search user by email in database.
+     * @param {string} email - Email linked to user.
+     * @returns {Promise<axios.AxiosResponse<any>>} - HTTP response with user's email linked to their contact list.
      */
-    getUsers(){
-        return this.#usersEndpoint.getAll();
+    findByEmail(email) {
+        return this.http.get(`${userPath}?email=${email}`);
     }
 
     /**
-     * Creates a new user via POST
-     * @param {Object} userData - Data for the new user (e.g., { email, password_hash })
-     * @returns {Promise<import('axios').AxiosResponse<Object>>}
+     * Register new users in database.
+     * @param userPayload - User data to registered.
+     * @returns {userPayload} - HTTP response with user registered.
      */
-    createUser(userData){
-        return this.#usersEndpoint.create(userData);
+    create(userPayload) {
+        return this.#userPath.create(userPayload);
     }
 }
