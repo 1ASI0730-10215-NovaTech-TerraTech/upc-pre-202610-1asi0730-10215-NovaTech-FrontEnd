@@ -5,8 +5,38 @@
 	},
 	"nav": {
 		"home": "Home",
+		"inventory": "Inventory",
 		"monitoring": "Monitoring",
-		"settings": "Settings"
+		"settings": "Profile",
+		"analytics": "Analytics",
+		"notifications": "Notifications",
+		"community": "Community"
+	},
+	"stock": {
+		"title": "Inventory Management",
+		"add_title": "Add new product",
+		"product": "Product",
+		"product_placeholder": "Ex: Tomato, Lettuce, Corn",
+		"quantity": "Quantity",
+		"unit": "Unit",
+		"unit_und": "units",
+		"minimum_stock": "Minimum stock",
+		"optional": "Optional",
+		"add_button": "Add",
+		"adding": "Adding...",
+		"product_list": "Products in inventory",
+		"loading": "Loading...",
+		"empty": "No products registered",
+		"actions": "Actions",
+		"discount": "Discount",
+		"discount_title": "Discount product",
+		"current_stock": "Current stock",
+		"discount_placeholder": "Quantity to discount",
+		"cancel": "Cancel",
+		"success": "Product added successfully",
+		"error_name": "Enter the product name",
+		"error_quantity": "Enter a valid quantity",
+		"error_general": "Error adding product"
 	},
 	"home": {
 		"title": "Welcome",
@@ -86,7 +116,76 @@
 		"delete-device-title": "Delete Device",
 		"delete-field-title": "Delete Field",
 		"form-validation-error": "Please fill in all required fields"
+	},
+	"analytics": {
+		"title": "Analytics Dashboard - TerraTech",
+		"subtitle": "Advanced visualization of metrics, agricultural projections, and yield maps.",
+		"sys-alert-title": "System Notification:",
+		"sys-alert-desc": "Critical humidity threshold detected in the North Zone - Sector 2.",
+		"fertility-map": "Generated Fertility Map (Plot View)",
+		"dashboard-metrics": "Updated Dashboard Metrics (Average Humidity)",
+		"records-title": "Comprehensive Record of Analyzed Reports",
+		"control-metrics": "Control Metrics",
+		"tech-interpretation": "Technical Interpretation:",
+		"variance": "Variance:",
+		"deviation": "Deviation:",
+		"recommendations": "Generated Irrigation Recommendations:",
+		"recommendations-desc": "Optimize drip irrigation cycles as a priority in sectors controlled by dev_003 and dev_004 devices due to humidity readings below the tolerated critical threshold.",
+		"export-btn": "Monthly Report Exported",
+		"optimal": "Optimal",
+		"warning": "Warning",
+		"critical": "Critical"
+	},
+	"profiles": {
+		"title": "Agricultural Profiles",
+		"new": "New Profile",
+		"new-title": "Create New Profile",
+		"edit-title": "Edit Profile",
+		"id": "ID",
+		"fundoName": "Fundo Name",
+		"contactPhone": "Contact Phone",
+		"moistureThreshold": "Moisture Threshold (%)",
+		"tempThreshold": "Temp Threshold (°C)",
+		"actions": "Actions",
+		"create-button": "Create Profile",
+		"update-button": "Update Profile",
+		"cancel-button": "Cancel",
+		"delete-header": "Confirm Deletion",
+		"confirm-delete": "Are you sure you want to delete {name}?"
+	},
+	"community": {
+		"profiles": {
+			"title": "Community Profiles",
+			"new": "New Profile",
+			"search": "Search by nickname...",
+			"nickname": "Nickname",
+			"reputationScore": "Reputation Score",
+			"publicBio": "Public Bio",
+			"visibility": "Visibility",
+			"actions": "Actions",
+			"id": "ID",
+			"new-title": "Create New Profile",
+			"edit-title": "Edit Profile",
+			"create-button": "Create",
+			"update-button": "Update",
+			"cancel-button": "Cancel",
+			"confirm-delete": "Are you sure you want to delete {name}?",
+			"delete-header": "Confirm Deletion"
+		},
+		"mural": {
+			"back": "Back",
+			"globalReputation": "Global Reputation",
+			"title": "Information Mural",
+			"rateMember": "Rate Member",
+			"writeComment": "Write a comment...",
+			"publishReview": "Publish review",
+			"noComments": "No comments yet. Be the first!",
+			"warning": "Warning",
+			"warningCommentRequired": "You must write a comment",
+			"success": "Success",
+			"successPublished": "Review published successfully",
+			"error": "Error",
+			"errorPublishing": "Could not publish the review"
+		}
 	}
-
 }
-
