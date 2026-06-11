@@ -1,17 +1,18 @@
 /**
- * Entity representing an authenticated user within the IAM bounded context.
- * Contains only non-sensitive data that can safely be stored in the frontend state.
+ *  Represents Users into bounded.
+ *  @class
  */
 export class User {
     /**
-     * @param {Object} params
-     * @param {string} params.id - Unique identifier
-     * @param {string} params.email - Email address
-     * @param {string} params.password_hash - Password linked user
+     * Create an instance of User.
+     * @param {Object} object - Object container of user.
+     * @param {string} object.id - Unique user identifier.
+     * @param {string} object.email - Email address linked to user.
+     * @param {string} object.password - Password linked to user.
      */
-    constructor({ id, email, password_hash}) {
+    constructor({id, email, password}) {
         this.id = id;
         this.email = email;
-        this.password_hash = password_hash;
+        this.password = password;
     }
 }
