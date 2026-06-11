@@ -4,18 +4,20 @@ import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
-import { useProfileManagementStore } from '../../application/profile-management.store.js';
+import { useCommunityManagementStore } from '../../application/community-management.store.js';
 
 /**
- * Component for creating or editing Agricultural Profiles.
+ * Component for creating or editing Community Profiles.
  * Uses Vue I18n for internationalization and Pinia for state management.
  */
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useProfileManagementStore();
+const store = useCommunityManagementStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -31,11 +33,11 @@ const isEdit = computed(() => !!route.params.id);
  */
 const profileData = ref({
   id: null,
-  user_id: 'usr_001',
-  fundo_name: '',
-  contact_phone: '',
-  moisture_threshold: 0,
-  temp_threshold: 0
+  profile_id: 'prof_001',
+  nickname: '',
+  reputation_score: 0,
+  public_bio: '',
+  visibility_status: true
 });
 
 /**
@@ -44,7 +46,9 @@ const profileData = ref({
  */
 onMounted(async () => {
   if (isEdit.value) {
-    await store.fetchProfiles();
+    if (!store.profilesLoaded) {
+      await store.fetchProfiles();
+    }
     const selected = store.getProfileById(route.params.id);
     if (selected) {
       profileData.value = { ...selected };
@@ -61,10 +65,8 @@ const handleSave = async () => {
   let isSuccess = false;
 
   if (isEdit.value) {
-
     isSuccess = await store.updateProfile(profileData.value);
   } else {
-
     isSuccess = await store.addProfile(profileData.value);
   }
 
@@ -75,7 +77,7 @@ const handleSave = async () => {
       detail: 'Operación exitosa',
       life: 2000
     });
-    setTimeout(() => router.push({ name: 'profile-list' }), 2000);
+    setTimeout(() => router.push({ name: 'community-profile-list' }), 2000);
   } else {
     toast.add({
       severity: 'error',
@@ -87,59 +89,54 @@ const handleSave = async () => {
 };
 
 const handleCancel = () => {
-  router.push({ name: 'profile-list' });
+  router.push({ name: 'community-profile-list' });
 };
-
 </script>
-
 
 <template>
   <div class="profile-settings-container">
-    <h2>{{ isEdit ? t('profiles.edit-title') : t('profiles.new-title') }}</h2>
+    <h2>{{ isEdit ? t('community.profiles.edit-title') : t('community.profiles.new-title') }}</h2>
     <Toast />
 
     <div class="form-card">
       <div class="p-fluid">
 
         <div class="field-group">
-          <label for="fundoName" class="field-label">{{ t('profiles.fundoName') }}</label>
-          <InputText id="fundoName" v-model="profileData.fundo_name" class="full-width" />
+          <label for="nickname" class="field-label">{{ t('community.profiles.nickname') }}</label>
+          <InputText id="nickname" v-model="profileData.nickname" class="full-width" />
         </div>
-
 
         <div class="field-group">
-          <label for="contactPhone" class="field-label">{{ t('profiles.contactPhone') }}</label>
-          <InputText id="contactPhone" v-model="profileData.contact_phone" class="full-width" />
+          <label for="reputation" class="field-label">{{ t('community.profiles.reputationScore') }}</label>
+          <InputText id="reputation" v-model.number="profileData.reputation_score" type="number" class="full-width" />
         </div>
-
 
         <div class="field-group">
-          <label for="moisture" class="field-label">{{ t('profiles.moistureThreshold') }}</label>
-          <InputText id="moisture" v-model.number="profileData.moisture_threshold" type="number" step="0.1" class="full-width" />
+          <label for="bio" class="field-label">{{ t('community.profiles.publicBio') }}</label>
+          <Textarea id="bio" v-model="profileData.public_bio" rows="3" class="full-width" />
         </div>
 
-
-        <div class="field-group">
-          <label for="temp" class="field-label">{{ t('profiles.tempThreshold') }}</label>
-          <InputText id="temp" v-model.number="profileData.temp_threshold" type="number" step="0.1" class="full-width" />
+        <div class="field-group flex align-items-center gap-2 mt-3">
+          <Checkbox id="visibility" v-model="profileData.visibility_status" :binary="true" />
+          <label for="visibility" class="field-label mb-0">{{ t('community.profiles.visibility') }}</label>
         </div>
-
 
         <div class="button-container">
           <Button
-              :label="isEdit ? t('profiles.update-button') : t('profiles.create-button')"
+              :label="isEdit ? t('community.profiles.update-button') : t('community.profiles.create-button')"
               :icon="isEdit ? 'pi pi-save' : 'pi pi-plus'"
               @click="handleSave"
               class="save-button"
           />
           <Button
-              :label="t('profiles.cancel-button')"
+              :label="t('community.profiles.cancel-button')"
               icon="pi pi-times"
               @click="handleCancel"
               class="cancel-button"
               severity="danger"
           />
         </div>
+
       </div>
     </div>
   </div>
@@ -200,4 +197,3 @@ const handleCancel = () => {
   padding: 0.75rem 1.5rem;
 }
 </style>
-

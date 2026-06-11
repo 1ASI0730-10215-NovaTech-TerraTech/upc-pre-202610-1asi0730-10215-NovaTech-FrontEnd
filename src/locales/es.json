@@ -9,7 +9,8 @@
 		"monitoring": "Monitoreo",
 		"settings": "Perfil",
 		"analytics": "Analíticas",
-		"notifications": "Notificaciones"
+		"notifications": "Notificaciones",
+		"community": "Comunidad"
 	},
 	"stock": {
 		"title": "Gestión de Inventario",
@@ -134,5 +135,57 @@
 		"optimal": "Óptimo",
 		"warning": "Advertencia",
 		"critical": "Crítico"
+	},
+	"profiles": {
+		"title": "Perfiles Agrícolas",
+		"new": "Nuevo Perfil",
+		"new-title": "Crear Nuevo Perfil",
+		"edit-title": "Editar Perfil",
+		"id": "ID",
+		"fundoName": "Nombre del Fundo",
+		"contactPhone": "Teléfono de Contacto",
+		"moistureThreshold": "Umbral de Humedad (%)",
+		"tempThreshold": "Umbral de Temp (°C)",
+		"actions": "Acciones",
+		"create-button": "Crear Perfil",
+		"update-button": "Actualizar Perfil",
+		"cancel-button": "Cancelar",
+		"delete-header": "Confirmar Eliminación",
+		"confirm-delete": "¿Estás seguro de que deseas eliminar {name}?"
+	},
+	"community": {
+		"profiles": {
+			"title": "Perfiles de la Comunidad",
+			"new": "Nuevo Perfil",
+			"search": "Buscar por nickname...",
+			"nickname": "Apodo (Nickname)",
+			"reputationScore": "Reputación",
+			"publicBio": "Biografía Pública",
+			"visibility": "Visibilidad",
+			"actions": "Acciones",
+			"id": "ID",
+			"new-title": "Crear Nuevo Perfil",
+			"edit-title": "Editar Perfil",
+			"create-button": "Crear",
+			"update-button": "Actualizar",
+			"cancel-button": "Cancelar",
+			"confirm-delete": "¿Estás seguro de que deseas eliminar a {name}?",
+			"delete-header": "Confirmar Eliminación"
+		},
+		"mural": {
+			"back": "Volver",
+			"globalReputation": "Reputación Global",
+			"title": "Mural de Información",
+			"rateMember": "Calificar Miembro",
+			"writeComment": "Escribe un comentario...",
+			"publishReview": "Publicar reseña",
+			"noComments": "Aún no hay comentarios. ¡Sé el primero!",
+			"warning": "Advertencia",
+			"warningCommentRequired": "Debes escribir un comentario",
+			"success": "Éxito",
+			"successPublished": "Reseña publicada correctamente",
+			"error": "Error",
+			"errorPublishing": "No se pudo publicar la reseña"
+		}
 	}
 }
