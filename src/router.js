@@ -8,16 +8,13 @@ import { analyticsRoutes } from "./analytics/presentation/analytics-management-r
 import notificationRoutes from './notification-management/presentation/notification-management-routes.js'
 import profileRoutes from "./profile-management/presentation/profile-management-routes.js";
 import communityRoutes from './community-management/presentation/community-routes.js';
-import StockForm from "./stock/presentation/views/stock-form.vue";
-
-
-console.log('notificationRoutes:', notificationRoutes)
+import stockRoutes from "./stock/presentation/stock-routes.js";
 
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/home', name: 'home', component: HomeView },
-    { path: '/inventory', name: 'inventory', component: StockForm },
     ...iamRoutes,
+    { path: '/inventory', component: RouterView, children: stockRoutes },
     { path: '/monitoring', component: RouterView, children: monitoringRoutes },
     { path: '/commercial', component: RouterView, children: commercialRoutes },
     { path: '/analytics', component: RouterView, children: analyticsRoutes },
