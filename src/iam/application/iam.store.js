@@ -55,7 +55,7 @@ const useIamStore = defineStore('iam', () => {
             if (usersFound.length === 0) {
                 return new UserResponse({
                     success: false,
-                    message: "Email already exists."
+                    message: "Email doesn't exists."
                 });
             }
 
