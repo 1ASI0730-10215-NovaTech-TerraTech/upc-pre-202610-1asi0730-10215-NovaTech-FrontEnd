@@ -5,6 +5,6 @@ export const analyticsRoutes = [
         path: 'dashboard',
         name: 'dashboard-analytics',
         component: ReportList,
-        meta: { title: 'Dashboard de Analíticas' }
+        meta: { title: 'Analytics Dashboard' }
     }
 ];
