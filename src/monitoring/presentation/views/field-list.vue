@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useConfirm } from 'primevue';
 import { useMonitoringStore } from '../../application/monitoring.store.js';
-import { onMounted, toRefs } from 'vue';
+import { onMounted, toRefs, ref, computed } from 'vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -12,215 +12,349 @@ const store = useMonitoringStore();
 const { fields, errors, fieldsLoaded } = toRefs(store);
 const { fetchFields, deleteField } = store;
 
-onMounted(() => {
-  if (!fieldsLoaded.value) {
-    fetchFields();
-  }
+// Opciones dinámicas del filtro (valores originales del API)
+const soilTypeOptions = computed(() => {
+  const uniqueTypes = [...new Set(fields.value.map(f => f.soil_type))];
+  return [
+    { label: t('monitoring.all'), value: 'ALL' },
+    ...uniqueTypes.map(type => ({
+      label: type,
+      value: type
+    }))
+  ];
 });
 
-function navigateToCreate() {
-  router.push({ name: 'monitoring-field-new' });
-}
+const selectedSoilType = ref('ALL');
+const filteredFields = computed(() => {
+  if (selectedSoilType.value === 'ALL') return fields.value;
+  return fields.value.filter(f => f.soil_type === selectedSoilType.value);
+});
 
-function navigateToEdit(field) {
-  router.push({ name: 'monitoring-field-edit', params: { id: field.id } });
-}
+onMounted(() => {
+  if (!fieldsLoaded.value) fetchFields();
+});
 
-function confirmDelete(field) {
+const navigateToCreate = () => router.push({ name: 'monitoring-field-new' });
+const navigateToEdit = (field) => router.push({ name: 'monitoring-field-edit', params: { id: field.id } });
+const navigateToDevices = () => router.push({ name: 'monitoring-devices' });
+
+const confirmDelete = (field) => {
   confirm.require({
     message: t('monitoring.confirm-delete-field'),
     header: t('monitoring.delete-field-title'),
     icon: 'pi pi-exclamation-triangle',
-    accept: () => {
-      deleteField(field);
-    }
+    accept: () => deleteField(field),
   });
-}
-
-const columns = [
-  { field: 'id', header: t('monitoring.field-id'), sortable: true },
-  { field: 'name', header: t('monitoring.name'), sortable: true },
-  { field: 'size_m2', header: t('monitoring.size-m2'), sortable: true },
-  { field: 'soil_type', header: t('monitoring.soil-type'), sortable: true },
-  { field: 'location_lat_long', header: t('monitoring.location'), sortable: false }
-];
+};
 </script>
 
 <template>
-  <div class="field-list-container">
-    <!-- Header -->
-    <div class="list-header">
-      <h2 class="title">{{ t('monitoring.fields') }}</h2>
-      <pv-button
-        icon="pi pi-plus"
-        :label="t('monitoring.new-field')"
-        class="btn-primary"
-        @click="navigateToCreate"
-      />
+  <div class="field-list-page">
+    <!-- Encabezado de página -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">{{ t('monitoring.fields') }}</h1>
+        <p class="page-description">{{ t('monitoring.fields-subtitle') || 'Administra tus zonas de cultivo' }}</p>
+      </div>
+      <div class="header-buttons">
+        <pv-button
+            icon="pi pi-microchip"
+            :label="t('monitoring.manage-devices')"
+            class="btn-secondary"
+            @click="navigateToDevices"
+        />
+        <pv-button
+            icon="pi pi-plus"
+            :label="t('monitoring.new-field')"
+            class="btn-primary"
+            @click="navigateToCreate"
+        />
+      </div>
     </div>
 
-    <!-- Data Table -->
-    <pv-data-table
-      v-if="fieldsLoaded"
-      :value="fields"
-      :columns="columns"
-      responsive-layout="scroll"
-      paginator
-      :rows="10"
-      :rows-per-page-options="[5, 10, 20, 50]"
-      current-page-report-template="Showing {first} to {last} of {totalRecords} fields"
-      striped-rows
-      show-grid-lines
-      class="p-datatable-striped"
-    >
-      <pv-column
-        v-for="col of columns"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        :sortable="col.sortable"
-        :style="`width: ${col.field === 'location_lat_long' ? '20%' : '18%'}`"
-      />
+    <!-- Tarjeta principal -->
+    <div class="card">
+      <!-- Barra de filtros -->
+      <div class="filters-bar">
+        <div class="filter-group">
+          <label class="filter-label">{{ t('monitoring.filter-by-soil-type') }}</label>
+          <pv-select
+              v-model="selectedSoilType"
+              :options="soilTypeOptions"
+              option-label="label"
+              option-value="value"
+              class="filter-select"
+              :placeholder="t('monitoring.all')"
+          />
+        </div>
+      </div>
 
-      <!-- Actions Column -->
-      <pv-column
-        header="Actions"
-        header-style="width: 15%"
-        body-style="text-align: center"
-        class="actions-column"
+      <!-- Tabla de datos -->
+      <pv-data-table
+          :value="filteredFields"
+          responsive-layout="scroll"
+          paginator
+          :rows="10"
+          :rows-per-page-options="[5, 10, 20, 50]"
+          striped-rows
+          class="custom-table"
       >
-        <template #body="{ data }">
-          <pv-button
-            icon="pi pi-pencil"
-            class="btn-icon btn-edit"
-            :title="t('monitoring.edit')"
-            @click="navigateToEdit(data)"
-          />
-          <pv-button
-            icon="pi pi-trash"
-            class="btn-icon btn-delete"
-            :title="t('monitoring.delete')"
-            @click="confirmDelete(data)"
-          />
+        <pv-column field="id" :header="t('monitoring.field-id')" sortable></pv-column>
+        <pv-column field="name" :header="t('monitoring.name')" sortable></pv-column>
+        <pv-column field="size_m2" :header="t('monitoring.size-m2')" sortable>
+          <template #body="{ data }">{{ data.size_m2 }} m²</template>
+        </pv-column>
+        <pv-column field="soil_type" :header="t('monitoring.soil-type')" sortable>
+          <template #body="{ data }">
+            <span class="soil-badge">{{ data.soil_type }}</span>
+          </template>
+        </pv-column>
+        <pv-column field="location_lat_long" :header="t('monitoring.location')"></pv-column>
+        <pv-column header="Actions" :header-style="{ width: '100px' }" body-style="text-align: center">
+          <template #body="{ data }">
+            <div class="action-buttons">
+              <pv-button
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-text btn-edit"
+                  @click="navigateToEdit(data)"
+                  v-tooltip.top="t('monitoring.edit')"
+              />
+              <pv-button
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text btn-delete"
+                  @click="confirmDelete(data)"
+                  v-tooltip.top="t('monitoring.delete')"
+              />
+            </div>
+          </template>
+        </pv-column>
+        <template #empty>
+          <div class="empty-table">
+            <i class="pi pi-inbox"></i>
+            <p>{{ t('monitoring.no-fields') || 'No hay zonas de cultivo registradas' }}</p>
+          </div>
         </template>
-      </pv-column>
-    </pv-data-table>
+      </pv-data-table>
 
-    <!-- Loading State -->
-    <div v-else class="loading-state">
-      <p>{{ t('monitoring.loading') }}</p>
-    </div>
-
-    <!-- Error Messages -->
-    <div v-if="errors.length > 0" class="error-container">
-      <div v-for="(error, index) in errors" :key="index" class="error-message">
-        {{ error.message }}
+      <!-- Mensajes de error -->
+      <div v-if="errors.length" class="error-container">
+        <div v-for="(err, idx) in errors" :key="idx" class="error-message">
+          <i class="pi pi-exclamation-circle"></i> {{ err.message }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-:root {
-  --color-primary: #1A2B4C;
-  --color-success: #00BB31;
-  --color-danger: #FF4757;
-  --color-white: #FFFFFF;
-  --color-border: #E0E0E0;
-  --color-light: #F5F7FA;
+/* ===========================================
+   VARIABLES (coherentes con el formulario)
+   =========================================== */
+.field-list-page {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --secondary: #3b82f6;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --text-primary: #ffffff;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --radius: 1rem;
 }
 
-.field-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.field-list-page {
+  padding: 1.5rem;
+  background-color: var(--bg-page);
+  min-height: 100vh;
 }
 
-.list-header {
+/* Encabezado */
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.title {
-  margin: 0;
-  color: var(--color-primary);
-  font-size: 1.5rem;
+.page-title {
+  font-size: 1.875rem;
   font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.page-description {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 0.75rem;
 }
 
 .btn-primary {
-  background-color: var(--color-success);
+  background-color: var(--primary);
   border: none;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s;
 }
-
 .btn-primary:hover {
-  background-color: #00a027;
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
-.actions-column {
+.btn-secondary {
+  background-color: var(--secondary);
+  border: none;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-secondary:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* Tarjeta principal */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+/* Barra de filtros */
+.filters-bar {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-group {
+  display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
-.btn-icon {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
-  background-color: var(--color-white);
-  cursor: pointer;
-  transition: all 0.2s ease;
+.filter-label {
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
+.filter-select {
+  width: 200px;
+}
+
+/* Tabla personalizada */
+.custom-table :deep(.p-datatable-wrapper) {
+  border-radius: 0.75rem;
+}
+.custom-table :deep(th) {
+  background-color: #64748b;
+  color: #FFFFFF;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.custom-table :deep(td) {
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Badge para tipo de suelo */
+.soil-badge {
+  display: inline-block;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Botones de acción en la tabla */
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
 .btn-edit {
-  color: #1976d2;
+  color: var(--secondary);
+  transition: all 0.2s;
 }
-
 .btn-edit:hover {
-  background-color: rgba(25, 118, 210, 0.1);
-  border-color: #1976d2;
+  background-color: rgba(59, 130, 246, 0.1);
+  transform: scale(1.05);
 }
-
 .btn-delete {
-  color: var(--color-danger);
+  color: var(--danger);
+  transition: all 0.2s;
 }
-
 .btn-delete:hover {
-  background-color: rgba(255, 71, 87, 0.1);
-  border-color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.05);
 }
 
-.loading-state {
+/* Estado vacío */
+.empty-table {
   text-align: center;
-  padding: 2rem;
-  color: var(--color-primary);
-  opacity: 0.6;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+.empty-table i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
 }
 
+/* Mensajes de error */
 .error-container {
   margin-top: 1rem;
 }
-
 .error-message {
-  padding: 1rem;
-  background-color: #ffe0e0;
-  color: var(--color-danger);
-  border-radius: 4px;
-  border-left: 4px solid var(--color-danger);
+  background-color: #fee2e2;
+  color: var(--danger);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
   margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .list-header {
-    flex-direction: column;
-    gap: 1rem;
+  .field-list-page {
+    padding: 1rem;
   }
-
-  .title {
-    font-size: 1.25rem;
+  .card {
+    padding: 1rem;
+  }
+  .filter-group {
+    width: 100%;
+  }
+  .filter-select {
+    flex: 1;
+  }
+  .header-buttons {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .header-buttons .p-button {
+    flex: 1;
   }
 }
 </style>
-
