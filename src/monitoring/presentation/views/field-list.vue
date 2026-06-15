@@ -50,7 +50,6 @@ const confirmDelete = (field) => {
 
 <template>
   <div class="field-list-page">
-    <!-- Encabezado de página -->
     <div class="page-header">
       <div>
         <h1 class="page-title">{{ t('monitoring.fields') }}</h1>
@@ -72,9 +71,7 @@ const confirmDelete = (field) => {
       </div>
     </div>
 
-    <!-- Tarjeta principal -->
     <div class="card">
-      <!-- Barra de filtros -->
       <div class="filters-bar">
         <div class="filter-group">
           <label class="filter-label">{{ t('monitoring.filter-by-soil-type') }}</label>
@@ -89,7 +86,6 @@ const confirmDelete = (field) => {
         </div>
       </div>
 
-      <!-- Tabla de datos -->
       <pv-data-table
           :value="filteredFields"
           responsive-layout="scroll"
@@ -136,7 +132,6 @@ const confirmDelete = (field) => {
         </template>
       </pv-data-table>
 
-      <!-- Mensajes de error -->
       <div v-if="errors.length" class="error-container">
         <div v-for="(err, idx) in errors" :key="idx" class="error-message">
           <i class="pi pi-exclamation-circle"></i> {{ err.message }}
@@ -147,9 +142,6 @@ const confirmDelete = (field) => {
 </template>
 
 <style scoped>
-/* ===========================================
-   VARIABLES (coherentes con el formulario)
-   =========================================== */
 .field-list-page {
   --primary: #10b981;
   --primary-hover: #059669;
@@ -171,7 +163,6 @@ const confirmDelete = (field) => {
   min-height: 100vh;
 }
 
-/* Encabezado */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -223,7 +214,6 @@ const confirmDelete = (field) => {
   transform: translateY(-1px);
 }
 
-/* Tarjeta principal */
 .card {
   background-color: var(--bg-card);
   border-radius: var(--radius);
@@ -232,7 +222,6 @@ const confirmDelete = (field) => {
   padding: 1.5rem;
 }
 
-/* Barra de filtros */
 .filters-bar {
   display: flex;
   justify-content: flex-end;
@@ -256,7 +245,6 @@ const confirmDelete = (field) => {
   width: 200px;
 }
 
-/* Tabla personalizada */
 .custom-table :deep(.p-datatable-wrapper) {
   border-radius: 0.75rem;
 }
@@ -273,7 +261,6 @@ const confirmDelete = (field) => {
   border-bottom: 1px solid var(--border);
 }
 
-/* Badge para tipo de suelo */
 .soil-badge {
   display: inline-block;
   background-color: #e0f2fe;
@@ -284,7 +271,6 @@ const confirmDelete = (field) => {
   font-weight: 500;
 }
 
-/* Botones de acción en la tabla */
 .action-buttons {
   display: flex;
   gap: 0.25rem;
@@ -307,7 +293,6 @@ const confirmDelete = (field) => {
   transform: scale(1.05);
 }
 
-/* Estado vacío */
 .empty-table {
   text-align: center;
   padding: 3rem;
@@ -319,7 +304,6 @@ const confirmDelete = (field) => {
   display: inline-block;
 }
 
-/* Mensajes de error */
 .error-container {
   margin-top: 1rem;
 }
@@ -335,7 +319,6 @@ const confirmDelete = (field) => {
   gap: 0.5rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .field-list-page {
     padding: 1rem;
