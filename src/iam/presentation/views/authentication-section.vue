@@ -1,7 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import { useIamStore } from "../../application/iam.store.js";
+import useIamStore from "../../application/iam.store.js"; // Importación corregida por defecto
+import { SignInCommand } from "../../domain/sign-in.command.js";
+import { SignUpCommand } from "../../domain/sign-up.command.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -17,34 +19,55 @@ function clearFeedback() {
   isError.value = false;
 }
 
+// Adaptado para usar Command + Store de Arquitectura Limpia
 async function handleLogin({ email, password }) {
   clearFeedback();
-  const response = await iamStore.login(email, password);
 
-  if (response.success) {
-    console.log('success, redirecting to home');
-    router.push({ name: 'home' });
-  } else {
-    console.log(`error`);
-    feedbackMessage.value = response.message;
+  // 1. Instanciamos el comando de Dominio
+  const signInCommand = new SignInCommand({
+    emailAddress: email,
+    password: password
+  });
+
+  try {
+    // 2. Ejecutamos la acción del store. Las redirecciones a 'home' o 'login'
+    // en caso de fallo ya se manejan internamente dentro del store.
+    await iamStore.signIn(signInCommand, router);
+
+    // Si el store detecta errores tras la ejecución, actualizamos el banner local
+    if (iamStore.errors.length > 0) {
+      feedbackMessage.value = 'Sign-in failed. Please check your credentials.';
+      isError.value = true;
+    }
+  } catch (error) {
+    feedbackMessage.value = 'An unexpected error occurred during sign-in.';
     isError.value = true;
   }
 }
 
+// Adaptado para usar Command + Store de Arquitectura Limpia
 async function handleRegister({ email, password }) {
   clearFeedback();
-  const response = await iamStore.register(email, password);
 
-  if (response.success) {
-    feedbackMessage.value = `${response.message} Redirecting...`;
-    isError.value = false;
+  // 1. Instanciamos el comando de Dominio para el registro
+  const signUpCommand = new SignUpCommand({
+    emailAddress: email,
+    password: password
+  });
 
-    setTimeout(() => {
-      router.push({ name: 'login' });
-      clearFeedback();
-    }, 2000);
-  } else {
-    feedbackMessage.value = response.message;
+  try {
+    // 2. Ejecutamos la acción del store. Las redirecciones se manejan dentro de él.
+    await iamStore.signUp(signUpCommand, router);
+
+    if (iamStore.errors.length > 0) {
+      feedbackMessage.value = 'Sign-up failed. The user might already exist.';
+      isError.value = true;
+    } else {
+      feedbackMessage.value = 'Registration successful! Redirecting...';
+      isError.value = false;
+    }
+  } catch (error) {
+    feedbackMessage.value = 'An unexpected error occurred during registration.';
     isError.value = true;
   }
 }
@@ -80,6 +103,7 @@ async function handleRegister({ email, password }) {
 </template>
 
 <style scoped>
+/* TODO TU CSS ORIGINAL SE MANTIENE 100% IGUAL, SIN ALTERACIONES */
 .auth-layout {
   display: flex;
   min-height: 100vh;

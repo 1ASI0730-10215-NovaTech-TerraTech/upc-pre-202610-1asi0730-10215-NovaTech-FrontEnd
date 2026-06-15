@@ -1,41 +1,30 @@
-import {User} from "../domain/model/user.entity.js";
-import {UserResource} from "./user.response.js";
+import {User} from "../domain/user.entity.js";
 
 /**
- * User assembler transforms the data to transfer to other layers.
- * @class
+ * Maps IAM infrastructure resources into domain entities.
+ *
+ * @class UserAssembler
  */
 export class UserAssembler {
     /**
-     * Transform resource to entity.
-     * Useful to register or update credentials of User.
-     * @param {Object} resource - The resource to be transformed.
-     * @returns {User|null} An instance of user entity.
+     * @param {Object} resource - User resource payload.
+     * @returns {User} User entity.
      */
     static toEntityFromResource(resource) {
-        if (!resource) {
-            return null;
-        }
-        return new User({
-            id: resource.id,
-            email: resource.email,
-            password: resource.password
-        });
+        return new User({...resource});
     }
 
     /**
-     * Transform user to resource.
-     * This is to prevent the leakage of sensitive data.
-     * @param {Object} user - The entity to be transformed.
-     * @returns {UserResource|null} And instance of user resource.
+     * @param {import('axios').AxiosResponse<Array<Object>|Object>} response - HTTP response containing user resources.
+     * @returns {User[]} Collection of user entities.
      */
-    static toResourceFromEntity(user) {
-        if (!user) {
-            return null;
+    static toEntitiesFromResponse(response) {
+        if (response.status !== 200) {
+            console.error(`${response.status}, ${response.statusText}`);
+            return [];
         }
-        return new UserResource({
-            id: user.id,
-            email: user.email,
-        });
+        let resources = response.data instanceof Array ? response.data : response.data['users'];
+
+        return resources.map(resource => this.toEntityFromResource(resource));
     }
 }

@@ -1,45 +1,60 @@
 import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 import {BaseApi} from "../../shared/infrastructure/base-api.js";
-const userPath = import.meta.env.VITE_USERS_ENDPOINT_PATH;
+const signInEndpointPath = import.meta.env.VITE_SIGNIN_ENDPOINT_PATH;
+const signUpEndpointPath = import.meta.env.VITE_SIGNUP_ENDPOINT_PATH;
+const usersEndpointPath   = import.meta.env.VITE_USERS_ENDPOINT_PATH;
 
 /**
- * API client for the IAM module.
- * This class provides methods to perform operations on users through a REST api.
- * Extends BaseApi and uses BaseEndpoint to handle routes generically.
+ * Infrastructure gateway for IAM bounded-context endpoints.
  *
  * @class IamApi
  * @extends BaseApi
- *
- * @property {BaseEndpoint} #userPath
- * Private endpoint for user operations.
  */
 export class IamApi extends BaseApi {
-    #userPath;
+    #signInEndpoint;
+    #signUpEndpoint;
+    #usersEndpoint;
 
-    /**
-     * Create a new instance of IamApi.
-     * Initializes the endpoint for users using the route configured in the environment variables.
-     */
+    /** Creates endpoint clients for sign-in, sign-up, and user listing. */
     constructor() {
         super();
-        this.#userPath = new BaseEndpoint(this, userPath);
+        this.#signInEndpoint = new BaseEndpoint(this, signInEndpointPath);
+        this.#signUpEndpoint = new BaseEndpoint(this, signUpEndpointPath);
+        this.#usersEndpoint = new BaseEndpoint(this, usersEndpointPath);
     }
 
     /**
-     * Search user by email in database.
-     * @param {string} email - Email linked to user.
-     * @returns {Promise<axios.AxiosResponse<any>>} - HTTP response with user's email linked to their contact list.
+     * Sends a sign-in command to the authentication endpoint.
+     * @param {import('../domain/sign-in.command.js').SignInCommand} signInRequest - Sign-in command.
+     * @returns {Promise<import('axios').AxiosResponse<Object>>} HTTP response with authentication payload.
      */
-    findByEmail(email) {
-        return this.http.get(`${userPath}?email=${email}`);
+    signIn(signInRequest) {
+        return this.#signInEndpoint.create(signInRequest);
     }
 
     /**
-     * Register new users in database.
-     * @param userPayload - User data to registered.
-     * @returns {userPayload} - HTTP response with user registered.
+     * Sends a sign-up command to the registration endpoint.
+     * @param {import('../domain/sign-up.command.js').SignUpCommand} signUpRequest - Sign-up command.
+     * @returns {Promise<import('axios').AxiosResponse<Object>>} HTTP response with registration payload.
      */
-    create(userPayload) {
-        return this.#userPath.create(userPayload);
+    signUp(signUpRequest) {
+        return this.#signUpEndpoint.create(signUpRequest);
+    }
+
+    /**
+     * Retrieves users visible to the IAM context.
+     * @returns {Promise<import('axios').AxiosResponse<Array<Object>|Object>>} HTTP response with user resources.
+     */
+    getUsers() {
+        return this.#usersEndpoint.getAll();
+    }
+
+    /**
+     * Retrieves user by email
+     * @param emailAddress users email address.
+     * @returns {Promise<import('axios').AxiosResponse<Array<Object>|Object>>} HTTP response with user resources.
+     */
+    findByEmail(emailAddress) {
+        return this.#usersEndpoint.getByEmail(emailAddress);
     }
 }
