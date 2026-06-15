@@ -1,152 +1,142 @@
 import {IamApi} from "../infrastructure/iam-api.js";
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {UserResponse} from "../infrastructure/user.response.js";
+import {SignInAssembler} from "../infrastructure/sign-in.assembler.js";
 import {UserAssembler} from "../infrastructure/user.assembler.js";
+import {SignUpAssembler} from "../infrastructure/sign-up.assembler.js";
+import {SignInCommand} from "../domain/sign-in.command.js";
+import {SignUpCommand} from "../domain/sign-up.command.js";
 
 const iamApi = new IamApi();
 
 /**
- * IAM Store - Centralized state management for Identity and Access Management.
+ * Application service store for the IAM bounded context.
+ * It coordinates authentication commands and exposes UI-facing identity state.
  *
- * This Pinia store manages the authentication state, session tracking,
- * and user registration/login workflows for the TerraTech platform.
- *
- * @type {Object} Store instance with state and actions.
+ * @module useIamStore
+ * @returns {Object} Store state and actions.
  */
 const useIamStore = defineStore('iam', () => {
-    /**
-     * The currently authenticated user resource. Null if guest.
-     */
-    const currentUser = ref(null);
-
-    /**
-     * Array of error objects encountered during IAM operations.
-     */
+    /** @type {import('vue').Ref<Array<import('../domain/user.entity.js').User>>} Array of user entities. */
+    const users = ref([]);
+    /** @type {import('vue').Ref<Array<Error>>} Errors raised by IAM use-case execution. */
     const errors = ref([]);
+    /** @type {import('vue').Ref<boolean>} Flag indicating if users have been loaded. */
+    const usersLoaded = ref(false);
+    /** @type {import('vue').Ref<boolean>} Flag indicating if a user is signed in. */
+    const isSignedIn = ref(false);
+    /** @type {import('vue').Ref<string|null>} Current signed-in username. */
+    const currentUsername = ref(null);
+    /** @type {import('vue').Ref<number>} Current signed-in user identifier. */
+    const currentUserId = ref(0);
+    /** @type {import('vue').ComputedRef<string|null>} Authentication token in local storage. */
+    const currentToken = computed(() => isSignedIn.value ? localStorage.getItem('token') : null);
 
     /**
-     * Computed property that return whether a user is currently logged in.
+     * Executes the sign-in use case and updates authentication state.
+     * @param {SignInCommand} signInCommand - Sign-in command.
+     * @param {import('vue-router').Router} router - Router used to redirect on result.
+     * @returns {void}
      */
-    const isAuthenticated = computed(() => {
-        return currentUser.value !== null;
-    });
+    function signIn(signInCommand, router) {
+        // Implementation for sign-in action
+        console.log(signInCommand);
+        iamApi.signIn(signInCommand)
+            .then(response => {
+                let signInResource = SignInAssembler.toResourceFromResponse(response);
+                if (signInResource) {
+                    let currentUser = UserAssembler.toEntityFromResource(signInResource);
+                    currentUsername.value = currentUser.emailAddress;
+                    currentUserId.value = currentUser.id;
+                    localStorage.setItem('token', signInResource.token);
+                    isSignedIn.value = true;
+                    console.log(`User signed in: ${currentUsername.value}`);
+                    errors.value = [];
+                    router.push({name: 'home'});
+                } else {
+                    isSignedIn.value = false;
+                    console.log('Sign-in failed');
+                    errors.value.push(new Error('Sign-in failed'));
+                    router.push({name: 'login'});
+                }
 
-    /**
-     * Internal helper to generate sequential ID for new users.
-     * TODO: delete this function when backend is implemented.
-     * @returns {string} Generate ID with format: user_Number.
-     * @private
-     */
-    function __generateId(){
-        return `usr_${Math.floor(1000 + Math.random() * 9000)}`;
-    }
-
-    /**
-     * Authenticates a user by checking credentials against the database.
-     * @param {string} email - User email address.
-     * @param {string} password - User password.
-     * @returns {Promise<UserResponse>} Custom response object with execution details.
-     */
-    function login(email, password) {
-        return iamApi.findByEmail(email).then(result => {
-            const usersFound = result.data;
-
-            if (usersFound.length === 0) {
-                return new UserResponse({
-                    success: false,
-                    message: "Email doesn't exists."
-                });
-            }
-
-            const dbUser = usersFound[0];
-
-            if (dbUser.password !== password) {
-                return new UserResponse({
-                    success: false,
-                    message: "Passwords do not match."
-                });
-            }
-
-            currentUser.value = UserAssembler.toResourceFromEntity(dbUser);
-
-            return new UserResponse({
-                success: true,
-                message: "Successfully logged in.",
-                resourceData: dbUser
-            });
-        }).catch(error => {
-            error.value.push(error);
-            return new UserResponse({
-                success: false,
-                message: "Failed to log in."
-            });
-        });
-    }
-
-    /**
-     * Registers a new user if the email is available.
-     * @param {string} email - New user email address.
-     * @param {string} password - New user password
-     * @returns {Promise<UserResponse>|Promise<Awaited<UserResponse>>} Custom response object with execution details.
-     */
-    function register(email, password) {
-        if (!email.includes("@") || password.length < 6) {
-            return Promise.resolve(new UserResponse({
-                success: false,
-                message: "Invalid Format. Email or password are invalid."
-            }))
-        }
-
-        return iamApi.findByEmail(email).then(result => {
-            const usersFound = result.data;
-
-            if (usersFound.length > 0){
-                return new UserResponse({
-                    success: false,
-                    message: "Email already exists."
-                });
-            }
-
-            const newUserPayload = {
-                id: __generateId(),
-                email: email,
-                password: password
-            };
-
-            return iamApi.create(newUserPayload).then(createResponse => {
-                const registeredUser = createResponse.data;
-
-                return new UserResponse({
-                    success: true,
-                    message: "Successfully registered.",
-                    resourceData: registeredUser
-                });
             })
-        }).catch(error => {
-            error.value.push(error);
-            return new UserResponse({
-                success: false,
-                message: "Failed to register.",
+            .catch(error => {
+                isSignedIn.value = false;
+                currentUsername.value = error.name;
+                console.log(error);
+                errors.value.push(error);
+                router.push({name: 'login'});
             });
-        });
     }
 
     /**
-     * Clears the authentication state, logging out current user.
+     * Executes the sign-up use case and routes the user to the next screen.
+     * @param {SignUpCommand} signUpCommand - Sign-up command.
+     * @param {import('vue-router').Router} router - Router used to redirect on result.
+     * @returns {void}
      */
-    function logout() {
-        currentUser.value = null;
+    function signUp(signUpCommand, router) {
+        // Implementation for sign-up action
+        iamApi.signUp(signUpCommand)
+            .then(response => {
+                let signUpResource = SignUpAssembler.toResourceFromResponse(response);
+                if (signUpResource) {
+                    console.log(signUpResource.message);
+                    errors.value = [];
+                    router.push({name: 'login'});
+                } else {
+                    console.log('Sign-up failed');
+                    errors.value.push(new Error('Sign-up failed'));
+                    router.push({name: 'register'});
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                errors.value.push(error);
+                router.push({name: 'register'});
+            });
+    }
+
+    /** Clears the active IAM session and local auth artifacts. */
+    function signOut() {
+        currentUsername.value = null;
+        currentUserId.value = 0;
+        localStorage.removeItem('token');
+        isSignedIn.value = false;
+        console.log('User signed out');
+        errors.value = [];
+    }
+
+    /**
+     * Loads user entities from infrastructure.
+     * @returns {void}
+     */
+    function fetchUsers() {
+        iamApi.getUsers().then(response => {
+            users.value = UserAssembler.toEntitiesFromResponse(response);
+            usersLoaded.value = true;
+            console.log(`Loaded ${users.value.length} users.`);
+            errors.value = [];
+        }).catch(error => {
+            console.error('Error fetching users:', error);
+            errors.value.push(error);
+        });
     }
 
     return {
-        currentUser,
+        users,
         errors,
-        isAuthenticated,
-        login,
-        register,
-        logout
+        usersLoaded,
+        currentUsername,
+        currentUserId,
+        currentToken,
+        isSignedIn,
+        signIn,
+        signUp,
+        signOut,
+        fetchUsers
     };
 });
 
-export { useIamStore };
+export default useIamStore;
