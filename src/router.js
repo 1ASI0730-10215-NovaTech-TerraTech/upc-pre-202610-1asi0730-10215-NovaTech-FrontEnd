@@ -19,7 +19,7 @@ const routes = [
     { path: '/', component: Layout, children: [
             { path: '', redirect: 'home'},
             { path: '/home', name: 'home', component: HomeView },
-            { path: '/inventory', component: RouterView, children: stockRoutes },
+            { path: '/stock', component: RouterView, children: stockRoutes },
             { path: '/monitoring', component: RouterView, children: monitoringRoutes },
             { path: '/commercial', component: RouterView, children: commercialRoutes },
             { path: '/analytics', component: RouterView, children: analyticsRoutes },
