@@ -22,8 +22,10 @@ async function handleLogin({ email, password }) {
   const response = await iamStore.login(email, password);
 
   if (response.success) {
+    console.log('success, redirecting to home');
     router.push({ name: 'home' });
   } else {
+    console.log(`error`);
     feedbackMessage.value = response.message;
     isError.value = true;
   }

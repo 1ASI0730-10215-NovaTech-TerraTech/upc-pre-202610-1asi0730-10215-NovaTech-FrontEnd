@@ -9,18 +9,25 @@ import notificationRoutes from './notification-management/presentation/notificat
 import profileRoutes from "./profile-management/presentation/profile-management-routes.js";
 import communityRoutes from './community-management/presentation/community-routes.js';
 import stockRoutes from "./stock/presentation/stock-routes.js";
+import Layout from "./shared/presentation/components/layout.vue";
+import AuthenticationSection from "./iam/presentation/views/authentication-section.vue";
 
 const routes = [
-    { path: '/', redirect: '/home' },
-    { path: '/home', name: 'home', component: HomeView },
-    ...iamRoutes,
-    { path: '/inventory', component: RouterView, children: stockRoutes },
-    { path: '/monitoring', component: RouterView, children: monitoringRoutes },
-    { path: '/commercial', component: RouterView, children: commercialRoutes },
-    { path: '/analytics', component: RouterView, children: analyticsRoutes },
-    { path: '/notifications', component: RouterView, children: notificationRoutes },
-    { path: '/settings', component: RouterView, children: profileRoutes },
-    { path: '/community', component: RouterView, children: communityRoutes },
+    { path: '/', redirect: '/auth/login'},
+    { path: '/auth', component: AuthenticationSection, children: iamRoutes},
+
+    { path: '/', component: Layout, children: [
+            { path: '', redirect: 'home'},
+            { path: '/home', name: 'home', component: HomeView },
+            { path: '/inventory', component: RouterView, children: stockRoutes },
+            { path: '/monitoring', component: RouterView, children: monitoringRoutes },
+            { path: '/commercial', component: RouterView, children: commercialRoutes },
+            { path: '/analytics', component: RouterView, children: analyticsRoutes },
+            { path: '/notifications', component: RouterView, children: notificationRoutes },
+            { path: '/settings', component: RouterView, children: profileRoutes },
+            { path: '/community', component: RouterView, children: communityRoutes },
+        ]
+    },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: PageNotFoundView }
 ]
 
