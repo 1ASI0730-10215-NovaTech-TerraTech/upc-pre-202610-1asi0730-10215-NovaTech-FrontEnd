@@ -21,6 +21,8 @@ export class Field {
      */
     id;
 
+    profile_id;
+
     /**
      * Descriptive name of the field.
      * @type {string}
@@ -58,8 +60,9 @@ export class Field {
      * @param {string} [params.soil_type=''] - Soil type
      * @param {string} [params.location_lat_long=''] - Geographic location
      */
-    constructor({ id = null, name = '', size_m2 = '', soil_type = '', location_lat_long = ''  }) {
+    constructor({ id = null, profile_id = '', name = '', size_m2 = '', soil_type = '', location_lat_long = ''  }) {
         this.id = id;
+        this.profile_id = profile_id;
         this.name = name;
         this.size_m2 = size_m2;
         this.soil_type = soil_type;

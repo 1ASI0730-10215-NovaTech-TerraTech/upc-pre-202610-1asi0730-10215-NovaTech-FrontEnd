@@ -18,8 +18,8 @@ const toggleDrawer = () => {
 
 const items = [
   { label: "nav.home", to: "/home", icon: "📊" },
-  { label: "nav.inventory", to: "/inventory", icon: "📦" },
-  { label: "nav.monitoring", to: "/monitoring/devices", icon: "🌾" },
+  { label: "nav.inventory", to: "/stock/inventory", icon: "📦" },
+  { label: "nav.monitoring", to: "/monitoring/fields", icon: "🌾" },
   { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
   { label: "nav.analytics", to: "/analytics/dashboard", icon: "🛍" },
   { label: "nav.settings", to: "/settings", icon: "👤" },
