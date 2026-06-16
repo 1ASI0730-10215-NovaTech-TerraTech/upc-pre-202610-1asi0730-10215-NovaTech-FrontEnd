@@ -95,18 +95,18 @@ const confirmDelete = (field) => {
           striped-rows
           class="custom-table"
       >
-        <pv-column field="id" :header="t('monitoring.field-id')" sortable></pv-column>
-        <pv-column field="name" :header="t('monitoring.name')" sortable></pv-column>
-        <pv-column field="size_m2" :header="t('monitoring.size-m2')" sortable>
+        <pv-column field="id" :header="t('monitoring.field-id')" sortable style="width: 15%"></pv-column>
+        <pv-column field="name" :header="t('monitoring.name')" sortable style="width: 25%"></pv-column>
+        <pv-column field="size_m2" :header="t('monitoring.size-m2')" sortable style="width: 15%">
           <template #body="{ data }">{{ data.size_m2 }} m²</template>
         </pv-column>
-        <pv-column field="soil_type" :header="t('monitoring.soil-type')" sortable>
+        <pv-column field="soil_type" :header="t('monitoring.soil-type')" sortable style="width: 15%">
           <template #body="{ data }">
             <span class="soil-badge">{{ data.soil_type }}</span>
           </template>
         </pv-column>
-        <pv-column field="location_lat_long" :header="t('monitoring.location')"></pv-column>
-        <pv-column header="Actions" :header-style="{ width: '100px' }" body-style="text-align: center">
+        <pv-column field="location_lat_long" :header="t('monitoring.location')" style="width: 20%"></pv-column>
+        <pv-column header="Actions" :header-style="{ width: '80px' }" style="width: 10%">
           <template #body="{ data }">
             <div class="action-buttons">
               <pv-button
@@ -148,16 +148,14 @@ const confirmDelete = (field) => {
   --secondary: #3b82f6;
   --danger: #ef4444;
   --danger-hover: #dc2626;
-  --text-primary: #ffffff;
+  --text-primary: #1A2B4C;
   --text-secondary: #64748b;
   --border: #e2e8f0;
   --bg-page: #f8fafc;
   --bg-card: #ffffff;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --radius: 1rem;
-}
 
-.field-list-page {
   padding: 1.5rem;
   background-color: var(--bg-page);
   min-height: 100vh;
@@ -175,7 +173,7 @@ const confirmDelete = (field) => {
 .page-title {
   font-size: 1.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #1A2B4C;
   margin: 0 0 0.25rem 0;
 }
 
@@ -190,28 +188,56 @@ const confirmDelete = (field) => {
   gap: 0.75rem;
 }
 
-.btn-primary {
-  background-color: var(--primary);
-  border: none;
+/* Estilos para botones - SIN NINGÚN EFECTO QUE CAMBIE TAMAÑO O POSICIÓN */
+.btn-primary,
+.btn-secondary {
   padding: 0.5rem 1.25rem;
   font-weight: 500;
-  transition: all 0.2s;
+  border: none;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease;
+}
+
+/* Anular cualquier transformación, shadow, borde o margin de PrimeVue */
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-primary:active,
+.btn-secondary:active,
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  transform: none !important;
+  scale: none !important;
+  translate: none !important;
+  margin: 0 !important;
+  padding: 0.5rem 1.25rem !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+.btn-primary {
+  background-color: var(--primary);
 }
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-1px);
 }
 
 .btn-secondary {
   background-color: var(--secondary);
-  border: none;
-  padding: 0.5rem 1.25rem;
-  font-weight: 500;
-  transition: all 0.2s;
 }
 .btn-secondary:hover {
   background-color: #2563eb;
-  transform: translateY(-1px);
+}
+
+/* Ocultar el efecto ripple completamente */
+.btn-primary :deep(.p-ink),
+.btn-secondary :deep(.p-ink) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .card {
@@ -247,18 +273,46 @@ const confirmDelete = (field) => {
 
 .custom-table :deep(.p-datatable-wrapper) {
   border-radius: 0.75rem;
+  overflow-x: auto;
 }
+
+.custom-table :deep(table) {
+  min-width: 800px;
+}
+
 .custom-table :deep(th) {
-  background-color: #64748b;
+  background-color: #1A2B4C;
   color: #FFFFFF;
   font-weight: 600;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
 }
+
 .custom-table :deep(td) {
   padding: 0.75rem 1rem;
-  color: var(--text-primary);
+  color: #1A2B4C;
+  background-color: #FFFFFF;
   border-bottom: 1px solid var(--border);
+}
+
+.custom-table :deep(th),
+.custom-table :deep(td) {
+  white-space: nowrap;
+}
+
+.custom-table :deep(td:first-child),
+.custom-table :deep(td:nth-child(2)) {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Filas alternadas con colores claros */
+.custom-table :deep(.p-row-even td) {
+  background-color: #FFFFFF;
+}
+
+.custom-table :deep(.p-row-odd td) {
+  background-color: #F8FAFC;
 }
 
 .soil-badge {
@@ -278,19 +332,17 @@ const confirmDelete = (field) => {
 }
 .btn-edit {
   color: var(--secondary);
-  transition: all 0.2s;
+  transition: background-color 0.2s ease;
 }
 .btn-edit:hover {
   background-color: rgba(59, 130, 246, 0.1);
-  transform: scale(1.05);
 }
 .btn-delete {
   color: var(--danger);
-  transition: all 0.2s;
+  transition: background-color 0.2s ease;
 }
 .btn-delete:hover {
   background-color: rgba(239, 68, 68, 0.1);
-  transform: scale(1.05);
 }
 
 .empty-table {

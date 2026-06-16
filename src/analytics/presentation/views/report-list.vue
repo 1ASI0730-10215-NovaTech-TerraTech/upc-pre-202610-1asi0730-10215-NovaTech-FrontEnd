@@ -12,7 +12,9 @@
 
     <template v-else>
       <div class="alert-banner-critical">
-        <div class="alert-icon">⚠️</div>
+        <div class="alert-icon">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
         <div class="alert-content">
           <strong>{{ $t('analytics.sys-alert-title') }}</strong> {{ $t('analytics.sys-alert-desc') }}
         </div>
@@ -22,7 +24,7 @@
         <!-- Fertility Map Card -->
         <div class="visual-card">
           <div class="card-header">
-            <span class="icon-box">🗺️</span>
+            <span class="icon-box"><i class="pi pi-map"></i></span>
             <h3>{{ $t('analytics.fertility-map') }}</h3>
           </div>
           <div class="card-body">
@@ -44,7 +46,7 @@
         <!-- Dashboard Metrics Card -->
         <div class="visual-card">
           <div class="card-header">
-            <span class="icon-box">📊</span>
+            <span class="icon-box"><i class="pi pi-chart-line"></i></span>
             <h3>{{ $t('analytics.dashboard-metrics') }}</h3>
           </div>
           <div class="card-body chart-body">
@@ -60,13 +62,13 @@
       </div>
 
       <div class="reports-section">
-        <h3>📋 {{ $t('analytics.records-title') }}</h3>
+        <h3><i class="pi pi-clipboard"></i> {{ $t('analytics.records-title') }}</h3>
 
         <div class="metrics-grid">
           <div v-for="rep in store.reportsList" :key="rep.id" class="card-metric">
             <div class="card-header-metric">
-              <span class="device-tag">🔆 {{ rep.device_id }}</span>
-              <span class="date-tag">{{ rep.generated_at }}</span>
+              <span class="device-tag"><i class="pi pi-microchip"></i> {{ rep.device_id }}</span>
+              <span class="date-tag"><i class="pi pi-calendar"></i> {{ rep.generated_at }}</span>
             </div>
             <div class="card-body">
               <h4 class="report-title">{{ $t('analytics.control-metrics') }}</h4>
@@ -88,7 +90,7 @@
 
       <div class="bottom-controls">
         <div class="recommendations-box">
-          <h4>💡 {{ $t('analytics.recommendations') }}</h4>
+          <h4><i class="pi pi-lightbulb"></i> {{ $t('analytics.recommendations') }}</h4>
           <p>{{ $t('analytics.recommendations-desc') }}</p>
         </div>
 
@@ -194,6 +196,10 @@ const triggerExportReport = () => {
   font-size: 20px;
 }
 
+.alert-icon i {
+  font-size: 1.25rem;
+}
+
 .visual-dashboard-grid {
   display: flex;
   flex-wrap: wrap;
@@ -216,11 +222,17 @@ const triggerExportReport = () => {
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .card-header h3 {
   margin: 0;
   font-size: 14px;
+  color: #2e7d32;
+}
+
+.icon-box i {
+  font-size: 1.25rem;
   color: #2e7d32;
 }
 
@@ -346,6 +358,9 @@ const triggerExportReport = () => {
 .reports-section h3 {
   color: #2e7d32;
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .metrics-grid {
@@ -376,6 +391,10 @@ const triggerExportReport = () => {
   font-size: 12px;
   font-weight: bold;
   color: #33691e;
+}
+
+.card-header-metric i {
+  margin-right: 4px;
 }
 
 .report-title {
@@ -437,6 +456,9 @@ const triggerExportReport = () => {
 .recommendations-box h4 {
   margin: 0 0 8px 0;
   color: #2e7d32;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .recommendations-box p {
