@@ -82,16 +82,16 @@ onMounted(() => {
     <!-- Formulario para agregar producto -->
     <div class="stock-form">
       <div class="form-title">
-        <span class="title-icon">➕</span>
+        <i class="pi pi-plus title-icon"></i>
         <h3>{{ t('stock.add_title') }}</h3>
       </div>
 
       <div v-if="success" class="alert-success">
-        ✓ {{ t('stock.success') }}
+        <i class="pi pi-check-circle"></i> {{ t('stock.success') }}
       </div>
 
       <div v-if="error" class="alert-error">
-        ⚠️ {{ error }}
+        <i class="pi pi-exclamation-triangle"></i> {{ error }}
       </div>
 
       <form @submit.prevent="submitProduct">
@@ -127,6 +127,7 @@ onMounted(() => {
 
           <div class="form-field form-action">
             <button type="submit" :disabled="stockStore.loading">
+              <i class="pi pi-save"></i>
               {{ stockStore.loading ? t('stock.adding') : t('stock.add_button') }}
             </button>
           </div>
@@ -137,17 +138,17 @@ onMounted(() => {
     <!-- Lista de productos -->
     <div class="product-list">
       <div class="list-header">
-        <span class="header-icon">📦</span>
+        <i class="pi pi-box header-icon"></i>
         <h3>{{ t('stock.product_list') }}</h3>
         <span class="badge">{{ stockStore.inventory.length }}</span>
       </div>
 
       <div v-if="stockStore.loading" class="loading">
-        {{ t('stock.loading') }}
+        <i class="pi pi-spin pi-spinner"></i> {{ t('stock.loading') }}
       </div>
 
       <div v-else-if="stockStore.inventory.length === 0" class="empty">
-        {{ t('stock.empty') }}
+        <i class="pi pi-inbox"></i> {{ t('stock.empty') }}
       </div>
 
       <div v-else class="table-wrapper">
@@ -170,7 +171,7 @@ onMounted(() => {
             <td class="warehouse">{{ item.warehouse_location || '---' }}</td>
             <td class="actions">
               <button class="btn-discount" @click="openDiscountModal(item)">
-                {{ t('stock.discount') }}
+                <i class="pi pi-minus-circle"></i> {{ t('stock.discount') }}
               </button>
             </td>
           </tr>
@@ -182,9 +183,14 @@ onMounted(() => {
     <!-- Modal para descontar producto -->
     <div v-if="showDiscountModal" class="modal">
       <div class="modal-content">
-        <h3>{{ t('stock.discount_title') }}</h3>
+        <div class="modal-header">
+          <i class="pi pi-exclamation-triangle modal-icon"></i>
+          <h3>{{ t('stock.discount_title') }}</h3>
+        </div>
         <p class="product-id">{{ selectedProduct?.product_id }}</p>
-        <p class="current-stock">{{ t('stock.current_stock') }}: {{ selectedProduct?.stock_quantity }}</p>
+        <p class="current-stock">
+          <i class="pi pi-box"></i> {{ t('stock.current_stock') }}: {{ selectedProduct?.stock_quantity }}
+        </p>
         <input
             v-model.number="discountQuantity"
             type="number"
@@ -193,10 +199,10 @@ onMounted(() => {
         />
         <div class="modal-actions">
           <button class="btn-submit" @click="submitDiscount" :disabled="stockStore.loading">
-            {{ t('stock.discount') }}
+            <i class="pi pi-check"></i> {{ t('stock.discount') }}
           </button>
           <button class="btn-cancel" @click="closeDiscountModal">
-            {{ t('stock.cancel') }}
+            <i class="pi pi-times"></i> {{ t('stock.cancel') }}
           </button>
         </div>
       </div>
@@ -240,6 +246,7 @@ onMounted(() => {
 
 .title-icon {
   font-size: 1.125rem;
+  color: #10b981;
 }
 
 .form-title h3 {
@@ -254,6 +261,9 @@ onMounted(() => {
   border-radius: 8px;
   font-size: 0.75rem;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .alert-success {
@@ -326,6 +336,9 @@ onMounted(() => {
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .form-action button:hover {
@@ -355,6 +368,7 @@ onMounted(() => {
 
 .header-icon {
   font-size: 1rem;
+  color: #10b981;
 }
 
 .list-header h3 {
@@ -379,6 +393,10 @@ onMounted(() => {
   padding: 2rem;
   color: #64748b;
   font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .table-wrapper {
@@ -452,6 +470,9 @@ onMounted(() => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .btn-discount:hover {
@@ -479,8 +500,20 @@ onMounted(() => {
   min-width: 320px;
 }
 
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-icon {
+  color: #ef4444;
+  font-size: 1.25rem;
+}
+
 .modal-content h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   font-size: 1.125rem;
   color: #1e293b;
 }
@@ -489,6 +522,9 @@ onMounted(() => {
   font-size: 0.875rem;
   color: #64748b;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .modal-content input {
@@ -522,6 +558,10 @@ onMounted(() => {
   border-radius: 8px;
   font-size: 0.875rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .btn-submit:hover {
@@ -537,6 +577,10 @@ onMounted(() => {
   border-radius: 8px;
   font-size: 0.875rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .btn-cancel:hover {

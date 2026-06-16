@@ -10,22 +10,18 @@ const { t }  = useI18n()
 
 const drawer = ref(false);
 const toggleDrawer = () => {
-  /**
-   * Toggles the state of the drawer between open and closed.
-   */
   drawer.value = !drawer.value;
 }
 
 const items = [
-  { label: "nav.home", to: "/home", icon: "📊" },
-  { label: "nav.inventory", to: "/stock/inventory", icon: "📦" },
-  { label: "nav.monitoring", to: "/monitoring/fields", icon: "🌾" },
-  { label: "commercial.catalog-title", to: "/commercial/catalog", icon: "🛍️" },
-  { label: "nav.analytics", to: "/analytics/dashboard", icon: "🛍" },
-  { label: "nav.settings", to: "/settings", icon: "👤" },
-  { label: "nav.notifications", to: "/notifications", icon: "🔔" },
-  { label: "nav.community", to: "/community", icon: "👥" }
-
+  { label: "nav.home", to: "/home", icon: "pi pi-home" },
+  { label: "nav.inventory", to: "/stock/inventory", icon: "pi pi-box" },
+  { label: "nav.monitoring", to: "/monitoring/fields", icon: "pi pi-map-marker" },
+  { label: "nav.catalog", to: "/commercial/catalog", icon: "pi pi-shopping-cart" },
+  { label: "nav.analytics", to: "/analytics/dashboard", icon: "pi pi-chart-line" },
+  { label: "nav.settings", to: "/settings", icon: "pi pi-user" },
+  { label: "nav.notifications", to: "/notifications", icon: "pi pi-bell" },
+  { label: "nav.community", to: "/community", icon: "pi pi-users" }
 ];
 </script>
 
@@ -58,9 +54,7 @@ const items = [
             :to="item.to"
             class="nav-item"
         >
-          <span class="nav-icon">
-            {{ item.icon }}
-          </span>
+          <i :class="item.icon" class="nav-icon"></i>
 
           <span class="nav-label">
             {{ t(item.label) }}
@@ -213,6 +207,7 @@ const items = [
 .nav-icon {
   width: 22px;
   text-align: center;
+  font-size: 1.1rem;
 }
 
 .nav-label {
@@ -303,11 +298,11 @@ const items = [
 @media (max-width: 600px) {
 
   .sidebar {
-    width: 90px;
+    width: 70px;
   }
 
   .main-area {
-    margin-left: 90px;
+    margin-left: 70px;
   }
 
   .brand-name,
@@ -317,6 +312,12 @@ const items = [
 
   .nav-item {
     justify-content: center;
+    padding: 0.8rem 0;
+  }
+
+  .nav-icon {
+    width: auto;
+    font-size: 1.2rem;
   }
 
   .sidebar-header {
@@ -328,7 +329,7 @@ const items = [
   }
 
   .page-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 }
 </style>

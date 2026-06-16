@@ -3,13 +3,15 @@ import OrderList from "./views/order-list.vue";
 
 export const commercialRoutes = [
     {
-        path: '/commercial/catalog',
+        path: 'catalog',
         name: 'commercial-catalog',
-        component: ProductList
+        component: ProductList,
+        meta: { title: 'Product Catalog' }
     },
     {
-        path: '/commercial/order-summary',
+        path: 'order-summary',
         name: 'order-summary',
-        component: OrderList
+        component: OrderList,
+        meta: { title: 'Order Summary' }
     }
 ];

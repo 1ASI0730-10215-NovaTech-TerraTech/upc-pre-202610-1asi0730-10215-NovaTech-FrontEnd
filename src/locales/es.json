@@ -10,7 +10,8 @@
 		"settings": "Perfil",
 		"analytics": "Analíticas",
 		"notifications": "Notificaciones",
-		"community": "Comunidad"
+		"community": "Comunidad",
+		"catalog": "Catálogo"
 	},
 	"stock": {
 		"title": "Gestión de Inventario",
@@ -61,8 +62,12 @@
 	},
 	"commercial": {
 		"catalog-title": "Catálogo",
-		"total-pay": "Pago Total: {amount}",
-		"payment-method": "Método de Pago: {method}",
+		"total-pay": "Pago Total",
+		"payment-method": "Método de Pago",
+		"payment-credit-card": "Tarjeta de Crédito",
+		"payment-debit-card": "Tarjeta de Débito",
+		"payment-paypal": "PayPal",
+		"payment-bank-transfer": "Transferencia Bancaria",
 		"confirm": "Confirmar",
 		"cancel": "Cancelar",
 		"order-summary": "Resumen del Pedido",
@@ -70,7 +75,42 @@
 		"success-title": "Compra Exitosa",
 		"success-msg": "¡Gracias por su compra! Su pedido ha sido procesado exitosamente",
 		"finish": "Finalizar",
-		"buy": "Comprar"
+		"buy": "Comprar",
+		"price-label": "Precio",
+		"product-type-iot": "Dispositivo IoT",
+		"product-type-subscription": "Suscripción",
+		"product-type-physical": "Producto Físico",
+		"loading-products": "Cargando productos...",
+		"empty-catalog": "No hay productos disponibles",
+		"order-status": "Estado del Pedido",
+		"order-date": "Fecha del Pedido",
+		"order-total": "Monto Total",
+		"order-id": "ID del Pedido",
+		"my-orders": "Mis Pedidos",
+		"product-name": "Producto",
+		"quantity": "Cantidad",
+		"products": {
+			"lora-moisture-sensor": {
+				"name": "Sensor de Humedad LoRa",
+				"description": "Sensor de alta precisión para monitoreo de humedad del suelo."
+			},
+			"terratech-plus": {
+				"name": "TerraTech Plus",
+				"description": "Nuestra mejor suscripción con análisis completos y soporte premium."
+			},
+			"terratech-premium": {
+				"name": "TerraTech Premium",
+				"description": "Plan estándar para monitoreo eficiente de cultivos."
+			},
+			"terratech-freemium": {
+				"name": "TerraTech Freemium",
+				"description": "Plan gratuito con funciones básicas de visualización."
+			},
+			"smart-valve": {
+				"name": "Válvula Inteligente",
+				"description": "Control remoto de riego para automatización del agua."
+			}
+		}
 	},
 	"monitoring": {
 		"devices": "Dispositivos",
@@ -154,7 +194,9 @@
 		"export-btn": "Reporte Mensual Exportado",
 		"optimal": "Óptimo",
 		"warning": "Advertencia",
-		"critical": "Crítico"
+		"critical": "Crítico",
+		"humidity-above": "Humedad > 50%",
+		"humidity-below": "Humedad < 30%"
 	},
 	"profiles": {
 		"title": "Perfiles Agrícolas",

@@ -1,46 +1,49 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-4xl font-bold mb-5 text-center text-primary">{{ $t('commercial.catalog-title') }}</h1>
+  <div class="product-catalog">
+    <h1 class="catalog-title">{{ $t('commercial.catalog-title') }}</h1>
 
-    <div v-if="store.loading" class="flex justify-content-center py-8">
+    <div v-if="store.loading" class="loading-state">
       <pv-progress-spinner />
+      <p>{{ $t('commercial.loading-products') }}</p>
     </div>
 
-    <div v-else-if="store.products.length > 0" class="grid justify-content-center">
-      <div v-for="product in store.products" :key="product.id" class="col-12 md:col-6 lg:col-4 p-3">
-        <pv-card class="h-full shadow-4 border-round-xl overflow-hidden custom-card">
-          <template #header>
-            <div class="relative">
-              <img :src="getProductImage(product.id)"
-                   class="w-full h-13rem object-cover"
-                   :alt="product.name"
-                   @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1518544861942-8e1003433621?w=600'" />
+    <div v-else-if="store.products.length === 0" class="empty-state">
+      <i class="pi pi-box"></i>
+      <p>{{ $t('commercial.empty-catalog') }}</p>
+    </div>
 
-              <pv-tag :value="product.type"
-                      :severity="product.type === 'SUBSCRIPTION' ? 'success' : 'warning'"
-                      class="absolute top-0 right-0 m-2 shadow-2" />
-            </div>
-          </template>
+    <div v-else class="products-grid">
+      <div v-for="product in store.products" :key="product.id" class="product-card">
+        <div class="product-image">
+          <img
+              :src="product.imageUrl || defaultImage"
+              :alt="getProductName(product)"
+              @error="handleImageError"
+          />
+          <pv-tag
+              :value="getProductTypeLabel(product.type)"
+              :severity="getProductTypeSeverity(product.type)"
+              class="product-type-tag"
+          />
+        </div>
 
-          <template #title>
-            <div class="text-xl font-bold text-white uppercase">{{ product.name }}</div>
-          </template>
+        <div class="product-info">
+          <h3 class="product-name">{{ getProductName(product) }}</h3>
+          <p class="product-description">{{ getProductDescription(product) }}</p>
+          <div class="product-price">
+            <span class="price-amount">${{ formatPrice(product.price) }}</span>
+            <span class="price-label">{{ $t('commercial.price-label') }}</span>
+          </div>
+        </div>
 
-          <template #content>
-            <p class="text-400 mb-4 h-3rem overflow-hidden">{{ product.description }}</p>
-            <div class="flex align-items-center justify-content-between bg-gray-800 p-2 border-round">
-              <span class="text-3xl font-bold text-green-400">${{ product.price }}</span>
-              <span class="text-xs font-bold text-500 uppercase">Precio</span>
-            </div>
-          </template>
-
-          <template #footer>
-            <pv-button :label="$t('commercial.buy')"
-                       icon="pi pi-shopping-cart"
-                       class="w-full p-button-raised p-button-rounded font-bold"
-                       @click="handleSelect(product)" />
-          </template>
-        </pv-card>
+        <div class="product-actions">
+          <pv-button
+              :label="$t('commercial.buy')"
+              icon="pi pi-shopping-cart"
+              class="buy-button"
+              @click="handleSelect(product)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -49,31 +52,94 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCommercialStore } from '../../application/commercial-management.store';
+import { useI18n } from 'vue-i18n';
+import { useCommercialStore } from '../../application/commercial-management.store.js';
 
+const { t } = useI18n();
 const store = useCommercialStore();
 const router = useRouter();
 
+const defaultImage = 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=400';
+
+// Map de IDs de producto a claves de traducción
+const productTranslationMap = {
+  // IDs reales del API - ajusta según tu backend
+  'prod_001': 'lora-moisture-sensor',
+  'prod_002': 'terratech-plus',
+  'prod_003': 'terratech-premium',
+  'prod_004': 'terratech-freemium',
+  'prod_005': 'smart-valve',
+  // Fallbacks por nombre (para productos que vienen del mock)
+  'LoRa Moisture Sensor': 'lora-moisture-sensor',
+  'TerraTech Plus': 'terratech-plus',
+  'TerraTech Premium': 'terratech-premium',
+  'TerraTech Freemium': 'terratech-freemium',
+  'Smart Valve': 'smart-valve'
+};
+
+const getProductTranslationKey = (product) => {
+  // Primero intentar por ID
+  if (productTranslationMap[product.id]) {
+    return productTranslationMap[product.id];
+  }
+  // Luego intentar por nombre
+  if (productTranslationMap[product.name]) {
+    return productTranslationMap[product.name];
+  }
+  // Si no hay traducción, devolver null
+  return null;
+};
+
+const getProductName = (product) => {
+  const key = getProductTranslationKey(product);
+  if (key) {
+    return t(`commercial.products.${key}.name`);
+  }
+  // Fallback al nombre del API
+  return product.name;
+};
+
+const getProductDescription = (product) => {
+  const key = getProductTranslationKey(product);
+  if (key) {
+    return t(`commercial.products.${key}.description`);
+  }
+  // Fallback a la descripción del API
+  return product.description;
+};
+
 onMounted(async () => {
-  await store.fetchProducts();
+  if (!store.productsLoaded.value) {
+    await store.fetchProducts();
+  }
 });
 
+const formatPrice = (price) => {
+  return Number(price).toFixed(2);
+};
 
-const getProductImage = (id) => {
-  const images = {
+const handleImageError = (event) => {
+  event.target.src = defaultImage;
+};
 
-    'prod_002': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600',
-
-    'prod_003': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600',
-
-    'prod_004': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600',
-
-    'prod_005': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600',
-
-    '9r5pzYm': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600'
+const getProductTypeLabel = (type) => {
+  const upperType = (type || '').toUpperCase();
+  const typeMap = {
+    'IOT': t('commercial.product-type-iot'),
+    'SUBSCRIPTION': t('commercial.product-type-subscription'),
+    'PHYSICAL': t('commercial.product-type-physical')
   };
+  return typeMap[upperType] || type || t('commercial.product-type-physical');
+};
 
-  return images[id] || 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=600';
+const getProductTypeSeverity = (type) => {
+  const upperType = (type || '').toUpperCase();
+  const severityMap = {
+    'IOT': 'warning',
+    'SUBSCRIPTION': 'success',
+    'PHYSICAL': 'info'
+  };
+  return severityMap[upperType] || 'secondary';
 };
 
 const handleSelect = (product) => {
@@ -83,14 +149,148 @@ const handleSelect = (product) => {
 </script>
 
 <style scoped>
-.custom-card {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+.product-catalog {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.custom-card:hover {
+.catalog-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a2b4c;
+  margin-bottom: 2rem;
+}
+
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #cbd5e1;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.product-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
   transform: translateY(-8px);
-  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-color: #4ade80;
+}
+
+.product-image {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-type-tag {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.product-info {
+  padding: 1.25rem;
+}
+
+.product-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+}
+
+.product-description {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  min-height: 3rem;
+}
+
+.product-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2d2d2d;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.price-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.price-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.product-actions {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+.buy-button {
+  width: 100%;
+  background: #4ade80;
+  border: none;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.buy-button:hover {
+  background: #22c55e;
+}
+
+@media (max-width: 768px) {
+  .product-catalog {
+    padding: 1rem;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .catalog-title {
+    font-size: 1.5rem;
+  }
 }
 </style>

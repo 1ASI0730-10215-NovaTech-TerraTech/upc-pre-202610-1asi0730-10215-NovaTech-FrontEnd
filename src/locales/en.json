@@ -10,7 +10,8 @@
 		"settings": "Profile",
 		"analytics": "Analytics",
 		"notifications": "Notifications",
-		"community": "Community"
+		"community": "Community",
+		"catalog": "Catalog"
 	},
 	"stock": {
 		"title": "Inventory Management",
@@ -61,8 +62,12 @@
 	},
 	"commercial": {
 		"catalog-title": "Catalog",
-		"total-pay": "Total Pay: {amount}",
-		"payment-method": "Payment Method: {method}",
+		"total-pay": "Total Pay",
+		"payment-method": "Payment Method",
+		"payment-credit-card": "Credit Card",
+		"payment-debit-card": "Debit Card",
+		"payment-paypal": "PayPal",
+		"payment-bank-transfer": "Bank Transfer",
 		"confirm": "Confirm",
 		"cancel": "Cancel",
 		"order-summary": "Order Summary",
@@ -70,7 +75,42 @@
 		"success-title": "Purchase Successful",
 		"success-msg": "Thank you for your purchase! Your order has been processed successfully",
 		"finish": "Finish",
-		"buy": "Buy"
+		"buy": "Buy",
+		"price-label": "Price",
+		"product-type-iot": "IoT Device",
+		"product-type-subscription": "Subscription",
+		"product-type-physical": "Physical Product",
+		"loading-products": "Loading products...",
+		"empty-catalog": "No products available",
+		"order-status": "Order Status",
+		"order-date": "Order Date",
+		"order-total": "Total Amount",
+		"order-id": "Order ID",
+		"my-orders": "My Orders",
+		"product-name": "Product",
+		"quantity": "Quantity",
+		"products": {
+			"lora-moisture-sensor": {
+				"name": "LoRa Moisture Sensor",
+				"description": "High precision sensor for soil moisture monitoring."
+			},
+			"terratech-plus": {
+				"name": "TerraTech Plus",
+				"description": "Our best subscription with full analytics and premium support."
+			},
+			"terratech-premium": {
+				"name": "TerraTech Premium",
+				"description": "Standard plan for efficient crop monitoring."
+			},
+			"terratech-freemium": {
+				"name": "TerraTech Freemium",
+				"description": "Free plan with basic visualization features."
+			},
+			"smart-valve": {
+				"name": "Smart Valve",
+				"description": "Remote irrigation control for automated watering."
+			}
+		}
 	},
 	"monitoring": {
 		"devices": "Devices",
@@ -154,7 +194,9 @@
 		"export-btn": "Monthly Report Exported",
 		"optimal": "Optimal",
 		"warning": "Warning",
-		"critical": "Critical"
+		"critical": "Critical",
+		"humidity-above": "Humidity > 50%",
+		"humidity-below": "Humidity < 30%"
 	},
 	"profiles": {
 		"title": "Agricultural Profiles",
