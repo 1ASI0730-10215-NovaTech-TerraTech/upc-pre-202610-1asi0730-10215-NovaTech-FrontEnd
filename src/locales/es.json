@@ -41,7 +41,22 @@
 	},
 	"home": {
 		"title": "Inicio",
-		"content": "Bienvenido a la aplicación web de TerraTech."
+		"content": "Bienvenido a la aplicación web de TerraTech.",
+		"dashboard": {
+			"devices": "Dispositivos",
+			"fields": "Zonas de Cultivo",
+			"products": "Productos",
+			"orders": "Pedidos",
+			"total": "Total",
+			"unread": "No leídas",
+			"profiles": "Perfiles",
+			"reports": "Reportes",
+			"bounded-contexts": "Resumen de Contextos Delimitados",
+			"total-items": "Total de Elementos",
+			"status-details": "Estado / Detalles",
+			"device-status": "Estado de Dispositivos",
+			"order-status": "Estado de Pedidos"
+		}
 	},
 	"navigation": {
 		"home": "Inicio",
