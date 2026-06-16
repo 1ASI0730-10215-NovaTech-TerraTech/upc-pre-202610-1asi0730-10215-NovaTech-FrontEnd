@@ -41,7 +41,22 @@
 	},
 	"home": {
 		"title": "Welcome",
-		"content": "Welcome to TerraTech App Web."
+		"content": "Welcome to TerraTech App Web.",
+		"dashboard": {
+			"devices": "Devices",
+			"fields": "Fields",
+			"products": "Products",
+			"orders": "Orders",
+			"total": "Total",
+			"unread": "Unread",
+			"profiles": "Profiles",
+			"reports": "Reports",
+			"bounded-contexts": "Bounded Contexts Summary",
+			"total-items": "Total Items",
+			"status-details": "Status / Details",
+			"device-status": "Device Status",
+			"order-status": "Order Status"
+		}
 	},
 	"navigation": {
 		"home": "Home",
