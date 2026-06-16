@@ -36,9 +36,21 @@
               <div class="plot optimal">P5<span class="tooltip">dev_001: {{ $t('analytics.optimal') }}</span></div>
             </div>
             <div class="map-legend">
-              <span class="legend-item"><span class="box optimal"></span> {{ $t('analytics.optimal') }} ({{ $t('analytics.humidity-above') }} 50%)</span>
-              <span class="legend-item"><span class="box warning"></span> {{ $t('analytics.warning') }} (30% - 50%)</span>
-              <span class="legend-item"><span class="box critical"></span> {{ $t('analytics.critical') }} ({{ $t('analytics.humidity-below') }} 30%)</span>
+              <div class="legend-item">
+                <span class="legend-dot optimal"></span>
+                <span class="legend-label">{{ $t('analytics.optimal') }}</span>
+                <span class="legend-value">> 50%</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot warning"></span>
+                <span class="legend-label">{{ $t('analytics.warning') }}</span>
+                <span class="legend-value">30% - 50%</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot critical"></span>
+                <span class="legend-label">{{ $t('analytics.critical') }}</span>
+                <span class="legend-value">< 30%</span>
+              </div>
             </div>
           </div>
         </div>
@@ -52,8 +64,10 @@
           <div class="card-body chart-body">
             <div class="bar-chart">
               <div v-for="rep in store.reportsList" :key="rep.id" class="chart-bar-wrapper">
-                <div class="bar-value-label">{{ rep.mean_value }}%</div>
-                <div class="bar" :style="{ height: rep.mean_value + '%' }"></div>
+                <div class="bar-value">{{ rep.mean_value }}%</div>
+                <div class="bar-container">
+                  <div class="bar" :style="{ height: rep.mean_value + '%' }"></div>
+                </div>
                 <div class="bar-label">{{ rep.device_id }}</div>
               </div>
             </div>
@@ -180,20 +194,26 @@ const triggerExportReport = () => {
   font-size: 14px;
 }
 
+/* Alerta */
 .alert-banner-critical {
   background-color: #f3e5f5;
   border-left: 5px solid #7b1fa2;
   color: #4a148c;
   padding: 15px;
-  border-radius: 4px;
+  border-radius: 12px;
   margin-bottom: 25px;
   display: flex;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.alert-banner-critical:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .alert-icon {
   margin-right: 15px;
-  font-size: 20px;
 }
 
 .alert-icon i {
@@ -207,13 +227,20 @@ const triggerExportReport = () => {
   margin-bottom: 30px;
 }
 
+/* Tarjetas */
 .visual-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 16px;
   border: 1px solid #e0e0e0;
   flex: 1;
   min-width: 340px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.visual-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -234,17 +261,21 @@ const triggerExportReport = () => {
 .icon-box i {
   font-size: 1.25rem;
   color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+  padding: 8px;
+  border-radius: 10px;
 }
 
 .card-body {
   padding: 20px;
 }
 
+/* Mapa agrícola */
 .agricultural-map {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .plot {
@@ -252,10 +283,16 @@ const triggerExportReport = () => {
   text-align: center;
   font-weight: bold;
   color: white;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
   position: relative;
+  transition: all 0.2s ease;
+}
+
+.plot:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
 }
 
 .plot .tooltip {
@@ -271,7 +308,7 @@ const triggerExportReport = () => {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .plot:hover .tooltip {
@@ -288,15 +325,19 @@ const triggerExportReport = () => {
 
 @keyframes pulse {
   0% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.8; }
   100% { opacity: 1; }
 }
 
+/* Leyenda mejorada - más limpia */
 .map-legend {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 12px;
+  justify-content: space-around;
+  gap: 15px;
+  flex-wrap: wrap;
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 .legend-item {
@@ -305,17 +346,33 @@ const triggerExportReport = () => {
   gap: 8px;
 }
 
-.box {
+.legend-dot {
   width: 12px;
   height: 12px;
   border-radius: 3px;
 }
 
+.legend-dot.optimal { background-color: #4caf50; }
+.legend-dot.warning { background-color: #ff9800; }
+.legend-dot.critical { background-color: #f44336; }
+
+.legend-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+.legend-value {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Gráfico de barras mejorado */
 .chart-body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 180px;
+  height: 200px;
 }
 
 .bar-chart {
@@ -323,7 +380,7 @@ const triggerExportReport = () => {
   align-items: flex-end;
   gap: 15px;
   width: 100%;
-  height: 130px;
+  height: 160px;
   border-bottom: 2px solid #ccc;
   padding: 0 5px;
 }
@@ -335,32 +392,52 @@ const triggerExportReport = () => {
   align-items: center;
 }
 
+.bar-value {
+  font-size: 11px;
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 5px;
+}
+
+.bar-container {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  background: #e8ece8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
 .bar {
   width: 100%;
   background: linear-gradient(to top, #2e7d32, #4caf50);
-  border-radius: 4px 4px 0 0;
+  border-radius: 6px 6px 0 0;
   transition: height 0.3s ease;
-}
-
-.bar-value-label {
-  font-size: 10px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 4px;
 }
 
 .bar-label {
   font-size: 10px;
   color: #666;
-  margin-top: 5px;
+  margin-top: 8px;
+  font-weight: 500;
 }
 
+/* Sección de reportes */
 .reports-section h3 {
   color: #2e7d32;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.reports-section h3 i {
+  font-size: 1.25rem;
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+  padding: 8px;
+  border-radius: 10px;
 }
 
 .metrics-grid {
@@ -369,22 +446,24 @@ const triggerExportReport = () => {
   gap: 20px;
 }
 
+/* Tarjetas de métricas */
 .card-metric {
   background: white;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   width: 290px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .card-metric:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-header-metric {
   background: #f1f8e9;
-  padding: 10px 15px;
+  padding: 12px 15px;
   border-bottom: 1px solid #dcedc8;
   display: flex;
   justify-content: space-between;
@@ -399,19 +478,19 @@ const triggerExportReport = () => {
 
 .report-title {
   margin: 10px 0 5px 0;
-  font-size: 12px;
-  color: #777;
+  font-size: 11px;
+  color: #999;
   text-transform: uppercase;
 }
 
 .data-highlight {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: bold;
   color: #1b5e20;
   margin: 0 0 10px 0;
 }
 
-.unit { font-size: 14px; color: #666; }
+.unit { font-size: 13px; color: #666; }
 
 .divider {
   border: 0;
@@ -429,28 +508,45 @@ const triggerExportReport = () => {
 .sub-data-group {
   display: flex;
   justify-content: space-between;
-  background: #fafafa;
-  padding: 6px;
-  border-radius: 4px;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 .sub-data {
   font-size: 11px;
-  color: #7f8c8d;
+  color: #666;
   margin: 0;
 }
 
+.sub-data code {
+  background: #e9ecef;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+
+/* Controles inferiores */
 .bottom-controls {
   margin-top: 30px;
   background: white;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 16px;
   border: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.bottom-controls:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recommendations-box {
+  flex: 1;
 }
 
 .recommendations-box h4 {
@@ -461,6 +557,11 @@ const triggerExportReport = () => {
   gap: 0.5rem;
 }
 
+.recommendations-box h4 i {
+  font-size: 1.25rem;
+  color: #ff9800;
+}
+
 .recommendations-box p {
   margin: 0;
   font-size: 13px;
@@ -469,11 +570,17 @@ const triggerExportReport = () => {
 }
 
 .btn-action-export {
-  padding: 12px 24px;
+  padding: 10px 24px;
   font-size: 14px;
-  font-weight: bold;
-  border-radius: 5px;
+  font-weight: 500;
+  border-radius: 25px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-action-export:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
 }
 
 @media (max-width: 768px) {
@@ -486,7 +593,6 @@ const triggerExportReport = () => {
   }
   .btn-action-export {
     width: 100%;
-    justify-content: center;
   }
 }
 </style>
