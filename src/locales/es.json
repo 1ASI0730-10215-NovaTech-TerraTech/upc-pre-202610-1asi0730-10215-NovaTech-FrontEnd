@@ -17,6 +17,7 @@
 		"title": "Gestión de Inventario",
 		"add_title": "Agregar nuevo producto",
 		"product": "Producto",
+		"product_id": "ID del Producto",
 		"product_placeholder": "Ej: Tomate, Lechuga, Maíz",
 		"quantity": "Cantidad",
 		"unit": "Unidad",
@@ -37,7 +38,9 @@
 		"success": "Producto agregado correctamente",
 		"error_name": "Ingrese el nombre del producto",
 		"error_quantity": "Ingrese una cantidad válida",
-		"error_general": "Error al agregar producto"
+		"error_general": "Error al agregar producto",
+		"warehouse": "Almacén",
+		"warehouse_placeholder": "Ej: Almacén Central, Depósito Norte"
 	},
 	"home": {
 		"title": "Inicio",
@@ -301,8 +304,8 @@
 		"sample-message": "El mensaje de alerta aparecerá aquí",
 		"check-thresholds": "Por favor verifique las condiciones del campo.",
 		"take-action": "Tome las acciones necesarias de inmediato.",
-		"urgent-action-required": "⚠️ URGENTE: Se requiere acción inmediata para el campo {field}",
-		"info-update": "ℹ️ Actualización disponible para el campo {field}",
+		"urgent-action-required": "URGENTE: Se requiere acción inmediata para el campo {field}",
+		"info-update": "Actualización disponible para el campo {field}",
 		"alert-info-title": "Acerca de las Alertas",
 		"alert-info-1": "Las alertas críticas requieren atención inmediata",
 		"alert-info-2": "Las advertencias indican posibles problemas en desarrollo",
