@@ -17,6 +17,7 @@
 		"title": "Inventory Management",
 		"add_title": "Add new product",
 		"product": "Product",
+		"product_id": "Product ID",
 		"product_placeholder": "Ex: Tomato, Lettuce, Corn",
 		"quantity": "Quantity",
 		"unit": "Unit",
@@ -37,7 +38,9 @@
 		"success": "Product added successfully",
 		"error_name": "Enter the product name",
 		"error_quantity": "Enter a valid quantity",
-		"error_general": "Error adding product"
+		"error_general": "Error adding product",
+		"warehouse": "Warehouse",
+		"warehouse_placeholder": "Ex: Main Warehouse, North Storage"
 	},
 	"home": {
 		"title": "Welcome",
@@ -301,8 +304,8 @@
 		"sample-message": "Alert message will appear here",
 		"check-thresholds": "Please check the field conditions.",
 		"take-action": "Take necessary actions immediately.",
-		"urgent-action-required": "⚠️ URGENT: Immediate action required for field {field}",
-		"info-update": "ℹ️ Update available for field {field}",
+		"urgent-action-required": "URGENT: Immediate action required for field {field}",
+		"info-update": "Update available for field {field}",
 		"alert-info-title": "About Alerts",
 		"alert-info-1": "Critical alerts require immediate attention",
 		"alert-info-2": "Warnings indicate potential issues developing",
