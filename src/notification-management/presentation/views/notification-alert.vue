@@ -42,7 +42,6 @@ const handleAlertTypeChange = () => {
   updateMessage();
 };
 
-// Ejecutar al montar el componente para que el mensaje inicial se genere
 onMounted(() => {
   updateMessage();
 });
@@ -85,7 +84,6 @@ async function submitAlert() {
       is_read: false
     };
 
-    // Regenerar mensaje después de limpiar el formulario
     updateMessage();
 
     setTimeout(() => {
@@ -150,8 +148,16 @@ function cancel() {
               <span class="preview-label">{{ t('notifications.preview') }}</span>
             </div>
             <div class="preview-body">
-              <h4 class="preview-title">{{ alertForm.title || t('notifications.sample-title') }}</h4>
-              <p class="preview-message">{{ alertForm.message || t('notifications.sample-message') }}</p>
+              <h4 class="preview-title">
+                <i v-if="alertForm.is_alert" class="pi pi-exclamation-triangle" style="color: #FF4757; margin-right: 0.5rem;"></i>
+                <i v-else class="pi pi-info-circle" style="color: #42A5F5; margin-right: 0.5rem;"></i>
+                {{ alertForm.title || t('notifications.sample-title') }}
+              </h4>
+              <p class="preview-message">
+                <i v-if="alertForm.is_alert" class="pi pi-exclamation-triangle" style="color: #FF4757; margin-right: 0.5rem; font-size: 0.8rem;"></i>
+                <i v-else class="pi pi-info-circle" style="color: #42A5F5; margin-right: 0.5rem; font-size: 0.8rem;"></i>
+                {{ alertForm.message || t('notifications.sample-message') }}
+              </p>
             </div>
           </div>
         </div>
@@ -381,6 +387,8 @@ function cancel() {
   color: #1A2B4C;
   font-size: 1rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 
 .preview-message {
@@ -388,6 +396,8 @@ function cancel() {
   color: #1A2B4C;
   font-size: 0.875rem;
   line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
 }
 
 /* Input Fields */
@@ -420,7 +430,6 @@ function cancel() {
   color: #1A2B4C !important;
 }
 
-/* Forzar color de texto en textarea */
 .message-preview:read-only {
   color: #1A2B4C !important;
   -webkit-text-fill-color: #1A2B4C !important;
