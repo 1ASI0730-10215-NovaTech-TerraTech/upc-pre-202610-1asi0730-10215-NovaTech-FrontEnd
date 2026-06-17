@@ -19,7 +19,7 @@ const error = ref('');
 const discountQuantity = ref(0);
 
 const openDiscountModal = (product) => {
-  selectedProduct.value = product;
+  selectedProduct.value = { ...product };
   discountQuantity.value = 0;
   showDiscountModal.value = true;
 };
@@ -44,6 +44,7 @@ const submitProduct = async () => {
   }
 
   try {
+    // NO se envía id, se genera automáticamente en el store
     await stockStore.addProduct({
       product_id: productForm.value.product_id,
       stock_quantity: Number(productForm.value.stock_quantity),
@@ -63,7 +64,13 @@ const submitProduct = async () => {
 
 const submitDiscount = async () => {
   if (selectedProduct.value && discountQuantity.value > 0) {
-    await stockStore.discountProduct(selectedProduct.value.id, discountQuantity.value);
+    const updatedProduct = {
+      id: selectedProduct.value.id,
+      product_id: selectedProduct.value.product_id,
+      stock_quantity: selectedProduct.value.stock_quantity - discountQuantity.value,
+      warehouse_location: selectedProduct.value.warehouse_location
+    };
+    await stockStore.discountProduct(updatedProduct);
     closeDiscountModal();
   }
 };
