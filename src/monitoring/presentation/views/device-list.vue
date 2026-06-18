@@ -60,18 +60,22 @@ const getFieldName = (fieldId) => {
         <p class="page-description">{{ t('monitoring.devices-subtitle') || 'Gestiona los dispositivos IoT de tus zonas' }}</p>
       </div>
       <div class="header-buttons">
-        <pv-button
-            icon="pi pi-map-marker"
-            :label="t('monitoring.manage-fields')"
-            class="btn-secondary"
-            @click="navigateToFields"
-        />
-        <pv-button
-            icon="pi pi-plus"
-            :label="t('monitoring.new-device')"
-            class="btn-primary"
-            @click="navigateToCreate"
-        />
+        <div class="btn-wrapper">
+          <pv-button
+              icon="pi pi-map-marker"
+              :label="t('monitoring.manage-fields')"
+              class="btn-secondary"
+              @click="navigateToFields"
+          />
+        </div>
+        <div class="btn-wrapper">
+          <pv-button
+              icon="pi pi-plus"
+              :label="t('monitoring.new-device')"
+              class="btn-primary"
+              @click="navigateToCreate"
+          />
+        </div>
       </div>
     </div>
 
@@ -103,40 +107,44 @@ const getFieldName = (fieldId) => {
           striped-rows
           class="custom-table"
       >
-        <pv-column field="id" :header="t('monitoring.device-id')" sortable></pv-column>
-        <pv-column field="field_id" :header="t('monitoring.field')" sortable>
+        <pv-column field="id" :header="t('monitoring.device-id')" sortable style="width: 110px; min-width: 110px; max-width: 110px;"></pv-column>
+        <pv-column field="field_id" :header="t('monitoring.field')" sortable style="width: 140px; min-width: 140px; max-width: 140px;">
           <template #body="{ data }">
             {{ getFieldName(data.field_id) }}
           </template>
         </pv-column>
-        <pv-column field="mac_address" :header="t('monitoring.mac-address')" sortable></pv-column>
-        <pv-column field="status" :header="t('monitoring.status')" sortable>
+        <pv-column field="mac_address" :header="t('monitoring.mac-address')" sortable style="width: 150px; min-width: 150px; max-width: 150px;"></pv-column>
+        <pv-column field="status" :header="t('monitoring.status')" sortable style="width: 100px; min-width: 100px; max-width: 100px;">
           <template #body="{ data }">
             <span :class="['status-badge', getStatusBadge(data.status).class]">
               {{ getStatusBadge(data.status).text }}
             </span>
           </template>
         </pv-column>
-        <pv-column field="last_sync" :header="t('monitoring.last-sync')" sortable>
+        <pv-column field="last_sync" :header="t('monitoring.last-sync')" sortable style="width: 150px; min-width: 150px; max-width: 150px;">
           <template #body="{ data }">
             {{ new Date(data.last_sync).toLocaleString() }}
           </template>
         </pv-column>
-        <pv-column header="Actions" :header-style="{ width: '100px' }" body-style="text-align: center">
+        <pv-column header="Actions" :header-style="{ width: '100px' }" body-style="text-align: center" style="width: 100px; min-width: 100px; max-width: 100px;">
           <template #body="{ data }">
             <div class="action-buttons">
-              <pv-button
-                  icon="pi pi-pencil"
-                  class="p-button-rounded p-button-text btn-edit"
-                  @click="navigateToEdit(data)"
-                  v-tooltip.top="t('monitoring.edit')"
-              />
-              <pv-button
-                  icon="pi pi-trash"
-                  class="p-button-rounded p-button-text btn-delete"
-                  @click="confirmDelete(data)"
-                  v-tooltip.top="t('monitoring.delete')"
-              />
+              <div class="btn-wrapper-action">
+                <pv-button
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-text btn-edit"
+                    @click="navigateToEdit(data)"
+                    v-tooltip.top="t('monitoring.edit')"
+                />
+              </div>
+              <div class="btn-wrapper-action">
+                <pv-button
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-text btn-delete"
+                    @click="confirmDelete(data)"
+                    v-tooltip.top="t('monitoring.delete')"
+                />
+              </div>
             </div>
           </template>
         </pv-column>
@@ -162,8 +170,9 @@ const getFieldName = (fieldId) => {
   --primary: #10b981;
   --primary-hover: #059669;
   --secondary: #3b82f6;
+  --secondary-hover: #2563eb;
   --danger: #ef4444;
-  --text-primary: #ffffff;
+  --text-primary: #1A2B4C;
   --text-secondary: #64748b;
   --border: #e2e8f0;
   --bg-page: #f8fafc;
@@ -195,32 +204,107 @@ const getFieldName = (fieldId) => {
   margin: 0;
   font-size: 0.875rem;
 }
+
+/* ============================================================
+   BOTONES - WRAPPER PARA EVITAR MOVIMIENTO
+   ============================================================ */
 .header-buttons {
   display: flex;
   gap: 0.75rem;
+  align-items: center;
 }
+
+.btn-wrapper {
+  display: inline-flex;
+  position: relative;
+}
+
+.btn-wrapper-action {
+  display: inline-flex;
+  position: relative;
+}
+
+.btn-primary,
+.btn-secondary {
+  border: none;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
 .btn-primary {
   background-color: var(--primary);
-  border: none;
-  padding: 0.5rem 1.25rem;
-  font-weight: 500;
-  transition: all 0.2s;
 }
+
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-1px);
 }
+
 .btn-secondary {
   background-color: var(--secondary);
-  border: none;
-  padding: 0.5rem 1.25rem;
-  font-weight: 500;
-  transition: all 0.2s;
 }
+
 .btn-secondary:hover {
-  background-color: #2563eb;
-  transform: translateY(-1px);
+  background-color: var(--secondary-hover);
 }
+
+/* Eliminar ripple en botones principales */
+.btn-primary :deep(.p-ink),
+.btn-secondary :deep(.p-ink) {
+  display: none !important;
+}
+
+.btn-edit,
+.btn-delete {
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit {
+  color: var(--secondary);
+}
+
+.btn-edit:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.btn-delete {
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Eliminar ripple en botones de acción */
+.btn-edit :deep(.p-ink),
+.btn-delete :deep(.p-ink) {
+  display: none !important;
+}
+
+/* Fijar tamaño de los botones de acción */
+.btn-edit,
+.btn-delete {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  align-items: center;
+}
+
 .card {
   background-color: var(--bg-card);
   border-radius: var(--radius);
@@ -249,6 +333,7 @@ const getFieldName = (fieldId) => {
 }
 .custom-table :deep(.p-datatable-wrapper) {
   border-radius: 0.75rem;
+  overflow-x: auto;
 }
 .custom-table :deep(th) {
   background-color: #64748b;
@@ -256,11 +341,28 @@ const getFieldName = (fieldId) => {
   font-weight: 600;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.3;
+  text-align: center;
 }
 .custom-table :deep(td) {
   padding: 0.75rem 1rem;
   color: var(--text-primary);
   border-bottom: 1px solid var(--border);
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.custom-table :deep(.p-datatable-tbody > tr:nth-child(even)) {
+  background-color: #ffffff;
+}
+.custom-table :deep(.p-datatable-tbody > tr:nth-child(odd)) {
+  background-color: #f8fafc;
+}
+.custom-table :deep(.p-datatable-tbody > tr:hover) {
+  background-color: #e8f5e9;
 }
 .status-badge {
   display: inline-block;
@@ -269,6 +371,7 @@ const getFieldName = (fieldId) => {
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .badge-online {
   background: #e8f5e9;
@@ -285,27 +388,6 @@ const getFieldName = (fieldId) => {
 .badge-default {
   background: #e0e0e0;
   color: #424242;
-}
-.action-buttons {
-  display: flex;
-  gap: 0.25rem;
-  justify-content: center;
-}
-.btn-edit {
-  color: var(--secondary);
-  transition: all 0.2s;
-}
-.btn-edit:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-  transform: scale(1.05);
-}
-.btn-delete {
-  color: var(--danger);
-  transition: all 0.2s;
-}
-.btn-delete:hover {
-  background-color: rgba(239, 68, 68, 0.1);
-  transform: scale(1.05);
 }
 .empty-table {
   text-align: center;
