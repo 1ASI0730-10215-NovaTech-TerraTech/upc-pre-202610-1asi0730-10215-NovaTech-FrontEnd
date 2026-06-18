@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 import useNotificationStore from '../../application/notification-management.store.js';
 import { Notification } from '../../domain/model/notification.entity.js';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
 const toast = useToast();
 const store = useNotificationStore();
@@ -41,6 +41,11 @@ const updateMessage = () => {
 const handleAlertTypeChange = () => {
   updateMessage();
 };
+
+// Escuchar cambios de idioma y actualizar el mensaje
+watch(locale, () => {
+  updateMessage();
+});
 
 onMounted(() => {
   updateMessage();
@@ -180,7 +185,7 @@ function cancel() {
         <div class="field-group">
           <label class="field-label">{{ t('notifications.message-preview') }}</label>
           <pv-textarea
-              v-model="alertForm.message"
+              :value="alertForm.message"
               readonly
               rows="4"
               class="full-width message-preview"
