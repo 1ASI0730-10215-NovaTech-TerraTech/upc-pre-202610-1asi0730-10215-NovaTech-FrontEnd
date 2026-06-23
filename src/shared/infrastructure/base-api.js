@@ -15,9 +15,23 @@ export class BaseApi {
     constructor() {
         this.#http = axios.create({
             baseURL: platformApi,
-            headers: { 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'}
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
+        this.#http.interceptors.request.use(
+            (config) => {
+                const token = localStorage.getItem('token');
+
+                if (token) {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                }
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
     }
 
     /**
