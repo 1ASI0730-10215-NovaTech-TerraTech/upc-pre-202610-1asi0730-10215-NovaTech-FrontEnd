@@ -10,7 +10,8 @@ import profileRoutes from "./profile-management/presentation/profile-management-
 import communityRoutes from './community-management/presentation/community-routes.js';
 import stockRoutes from "./stock/presentation/stock-routes.js";
 import Layout from "./shared/presentation/components/layout.vue";
-import AuthenticationSection from "./iam/presentation/views/authentication-section.vue";
+import AuthenticationSection from "./iam/presentation/components/authentication-section.vue";
+import {authenticationGuard} from "./iam/infrastructure/authentication.guard.js";
 
 const routes = [
     { path: '/', redirect: '/auth/login'},
@@ -33,7 +34,26 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes
+    routes: routes
 })
+
+/**
+ * Global navigation guard that updates the document title and delegates auth when enabled.
+ *
+ * @param {import('vue-router').RouteLocationNormalized} to - Target route.
+ * @param {import('vue-router').RouteLocationNormalized} from - Previous route.
+ * @param {import('vue-router').NavigationGuardNext} next - Guard continuation callback.
+ * @returns {void}
+ */
+router.beforeEach((to, from) => {
+    console.log(`Navigating from ${from.name} to ${to.name}`);
+    // Set the page title
+    let baseTitle = 'TerraTech';
+    document.title = `${baseTitle} - ${to.meta['title']}`;
+    // When IAM is implemented, use:
+    return authenticationGuard(to, from);
+    // if not, use:
+    // return true;
+});
 
 export default router

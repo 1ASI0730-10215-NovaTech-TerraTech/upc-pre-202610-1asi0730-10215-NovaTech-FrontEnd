@@ -5,14 +5,13 @@ import useIamStore from "../application/iam.store.js";
  *
  * @param {import('vue-router').RouteLocationNormalized} to - Target route.
  * @param {import('vue-router').RouteLocationNormalized} from - Current route.
- * @param {import('vue-router').NavigationGuardNext} next - Guard continuation callback.
  * @returns {void}
  */
-export const authenticationGuard = (to, from, next) => {
+export const authenticationGuard = (to, from) => {
     const store = useIamStore();
     const isAnonymous = !store.isSignedIn;
-    const publicRoutes = ['/login', '/register', '/page-not-found'];
+    const publicRoutes = ['/auth/login', '/auth/register', '/auth/page-not-found'];
     const routeRequiresToBeAuthenticated = !publicRoutes.includes(to.path);
-    if (isAnonymous && routeRequiresToBeAuthenticated) return next({ name: 'login'});
-    else next();
+    if (isAnonymous && routeRequiresToBeAuthenticated) return {path: '/auth/login'};
+    return true;
 }
