@@ -1,5 +1,5 @@
-const loginForm = () => import( './components/login-form.vue');
-const registerForm = () => import( './components/register-form.vue');
+const loginForm = () => import( './views/sign-in.vue');
+const registerForm = () => import( './views/sign-up.vue');
 /**
  * Child routes exposed by the Identity and Access Management (IAM) bounded context.
  */
