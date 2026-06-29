@@ -68,7 +68,7 @@
                 <div class="bar-container">
                   <div class="bar" :style="{ height: rep.mean_value + '%' }"></div>
                 </div>
-                <div class="bar-label">{{ rep.device_id }}</div>
+                <div class="bar-label">{{ rep.standard_deviation }}</div>
               </div>
             </div>
           </div>

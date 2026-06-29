@@ -15,7 +15,7 @@ export class Report {
      * @constructor
      * @param {Object} params
      */
-    constructor({ id = null, device_id = '', generated_at = '', mean_value = 0, variance = 0, standard_deviation = 0, technical_interpretation = '' }) {
+    constructor({ id = null, device_id = null, generated_at = '', mean_value = null, variance = null, standard_deviation = null, technical_interpretation = '' }) {
         this.id = id;
         this.device_id = device_id;
         this.generated_at = generated_at;
