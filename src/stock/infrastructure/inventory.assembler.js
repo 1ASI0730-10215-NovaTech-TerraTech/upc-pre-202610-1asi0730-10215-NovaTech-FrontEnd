@@ -12,7 +12,13 @@ export class InventoryAssembler {
      * @returns {Inventory} Inventory entity.
      */
     static toEntityFromResource(resource) {
-        return new Inventory({ ...resource });
+        // El backend devuelve en camelCase: productId, stockQuantity, warehouseLocation
+        return new Inventory({
+            id: resource.id,
+            product_id: resource.productId || resource.product_id,
+            stock_quantity: resource.stockQuantity || resource.stock_quantity,
+            warehouse_location: resource.warehouseLocation || resource.warehouse_location
+        });
     }
 
     /**
@@ -26,8 +32,12 @@ export class InventoryAssembler {
             console.error(`${response.status} - ${response.statusText}`);
             return [];
         }
-        let resources = response.data instanceof Array ? response.data
-            : response.data['inventory'];
+
+        let resources = response.data;
+        if (!Array.isArray(resources)) {
+            resources = response.data['inventories'] || response.data['inventory'] || [];
+        }
+
         return resources.map(resource => this.toEntityFromResource(resource));
     }
 }
