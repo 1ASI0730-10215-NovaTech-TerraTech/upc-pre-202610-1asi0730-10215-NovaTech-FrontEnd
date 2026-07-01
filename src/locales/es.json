@@ -193,7 +193,13 @@
 		"loading-fields": "Cargando zonas...",
 		"no-fields-available": "No hay zonas disponibles. Crea una zona primero.",
 		"field-id-placeholder": "ej. field_001, field_002",
-		"field-id-hint": "Ingresa el ID de la zona de cultivo a la que pertenece este dispositivo"
+		"field-id-hint": "Ingresa el ID de la zona de cultivo a la que pertenece este dispositivo",
+		"latitude": "Latitud",
+		"longitude": "Longitud",
+		"latitude-placeholder": "ej., -9.9306",
+		"longitude-placeholder": "ej., -76.2422",
+		"latitude-required": "La latitud es obligatoria",
+		"longitude-required": "La longitud es obligatoria"
 	},
 	"analytics": {
 		"title": "Dashboard de Analíticas - TerraTech",
