@@ -14,7 +14,17 @@ export class ReportAssembler {
      * @returns {Report} Report instance with resource data
      */
     static toEntityFromResource(resource) {
-        return new Report({ ...resource });
+        return new Report({
+            id: resource.id,
+            device_id: resource.device_id || resource.deviceId,
+            generated_at: resource.generated_at || resource.generatedAt,
+            mean_value: resource.mean_value !== undefined ? resource.mean_value : resource.meanValue,
+
+            variance: resource.variance !== undefined ? resource.variance : resource.varianceValue,
+            standard_deviation: resource.standard_deviation !== undefined ? resource.standard_deviation : resource.standardDeviation,
+
+            technical_interpretation: resource.technical_interpretation || resource.technicalInterpretation
+        });
     }
 
     /**
