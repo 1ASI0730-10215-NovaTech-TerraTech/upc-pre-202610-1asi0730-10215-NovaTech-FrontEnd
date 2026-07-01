@@ -7,31 +7,29 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import { useProfileManagementStore } from '../../application/profile-management.store.js';
+import useIamStore from "../../../iam/application/iam.store.js";
 
-/**
- * Component for creating or editing Agricultural Profiles.
- * Uses Vue I18n for internationalization and Pinia for state management.
- */
+import { ProfileManagementApi } from '../../infrastructure/profile-management-api.js';
+const profileApi = new ProfileManagementApi();
 
 const { t } = useI18n();
 const toast = useToast();
 const store = useProfileManagementStore();
+const iamStore = useIamStore();
 const route = useRoute();
 const router = useRouter();
 
 /**
- * Computed property to determine if the component is in edit mode.
- * @type {import('vue').ComputedRef<boolean>}
+ * Computed property to determine if the component is in edit mode
  */
 const isEdit = computed(() => !!route.params.id);
 
 /**
- * Reactive object representing the profile data in the form.
- * @type {import('vue').Ref<Object>}
+ * Reactive state object representing the profile fields bound to the form inputs.
  */
 const profileData = ref({
   id: null,
-  user_id: 'usr_001',
+  user_id: 0,
   fundo_name: '',
   contact_phone: '',
   moisture_threshold: 0,
@@ -39,40 +37,56 @@ const profileData = ref({
 });
 
 /**
- * Lifecycle hook: initializes form data based on route parameters.
- * Fetches existing profile data if in edit mode.
+ * If in edit mode, fetches and loads the existing profile parameters.
+ * If in creation mode, assigns the current user identity context securely.
  */
 onMounted(async () => {
   if (isEdit.value) {
     await store.fetchProfiles();
-    const selected = store.getProfileById(route.params.id);
+    const selected = store.getProfileById(Number(route.params.id));
     if (selected) {
       profileData.value = { ...selected };
     }
+  } else {
+    profileData.value.user_id = Number(iamStore.currentUserId);
   }
 });
 
 /**
- * Handles the save action for both creation and update operations.
- * Navigates back to the profile list upon success.
- * @returns {Promise<void>}
+ * Handles the saving orchestration for the form.
  */
 const handleSave = async () => {
   let isSuccess = false;
 
   if (isEdit.value) {
-
     isSuccess = await store.updateProfile(profileData.value);
   } else {
+    const cleanPayloadForDotNet = {
+      userId: Number(profileData.value.user_id),
+      fundoName: profileData.value.fundo_name,
+      contactPhone: profileData.value.contact_phone,
+      moistureThreshold: Number(profileData.value.moisture_threshold),
+      tempThreshold: Number(profileData.value.temp_threshold)
+    };
 
-    isSuccess = await store.addProfile(profileData.value);
+    try {
+      const response = await profileApi.createProfile(cleanPayloadForDotNet);
+
+      if (response.status === 201 || response.status === 200) {
+        isSuccess = true;
+        await store.fetchProfiles();
+      }
+    } catch (error) {
+      console.error("Error to created a new profile:", error);
+      isSuccess = false;
+    }
   }
 
   if (isSuccess) {
     toast.add({
       severity: 'success',
-      summary: isEdit.value ? 'Actualizado' : 'Creado',
-      detail: 'Operación exitosa',
+      summary: isEdit.value ? 'Updated' : 'Created',
+      detail: 'Operation successful',
       life: 2000
     });
     setTimeout(() => router.push({ name: 'profile-list' }), 2000);
@@ -80,7 +94,7 @@ const handleSave = async () => {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'No se pudo guardar la información',
+      detail: 'Error while saving/creating profile',
       life: 3000
     });
   }
@@ -89,9 +103,7 @@ const handleSave = async () => {
 const handleCancel = () => {
   router.push({ name: 'profile-list' });
 };
-
 </script>
-
 
 <template>
   <div class="profile-settings-container">
@@ -200,4 +212,3 @@ const handleCancel = () => {
   padding: 0.75rem 1.5rem;
 }
 </style>
-
