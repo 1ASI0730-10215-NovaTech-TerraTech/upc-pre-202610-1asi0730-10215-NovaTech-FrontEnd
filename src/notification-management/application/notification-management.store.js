@@ -13,6 +13,34 @@ import { Notification } from "../domain/model/notification.entity.js";
 const notificationApi = new NotificationManagementApi();
 
 /**
+ * Utility function to retry failed requests with exponential backoff
+ * @param {Function} fn - The async function to retry
+ * @param {number} maxRetries - Maximum number of retry attempts
+ * @param {number} delay - Initial delay in ms
+ * @returns {Promise} - The result of the function
+ */
+async function retryWithBackoff(fn, maxRetries = 3, delay = 1000) {
+    let lastError;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error;
+            // Si es un error 500, esperamos y reintentamos
+            if (error.response?.status === 500) {
+                const waitTime = delay * Math.pow(2, attempt);
+                console.log(`⚠️ Retry ${attempt + 1}/${maxRetries} in ${waitTime}ms...`);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+                continue;
+            }
+            // Si no es 500, lanzamos el error inmediatamente
+            throw error;
+        }
+    }
+    throw lastError;
+}
+
+/**
  * Reactive store that exposes Notification Management commands and queries.
  *
  * @returns {Object} Store state and actions.
@@ -60,19 +88,31 @@ const useNotificationStore = defineStore('notification-management', () => {
 
     /**
      * Loads notifications from infrastructure and updates the application state.
+     * Uses retry mechanism for 500 errors.
      * @returns {void}
      */
     function fetchNotifications() {
         loading.value = true;
-        notificationApi.getNotifications().then(response => {
-            notifications.value = NotificationAssembler.toEntitiesFromResponse(response);
-            notificationsLoaded.value = true;
-            console.log('Notifications loaded:', notifications.value);
-        }).catch(error => {
-            errors.value.push(error);
-        }).finally(() => {
-            loading.value = false;
-        });
+        retryWithBackoff(() => notificationApi.getNotifications(), 3, 1000)
+            .then(response => {
+                if (response && response.status === 200) {
+                    notifications.value = NotificationAssembler.toEntitiesFromResponse(response);
+                    notificationsLoaded.value = true;
+                    console.log('✅ Notifications loaded:', notifications.value.length);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error fetching notifications after retries:', error);
+                errors.value.push(error);
+                // Si falla después de reintentos, intentamos usar datos en caché
+                if (notifications.value.length === 0) {
+                    notifications.value = [];
+                    notificationsLoaded.value = true; // Mostrar estado vacío
+                }
+            })
+            .finally(() => {
+                loading.value = false;
+            });
     }
 
     /**
@@ -92,12 +132,16 @@ const useNotificationStore = defineStore('notification-management', () => {
     async function addNotification(notification) {
         loading.value = true;
         try {
-            const response = await notificationApi.createNotification(notification);
-            const resource = response.data;
-            const newNotification = NotificationAssembler.toEntityFromResource(resource);
-            notifications.value.push(newNotification);
-            return true;
+            const response = await retryWithBackoff(() => notificationApi.createNotification(notification), 2, 500);
+            if (response && (response.status === 200 || response.status === 201)) {
+                const resource = response.data;
+                const newNotification = NotificationAssembler.toEntityFromResource(resource);
+                notifications.value.push(newNotification);
+                return true;
+            }
+            return false;
         } catch (error) {
+            console.error('❌ Error creating notification:', error);
             errors.value.push(error);
             return false;
         } finally {
@@ -113,13 +157,17 @@ const useNotificationStore = defineStore('notification-management', () => {
     async function updateNotification(notification) {
         loading.value = true;
         try {
-            const response = await notificationApi.updateNotification(notification);
-            const resource = response.data;
-            const updatedNotification = NotificationAssembler.toEntityFromResource(resource);
-            const index = notifications.value.findIndex(n => n.id === updatedNotification.id);
-            if (index !== -1) notifications.value[index] = updatedNotification;
-            return true;
+            const response = await retryWithBackoff(() => notificationApi.updateNotification(notification), 2, 500);
+            if (response && response.status === 200) {
+                const resource = response.data;
+                const updatedNotification = NotificationAssembler.toEntityFromResource(resource);
+                const index = notifications.value.findIndex(n => n.id === updatedNotification.id);
+                if (index !== -1) notifications.value[index] = updatedNotification;
+                return true;
+            }
+            return false;
         } catch (error) {
+            console.error('❌ Error updating notification:', error);
             errors.value.push(error);
             return false;
         } finally {
@@ -135,11 +183,12 @@ const useNotificationStore = defineStore('notification-management', () => {
     async function deleteNotification(notification) {
         loading.value = true;
         try {
-            await notificationApi.deleteNotification(notification.id);
+            await retryWithBackoff(() => notificationApi.deleteNotification(notification.id), 2, 500);
             const index = notifications.value.findIndex(n => n.id === notification.id);
             if (index !== -1) notifications.value.splice(index, 1);
             return true;
         } catch (error) {
+            console.error('❌ Error deleting notification:', error);
             errors.value.push(error);
             return false;
         } finally {
@@ -155,23 +204,33 @@ const useNotificationStore = defineStore('notification-management', () => {
     async function markAsRead(id) {
         loading.value = true;
         try {
-            // El backend responde con 200 OK pero sin contenido
-            // Actualizamos manualmente el estado local
-            const response = await notificationApi.markAsRead(id);
-            console.log('Mark as read response:', response);
+            // Intentar con reintento
+            await retryWithBackoff(() => notificationApi.markAsRead(id), 2, 500);
 
+            // Actualizar estado local manualmente
             const index = notifications.value.findIndex(n => n.id === id);
             if (index !== -1) {
                 notifications.value[index] = {
                     ...notifications.value[index],
                     is_read: true
                 };
-                console.log('Notification marked as read in local state');
+                console.log('✅ Notification marked as read in local state');
+                return true;
             }
-            return true;
+            return false;
         } catch (error) {
-            console.error('Error marking notification as read:', error);
+            console.error('❌ Error marking notification as read:', error);
             errors.value.push(error);
+            // Aún si falla el backend, actualizamos el estado local para mejor UX
+            const index = notifications.value.findIndex(n => n.id === id);
+            if (index !== -1) {
+                notifications.value[index] = {
+                    ...notifications.value[index],
+                    is_read: true
+                };
+                console.log('⚠️ Notification marked as read locally despite API error');
+                return true;
+            }
             return false;
         } finally {
             loading.value = false;
@@ -191,19 +250,21 @@ const useNotificationStore = defineStore('notification-management', () => {
                 n => n.profile_id === profileId && !n.is_read
             );
 
-            // Marcar cada una como leída usando el método markAsRead
-            await Promise.all(unreadNotifications.map(n => markAsRead(n.id)));
+            if (unreadNotifications.length === 0) {
+                return true;
+            }
 
-            // Actualizar el estado local (aunque markAsRead ya lo hace, pero por si acaso)
-            notifications.value = notifications.value.map(n => {
-                if (n.profile_id === profileId && !n.is_read) {
-                    return { ...n, is_read: true };
-                }
-                return n;
-            });
-            return true;
+            // Marcar cada una como leída con reintentos individuales
+            const results = await Promise.allSettled(
+                unreadNotifications.map(n => markAsRead(n.id))
+            );
+
+            const successCount = results.filter(r => r.status === 'fulfilled' && r.value === true).length;
+            console.log(`✅ Marked ${successCount}/${unreadNotifications.length} notifications as read`);
+
+            return successCount > 0;
         } catch (error) {
-            console.error('Error marking all as read:', error);
+            console.error('❌ Error marking all as read:', error);
             errors.value.push(error);
             return false;
         } finally {
