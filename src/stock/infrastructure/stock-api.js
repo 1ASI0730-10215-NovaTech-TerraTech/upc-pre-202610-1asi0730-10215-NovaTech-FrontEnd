@@ -1,7 +1,7 @@
 import { BaseApi } from "../../shared/infrastructure/base-api.js";
 import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
-const inventoryEndpointPath = import.meta.env.VITE_INVENTORY_ENDPOINT_PATH;
+const inventoryEndpointPath = import.meta.env.VITE_INVENTORIES_ENDPOINT_PATH;
 
 /**
  * Infrastructure service gateway for the Stock bounded-context endpoints.
