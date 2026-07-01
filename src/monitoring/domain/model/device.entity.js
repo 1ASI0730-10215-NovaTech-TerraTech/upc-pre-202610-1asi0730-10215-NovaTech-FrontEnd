@@ -5,7 +5,7 @@ export class Device {
     status;
     last_sync;
 
-    constructor({ id = null, field_id = '', mac_address = '', status = '', last_sync = '' }) {
+    constructor({ id = 0, field_id = 0, mac_address = '', status = '', last_sync = '' }) {
         this.id = id;
         this.field_id = field_id;
         this.mac_address = mac_address;
