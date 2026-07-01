@@ -70,21 +70,22 @@ export const useProfileManagementStore = defineStore('profileManagement', () => 
      */
     function addProfile(profile) {
         const payload = {
-            id: `prof_00${profiles.value.length + 1}`,
-            user_id: 'usr_001',
+            id: Number(profile.id),
+            user_id: Number(profile.user_id),
             fundo_name: profile.fundo_name,
             contact_phone: profile.contact_phone,
-            moisture_threshold: profile.moisture_threshold,
-            temp_threshold: profile.temp_threshold
+            moisture_threshold: Number(profile.moisture_threshold),
+            temp_threshold: Number(profile.temp_threshold)
         };
 
 
-        return api.createProfile(payload).then(response => {
-            const resource = response.data;
-            const newProfile = ProfileAssembler.toEntityFromResource(resource);
-            profiles.value.push(newProfile);
-            return true;
-        }).catch(error => {
+        return api.createProfile(payload)
+            .then(response => {
+                const resource = response.data;
+                const newProfile = ProfileAssembler.toEntityFromResource(resource);
+                profiles.value.push(newProfile);
+                return true;
+            }).catch(error => {
             errors.value.push(error);
             return false;
         });
@@ -96,21 +97,30 @@ export const useProfileManagementStore = defineStore('profileManagement', () => 
      */
     function updateProfile(profile) {
 
-        return api.updateProfile(profile.id, profile)
-            .then(response => {
+        const payload = {
+            id: Number(profile.id),
+            user_id: Number(profile.user_id),
+            fundo_name: profile.fundo_name,
+            contact_phone: profile.contact_phone,
+            moisture_threshold: Number(profile.moisture_threshold),
+            temp_threshold: Number(profile.temp_threshold)
+        }
+
+        return api.updateProfile(payload.id, payload)
+            .then(response=> {
                 const resource = response.data;
-                const updatedProfile = ProfileAssembler.toEntityFromResource(resource);
-                const index = profiles.value.findIndex(p => p.id === updatedProfile.id);
+                const updateProfile = ProfileAssembler.toEntityFromResource(resource);
+                const index = profiles.value.findIndex(p => p.id === updateProfile.id);
 
                 if (index !== -1) {
-                    profiles.value[index] = updatedProfile;
+                    profiles.value[index] = updateProfile;
                 }
-                return true;
+                return true
             })
             .catch(error => {
                 errors.value.push(error);
                 return false;
-            });
+            })
     }
 
     /**
