@@ -1,10 +1,10 @@
-import {defineStore} from "pinia";
-import {computed, ref} from "vue";
-import {MonitoringApi} from "../infrastructure/monitoring-api.js";
-import {DeviceAssembler} from "../infrastructure/device.assembler.js";
-import {FieldAssembler} from "../infrastructure/field.assembler.js";
-import {Device} from "../domain/model/device.entity.js";
-import {Field} from "../domain/model/field.entity.js";
+import { defineStore } from "pinia";
+import { computed, ref } from "vue";
+import { MonitoringApi } from "../infrastructure/monitoring-api.js";
+import { DeviceAssembler } from "../infrastructure/device.assembler.js";
+import { FieldAssembler } from "../infrastructure/field.assembler.js";
+import { Device } from "../domain/model/device.entity.js";
+import { Field } from "../domain/model/field.entity.js";
 
 const monitoringApi = new MonitoringApi();
 
@@ -90,6 +90,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
             devicesLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
+            devicesLoaded.value = true;
         });
     }
 
@@ -110,6 +111,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
             fieldsLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
+            fieldsLoaded.value = true;
         });
     }
 
@@ -185,7 +187,11 @@ const useMonitoringStore = defineStore('monitoring', () => {
         if (!device.id || String(device.id).trim() === '') {
             device.id = __generateId(devices, 'dev_');
         }
-        monitoringApi.createDevice(device).then(response => {
+        const payload = {
+            ...device,
+            field_id: Number(device.field_id) || 0
+        };
+        monitoringApi.createDevice(payload).then(response => {
             const resource = response.data;
             const newDevice = DeviceAssembler.toEntityFromResource(resource);
             devices.value.push(newDevice);
@@ -220,7 +226,11 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * });
      */
     function updateDevice(device) {
-        monitoringApi.updateDevice(device).then(response => {
+        const payload = {
+            ...device,
+            field_id: Number(device.field_id) || 0
+        };
+        monitoringApi.updateDevice(payload).then(response => {
             const resource = response.data;
             const updatedDevice = DeviceAssembler.toEntityFromResource(resource);
             const index = devices.value.findIndex(c => String(c["id"]) === String(updatedDevice.id));
@@ -285,25 +295,36 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @param {Field|Object} field - Field object to create
      * @param {string} [field.id] - Optional field ID. If not provided, one will be generated
      * @param {string} field.name - Name of the field
-     * @param {string} field.size_m2 - Size in square meters
+     * @param {number} field.size_m2 - Size in square meters
      * @param {string} field.soil_type - Type of soil (loamy, sandy, clay, silty)
-     * @param {string} field.location_lat_long - Geographic location in lat/long format
+     * @param {number} field.latitude - Latitude coordinate
+     * @param {number} field.longitude - Longitude coordinate
      *
      * @returns {void}
      *
      * @example
      * store.addField({
      *   name: 'Main Field',
-     *   size_m2: '5000',
+     *   size_m2: 5000,
      *   soil_type: 'loamy',
-     *   location_lat_long: '10.5°N, 20.3°W'
+     *   latitude: -9.9306,
+     *   longitude: -76.2422
      * });
      */
     function addField(field) {
         if (!field.id || String(field.id).trim() === '') {
             field.id = __generateId(fields, 'field_');
         }
-        monitoringApi.createField(field).then(response => {
+        const payload = {
+            id: field.id,
+            profile_id: Number(field.profile_id) || 0,
+            name: field.name || '',
+            size_m2: Number(field.size_m2) || 0,
+            soil_type: field.soil_type || '',
+            latitude: Number(field.latitude) || 0,
+            longitude: Number(field.longitude) || 0
+        };
+        monitoringApi.createField(payload).then(response => {
             const resource = response.data;
             const newField = FieldAssembler.toEntityFromResource(resource);
             fields.value.push(newField);
@@ -322,9 +343,10 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @param {Field|Object} field - Updated field object
      * @param {string} field.id - Field identifier
      * @param {string} field.name - Name of the field
-     * @param {string} field.size_m2 - Size in square meters
+     * @param {number} field.size_m2 - Size in square meters
      * @param {string} field.soil_type - Type of soil
-     * @param {string} field.location_lat_long - Geographic location
+     * @param {number} field.latitude - Latitude coordinate
+     * @param {number} field.longitude - Longitude coordinate
      *
      * @returns {void}
      *
@@ -334,13 +356,23 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * store.updateField({
      *   id: 'field_001',
      *   name: 'Updated Field',
-     *   size_m2: '6000',
+     *   size_m2: 6000,
      *   soil_type: 'sandy',
-     *   location_lat_long: '10.5°N, 20.3°W'
+     *   latitude: 10.5,
+     *   longitude: 20.3
      * });
      */
     function updateField(field) {
-        monitoringApi.updateField(field).then(response => {
+        const payload = {
+            id: field.id,
+            profile_id: Number(field.profile_id) || 0,
+            name: field.name || '',
+            size_m2: Number(field.size_m2) || 0,
+            soil_type: field.soil_type || '',
+            latitude: Number(field.latitude) || 0,
+            longitude: Number(field.longitude) || 0
+        };
+        monitoringApi.updateField(payload).then(response => {
             const resource = response.data;
             const updatedField = FieldAssembler.toEntityFromResource(resource);
             const index = fields.value.findIndex(t => String(t["id"]) === String(updatedField.id));
