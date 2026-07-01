@@ -53,7 +53,9 @@ const confirmDelete = (profile) => {
 
 <template>
   <div class="list-container">
-    <h1>{{ t("profiles.title") }}</h1>
+    <div class="list-header">
+      <h1>{{ t("profiles.title") }}</h1>
+    </div>
 
     <div class="button-container">
       <pv-button
@@ -64,46 +66,47 @@ const confirmDelete = (profile) => {
       />
     </div>
 
-    <pv-data-table
-        :loading="!profilesLoaded"
-        :rows="5"
-        :value="profiles"
-        paginator
-        class="profiles-table"
-    >
-      <pv-column :header="t('profiles.id')" field="id" sortable />
+    <div class="table-section">
+      <pv-data-table
+          :loading="!profilesLoaded"
+          :rows="5"
+          :value="profiles"
+          paginator
+          class="profiles-table"
+      >
+        <pv-column :header="t('profiles.id')" field="id" sortable />
+        <pv-column :header="t('profiles.fundoName')" field="fundo_name" sortable />
+        <pv-column :header="t('profiles.contactPhone')" field="contact_phone" sortable />
+        <pv-column
+            :header="t('profiles.moistureThreshold')"
+            field="moisture_threshold"
+            sortable
+        />
+        <pv-column
+            :header="t('profiles.tempThreshold')"
+            field="temp_threshold"
+            sortable
+        />
 
-      <pv-column :header="t('profiles.fundoName')" field="fundo_name" sortable />
-      <pv-column :header="t('profiles.contactPhone')" field="contact_phone" sortable />
-      <pv-column
-          :header="t('profiles.moistureThreshold')"
-          field="moisture_threshold"
-          sortable
-      />
-      <pv-column
-          :header="t('profiles.tempThreshold')"
-          field="temp_threshold"
-          sortable
-      />
-
-      <pv-column :header="t('profiles.actions')">
-        <template #body="slotProps">
-          <pv-button
-              icon="pi pi-pencil"
-              rounded
-              text
-              @click="navigateToEdit(slotProps.data.id)"
-          />
-          <pv-button
-              icon="pi pi-trash"
-              rounded
-              severity="danger"
-              text
-              @click="confirmDelete(slotProps.data)"
-          />
-        </template>
-      </pv-column>
-    </pv-data-table>
+        <pv-column :header="t('profiles.actions')">
+          <template #body="slotProps">
+            <pv-button
+                icon="pi pi-pencil"
+                rounded
+                text
+                @click="navigateToEdit(slotProps.data.id)"
+            />
+            <pv-button
+                icon="pi pi-trash"
+                rounded
+                severity="danger"
+                text
+                @click="confirmDelete(slotProps.data)"
+            />
+          </template>
+        </pv-column>
+      </pv-data-table>
+    </div>
   </div>
 </template>
 
@@ -115,14 +118,17 @@ const confirmDelete = (profile) => {
   gap: 1rem;
 }
 
+.list-header {
+  margin-bottom: 0.5rem;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
-/* Contenedor que mantiene el espacio reservado */
 .button-container {
   display: inline-block;
   width: fit-content;
@@ -134,18 +140,15 @@ h1 {
   background-color: #4fd1c5;
   border: none;
   transition: background-color 0.2s ease;
-  /* Fijar dimensiones constantes */
   min-width: 120px;
   height: 42px;
   padding: 0.75rem 1.25rem;
 }
 
-/* Mantener las mismas dimensiones en hover */
 .add-button:hover {
   background-color: #38b2ac;
 }
 
-/* Forzar que no haya cambios de padding, margin, border o box-shadow */
 .add-button:hover,
 .add-button:focus,
 .add-button:active {
@@ -157,7 +160,6 @@ h1 {
   outline: none !important;
 }
 
-/* Prevenir cambios en el ícono y texto */
 .add-button :deep(.p-button-label),
 .add-button :deep(.p-icon),
 .add-button :deep(.pi) {
@@ -165,25 +167,26 @@ h1 {
   transform: none !important;
 }
 
+.table-section {
+  width: 100%;
+}
+
 .profiles-table {
   min-width: 100%;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* Fijar la tabla para que no se mueva */
   position: relative;
   top: 0;
   margin-top: 0;
   transition: none;
 }
 
-/* Asegurar que la tabla nunca cambie su posición */
 .profiles-table :deep(.p-datatable-wrapper) {
   transition: none !important;
   transform: none !important;
 }
 
-/* Forzar que los botones de acciones no afecten el layout */
 .profiles-table :deep(.p-button) {
   transition: none !important;
   box-shadow: none !important;
@@ -196,7 +199,6 @@ h1 {
   background-color: transparent !important;
 }
 
-/* Prevenir cualquier reflow en las filas */
 .profiles-table :deep(.p-datatable-tbody > tr) {
   transform: translateZ(0);
   backface-visibility: hidden;

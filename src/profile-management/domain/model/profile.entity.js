@@ -7,16 +7,16 @@ export class Profile {
 
     /**
      * @param {Object} params - Entity attributes.
-     * @param {?string} [params.id=null] - Profile identifier.
-     * @param {string} [params.userId=''] - Foreign key of the related user.
-     * @param {string} [params.fundoName=''] - Name of the agricultural field (fundo).
-     * @param {string} [params.contactPhone=''] - Contact phone number for the profile.
-     * @param {number} [params.moistureThreshold=0] - Moisture threshold percentage for alerts.
-     * @param {number} [params.tempThreshold=0] - Temperature threshold in Celsius for alerts.
+     * @param {?number} [params.id=null] - Profile identifier.
+     * @param {?number} [params.user_id=null] - Foreign key of the related user.
+     * @param {string} [params.fundo_name=''] - Name of the agricultural field (fundo).
+     * @param {string} [params.contact_phone=''] - Contact phone number for the profile.
+     * @param {number} [params.moisture_threshold=0] - Moisture threshold percentage for alerts.
+     * @param {number} [params.temp_threshold=0] - Temperature threshold in Celsius for alerts.
      */
     constructor({
-                    id = null,
-                    user_id = '',
+                    id = 0,
+                    user_id = 0,
                     fundo_name = '',
                     contact_phone = '',
                     moisture_threshold = 0,

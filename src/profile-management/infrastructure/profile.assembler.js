@@ -12,7 +12,15 @@ export class ProfileAssembler {
      * @returns {Profile} Profile entity.
      */
     static toEntityFromResource(resource) {
-        return new Profile({...resource});
+        return new Profile({
+            id: resource.id,
+            user_id: resource.user_id || resource.userId,
+            fundo_name: resource.fundo_name || resource.fundoName,
+            contact_phone: resource.contact_phone || resource.contactPhone,
+            moisture_threshold: resource.moisture_threshold || resource.moistureThreshold,
+            temp_threshold: resource.temp_threshold || resource.tempThreshold,
+            }
+        );
     }
 
     /**
