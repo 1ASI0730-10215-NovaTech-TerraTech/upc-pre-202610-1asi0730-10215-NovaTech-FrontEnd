@@ -8,26 +8,21 @@ const stockApi = new StockApi();
 export const useStockStore = defineStore('stock', () => {
     const inventory = ref([]);
     const loading = ref(false);
-
-    // Función para generar ID automático (igual que en monitoring)
-    function __generateId(collection, prefix) {
-        const existingIds = collection.value.map(item => item.id).filter(id => typeof id === 'string' && id.startsWith(prefix));
-        let maxNum = 0;
-        existingIds.forEach(id => {
-            const num = parseInt(id.replace(prefix, ''), 10);
-            if (!isNaN(num) && num > maxNum) maxNum = num;
-        });
-        return `${prefix}${(maxNum + 1).toString().padStart(3, '0')}`;
-    }
+    const error = ref(null);
 
     const fetchInventory = async () => {
         loading.value = true;
+        error.value = null;
         try {
             const response = await stockApi.getInventory();
-            inventory.value = InventoryAssembler.toEntitiesFromResponse(response);
-            console.log('📦 Inventario cargado:', inventory.value.length, 'productos');
-        } catch (error) {
-            console.error('❌ Error al cargar inventario:', error);
+            if (response.status === 200) {
+                inventory.value = InventoryAssembler.toEntitiesFromResponse(response);
+                console.log('✅ Inventario cargado:', inventory.value.length, 'productos');
+            }
+        } catch (err) {
+            console.error('❌ Error al cargar inventario:', err);
+            error.value = 'Error al cargar el inventario. Por favor, recarga la página.';
+            inventory.value = [];
         } finally {
             loading.value = false;
         }
@@ -35,25 +30,31 @@ export const useStockStore = defineStore('stock', () => {
 
     const addProduct = async (productData) => {
         loading.value = true;
+        error.value = null;
         try {
-            console.log('🟡 Producto recibido en store:', productData);
+            // ✅ NO enviar ID, el backend lo genera
+            // ✅ Asegurar que ProductId y StockQuantity sean números
+            const payload = {
+                ProductId: Number(productData.ProductId),
+                StockQuantity: Number(productData.StockQuantity),
+                WarehouseLocation: productData.WarehouseLocation || null
+            };
 
-            // Auto-generar ID si no tiene (igual que monitoring)
-            if (!productData.id || String(productData.id).trim() === '') {
-                productData.id = __generateId(inventory, 'inv_');
-                console.log('🔵 ID generado automáticamente:', productData.id);
-            } else {
-                console.log('🟢 Producto ya tiene ID:', productData.id);
+            console.log('📤 Enviando al backend:', payload);
+
+            const response = await stockApi.createInventory(payload);
+            console.log('📥 Respuesta del backend:', response);
+
+            if (response.status === 201 || response.status === 200) {
+                console.log('✅ Producto creado exitosamente');
+                await fetchInventory(); // Recargar la lista
+                return true;
             }
-
-            console.log('📤 Enviando al backend:', productData);
-
-            await stockApi.createInventory(productData);
-            console.log('✅ Producto creado exitosamente con ID:', productData.id);
-
-            await fetchInventory();
-        } catch (error) {
-            console.error('❌ Error al agregar producto:', error);
+            return false;
+        } catch (err) {
+            console.error('❌ Error al agregar producto:', err);
+            error.value = err.response?.data?.title || 'Error al agregar producto. Intenta nuevamente.';
+            return false;
         } finally {
             loading.value = false;
         }
@@ -61,13 +62,31 @@ export const useStockStore = defineStore('stock', () => {
 
     const discountProduct = async (updatedProduct) => {
         loading.value = true;
+        error.value = null;
         try {
-            console.log('🟡 Descontando producto:', updatedProduct);
-            await stockApi.updateInventory(updatedProduct);
-            console.log('✅ Descuento realizado exitosamente');
-            await fetchInventory();
-        } catch (error) {
-            console.error('❌ Error al descontar producto:', error);
+            // ✅ Asegurar que StockQuantity sea número
+            const payload = {
+                id: updatedProduct.id,
+                ProductId: Number(updatedProduct.ProductId),
+                StockQuantity: Number(updatedProduct.StockQuantity),
+                WarehouseLocation: updatedProduct.WarehouseLocation || null
+            };
+
+            console.log('📤 Descontando producto:', payload);
+
+            const response = await stockApi.updateInventory(payload);
+            console.log('📥 Respuesta del backend:', response);
+
+            if (response.status === 200) {
+                console.log('✅ Descuento realizado exitosamente');
+                await fetchInventory(); // Recargar la lista
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.error('❌ Error al descontar producto:', err);
+            error.value = err.response?.data?.title || 'Error al descontar producto. Intenta nuevamente.';
+            return false;
         } finally {
             loading.value = false;
         }
@@ -76,6 +95,7 @@ export const useStockStore = defineStore('stock', () => {
     return {
         inventory,
         loading,
+        error,
         fetchInventory,
         addProduct,
         discountProduct
