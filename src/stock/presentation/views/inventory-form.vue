@@ -9,9 +9,9 @@ const selectedProduct = ref(null);
 const showDiscountModal = ref(false);
 
 const productForm = ref({
-  product_id: '',
-  stock_quantity: '',
-  warehouse_location: ''
+  ProductId: '',
+  StockQuantity: '',
+  WarehouseLocation: ''
 });
 
 const success = ref(false);
@@ -32,33 +32,43 @@ const closeDiscountModal = () => {
 
 const submitProduct = async () => {
   error.value = '';
+  success.value = false;
 
-  if (!productForm.value.product_id.trim()) {
-    error.value = t('stock.error_name');
+  const productId = Number(productForm.value.ProductId);
+  const stockQuantity = Number(productForm.value.StockQuantity);
+
+  if (!productId || productId <= 0) {
+    error.value = 'Ingresa un ID de producto válido (número positivo)';
     return;
   }
 
-  if (!productForm.value.stock_quantity || productForm.value.stock_quantity <= 0) {
-    error.value = t('stock.error_quantity');
+  if (!stockQuantity || stockQuantity <= 0) {
+    error.value = 'Ingresa una cantidad válida (número positivo)';
     return;
   }
 
   try {
-    // NO se envía id, se genera automáticamente en el store
-    await stockStore.addProduct({
-      product_id: productForm.value.product_id,
-      stock_quantity: Number(productForm.value.stock_quantity),
-      warehouse_location: productForm.value.warehouse_location || ''
-    });
+    const payload = {
+      ProductId: productId,
+      StockQuantity: stockQuantity,
+      WarehouseLocation: productForm.value.WarehouseLocation || null
+    };
 
-    productForm.value = { product_id: '', stock_quantity: '', warehouse_location: '' };
-    success.value = true;
+    console.log('📤 Payload a enviar:', payload);
 
-    setTimeout(() => {
-      success.value = false;
-    }, 2000);
+    const successResult = await stockStore.addProduct(payload);
+
+    if (successResult) {
+      success.value = true;
+      productForm.value = { ProductId: '', StockQuantity: '', WarehouseLocation: '' };
+
+      setTimeout(() => {
+        success.value = false;
+      }, 3000);
+    }
   } catch (err) {
-    error.value = t('stock.error_general');
+    console.error('❌ Error:', err);
+    error.value = 'Error al agregar producto. Intenta nuevamente.';
   }
 };
 
@@ -66,9 +76,9 @@ const submitDiscount = async () => {
   if (selectedProduct.value && discountQuantity.value > 0) {
     const updatedProduct = {
       id: selectedProduct.value.id,
-      product_id: selectedProduct.value.product_id,
-      stock_quantity: selectedProduct.value.stock_quantity - discountQuantity.value,
-      warehouse_location: selectedProduct.value.warehouse_location
+      ProductId: selectedProduct.value.ProductId,
+      StockQuantity: selectedProduct.value.StockQuantity - discountQuantity.value,
+      WarehouseLocation: selectedProduct.value.WarehouseLocation
     };
     await stockStore.discountProduct(updatedProduct);
     closeDiscountModal();
@@ -106,9 +116,11 @@ onMounted(() => {
           <div class="form-field">
             <label>{{ t('stock.product_id') }}</label>
             <input
-                v-model="productForm.product_id"
-                type="text"
-                :placeholder="t('stock.product_placeholder')"
+                v-model="productForm.ProductId"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Ej: 1, 2, 3..."
                 autocomplete="off"
             />
           </div>
@@ -116,17 +128,18 @@ onMounted(() => {
           <div class="form-field">
             <label>{{ t('stock.quantity') }}</label>
             <input
-                v-model.number="productForm.stock_quantity"
+                v-model="productForm.StockQuantity"
                 type="number"
-                step="0.01"
-                placeholder="0"
+                min="1"
+                step="1"
+                placeholder="Ej: 10, 50, 100"
             />
           </div>
 
           <div class="form-field">
             <label>{{ t('stock.warehouse') }}</label>
             <input
-                v-model="productForm.warehouse_location"
+                v-model="productForm.WarehouseLocation"
                 type="text"
                 :placeholder="t('stock.warehouse_placeholder')"
             />
@@ -173,9 +186,9 @@ onMounted(() => {
               v-for="item in stockStore.inventory"
               :key="item.id"
           >
-            <td class="product-id">{{ item.product_id }}</td>
-            <td class="quantity">{{ item.stock_quantity }}</td>
-            <td class="warehouse">{{ item.warehouse_location || '---' }}</td>
+            <td class="product-id">{{ item.product_id || item.ProductId }}</td>
+            <td class="quantity">{{ item.stock_quantity || item.StockQuantity }}</td>
+            <td class="warehouse">{{ item.warehouse_location || item.WarehouseLocation || '---' }}</td>
             <td class="actions">
               <button class="btn-discount" @click="openDiscountModal(item)">
                 <i class="pi pi-minus-circle"></i> {{ t('stock.discount') }}
@@ -194,13 +207,14 @@ onMounted(() => {
           <i class="pi pi-exclamation-triangle modal-icon"></i>
           <h3>{{ t('stock.discount_title') }}</h3>
         </div>
-        <p class="product-id">{{ selectedProduct?.product_id }}</p>
+        <p class="product-id">{{ selectedProduct?.product_id || selectedProduct?.ProductId }}</p>
         <p class="current-stock">
-          <i class="pi pi-box"></i> {{ t('stock.current_stock') }}: {{ selectedProduct?.stock_quantity }}
+          <i class="pi pi-box"></i> {{ t('stock.current_stock') }}: {{ selectedProduct?.stock_quantity || selectedProduct?.StockQuantity }}
         </p>
         <input
             v-model.number="discountQuantity"
             type="number"
+            min="1"
             :placeholder="t('stock.discount_placeholder')"
             autofocus
         />
@@ -318,10 +332,6 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-.form-field input::placeholder {
-  color: #94a3b8;
-}
-
 .form-field input:focus {
   outline: none;
   border-color: #00BB31;
@@ -341,7 +351,6 @@ onMounted(() => {
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  white-space: nowrap;
   transition: background 0.2s;
   display: flex;
   align-items: center;
