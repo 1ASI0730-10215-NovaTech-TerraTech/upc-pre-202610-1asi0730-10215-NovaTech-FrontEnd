@@ -37,6 +37,12 @@ const useNotificationStore = defineStore('notification-management', () => {
     const notificationsLoaded = ref(false);
 
     /**
+     * Loading state for async operations.
+     * @type {import('vue').Ref<boolean>}
+     */
+    const loading = ref(false);
+
+    /**
      * Number of loaded notifications.
      * @type {import('vue').ComputedRef<number>}
      */
@@ -57,12 +63,15 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {void}
      */
     function fetchNotifications() {
+        loading.value = true;
         notificationApi.getNotifications().then(response => {
             notifications.value = NotificationAssembler.toEntitiesFromResponse(response);
             notificationsLoaded.value = true;
             console.log('Notifications loaded:', notifications.value);
         }).catch(error => {
             errors.value.push(error);
+        }).finally(() => {
+            loading.value = false;
         });
     }
 
@@ -81,6 +90,7 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {Promise<boolean>} Success status.
      */
     async function addNotification(notification) {
+        loading.value = true;
         try {
             const response = await notificationApi.createNotification(notification);
             const resource = response.data;
@@ -90,6 +100,8 @@ const useNotificationStore = defineStore('notification-management', () => {
         } catch (error) {
             errors.value.push(error);
             return false;
+        } finally {
+            loading.value = false;
         }
     }
 
@@ -99,6 +111,7 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {Promise<boolean>} Success status.
      */
     async function updateNotification(notification) {
+        loading.value = true;
         try {
             const response = await notificationApi.updateNotification(notification);
             const resource = response.data;
@@ -109,6 +122,8 @@ const useNotificationStore = defineStore('notification-management', () => {
         } catch (error) {
             errors.value.push(error);
             return false;
+        } finally {
+            loading.value = false;
         }
     }
 
@@ -118,6 +133,7 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {Promise<boolean>} Success status.
      */
     async function deleteNotification(notification) {
+        loading.value = true;
         try {
             await notificationApi.deleteNotification(notification.id);
             const index = notifications.value.findIndex(n => n.id === notification.id);
@@ -126,6 +142,8 @@ const useNotificationStore = defineStore('notification-management', () => {
         } catch (error) {
             errors.value.push(error);
             return false;
+        } finally {
+            loading.value = false;
         }
     }
 
@@ -135,16 +153,28 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {Promise<boolean>} Success status.
      */
     async function markAsRead(id) {
+        loading.value = true;
         try {
+            // El backend responde con 200 OK pero sin contenido
+            // Actualizamos manualmente el estado local
             const response = await notificationApi.markAsRead(id);
-            const resource = response.data;
-            const updatedNotification = NotificationAssembler.toEntityFromResource(resource);
-            const index = notifications.value.findIndex(n => n.id === updatedNotification.id);
-            if (index !== -1) notifications.value[index] = updatedNotification;
+            console.log('Mark as read response:', response);
+
+            const index = notifications.value.findIndex(n => n.id === id);
+            if (index !== -1) {
+                notifications.value[index] = {
+                    ...notifications.value[index],
+                    is_read: true
+                };
+                console.log('Notification marked as read in local state');
+            }
             return true;
         } catch (error) {
+            console.error('Error marking notification as read:', error);
             errors.value.push(error);
             return false;
+        } finally {
+            loading.value = false;
         }
     }
 
@@ -154,23 +184,37 @@ const useNotificationStore = defineStore('notification-management', () => {
      * @returns {Promise<boolean>} Success status.
      */
     async function markAllAsRead(profileId) {
+        loading.value = true;
         try {
-            await notificationApi.markAllAsRead(profileId);
-            notifications.value.forEach(n => {
+            // Obtener todas las notificaciones no leídas del perfil
+            const unreadNotifications = notifications.value.filter(
+                n => n.profile_id === profileId && !n.is_read
+            );
+
+            // Marcar cada una como leída usando el método markAsRead
+            await Promise.all(unreadNotifications.map(n => markAsRead(n.id)));
+
+            // Actualizar el estado local (aunque markAsRead ya lo hace, pero por si acaso)
+            notifications.value = notifications.value.map(n => {
                 if (n.profile_id === profileId && !n.is_read) {
-                    n.is_read = true;
+                    return { ...n, is_read: true };
                 }
+                return n;
             });
             return true;
         } catch (error) {
+            console.error('Error marking all as read:', error);
             errors.value.push(error);
             return false;
+        } finally {
+            loading.value = false;
         }
     }
 
     return {
         notifications,
         errors,
+        loading,
         notificationsLoaded,
         notificationsCount,
         unreadCount,
