@@ -68,7 +68,8 @@ export class NotificationManagementApi extends BaseApi {
      * @returns {Promise<import('axios').AxiosResponse>} Promise resolving to the updated notification response.
      */
     markAsRead(id) {
-        return this.#notificationsEndpoint.update(id, { is_read: true });
+        // CORREGIDO: Usar el endpoint específico /reads que existe en el backend
+        return this.http.put(`${notificationsEndpointPath}/${id}/reads`);
     }
 
     /**
@@ -77,6 +78,8 @@ export class NotificationManagementApi extends BaseApi {
      * @returns {Promise<import('axios').AxiosResponse>} Promise resolving to the notifications response.
      */
     markAllAsRead(profileId) {
+        // Este método ahora será manejado directamente en el store
+        // ya que el backend no tiene un endpoint específico para esto
         return this.getNotifications().then(response => {
             const notifications = response.data;
             const updatePromises = notifications
