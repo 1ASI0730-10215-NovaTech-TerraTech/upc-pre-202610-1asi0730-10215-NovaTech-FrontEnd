@@ -15,7 +15,8 @@ const form = ref({
   name: '',
   size_m2: null,
   soil_type: '',
-  location_lat_long: ''
+  latitude: null,
+  longitude: null
 });
 
 const submitted = ref(false);
@@ -34,7 +35,13 @@ onMounted(() => {
   if (isEdit.value) {
     const field = store.getFieldById(route.params.id);
     if (field) {
-      form.value = { ...field };
+      form.value = {
+        name: field.name || '',
+        size_m2: field.size_m2 || null,
+        soil_type: field.soil_type || '',
+        latitude: field.latitude || null,
+        longitude: field.longitude || null
+      };
     } else {
       navigateBack();
     }
@@ -47,7 +54,7 @@ function navigateBack() {
 
 function submit() {
   submitted.value = true;
-  if (!form.value.name || !form.value.size_m2 || !form.value.soil_type) {
+  if (!form.value.name || !form.value.size_m2 || !form.value.soil_type || form.value.latitude === null || form.value.longitude === null) {
     return;
   }
 
@@ -121,14 +128,35 @@ function cancel() {
           <small v-if="submitted && !form.soil_type" class="error-text">{{ t('monitoring.soil-type-required') }}</small>
         </div>
 
-        <div class="form-group">
-          <label for="location_lat_long" class="form-label">{{ t('monitoring.location') }}</label>
-          <pv-input-text
-              id="location_lat_long"
-              v-model="form.location_lat_long"
-              :placeholder="t('monitoring.location-placeholder')"
-          />
-          <small class="helper-text">{{ t('monitoring.location-format-hint') }}</small>
+        <!-- Latitude and Longitude inputs side by side -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="latitude" class="form-label required">{{ t('monitoring.latitude') }}</label>
+            <pv-input-number
+                id="latitude"
+                v-model="form.latitude"
+                :placeholder="t('monitoring.latitude-placeholder')"
+                :min="-90"
+                :max="90"
+                :class="{ 'p-invalid': submitted && form.latitude === null }"
+                mode="decimal"
+            />
+            <small v-if="submitted && form.latitude === null" class="error-text">{{ t('monitoring.latitude-required') }}</small>
+          </div>
+
+          <div class="form-group">
+            <label for="longitude" class="form-label required">{{ t('monitoring.longitude') }}</label>
+            <pv-input-number
+                id="longitude"
+                v-model="form.longitude"
+                :placeholder="t('monitoring.longitude-placeholder')"
+                :min="-180"
+                :max="180"
+                :class="{ 'p-invalid': submitted && form.longitude === null }"
+                mode="decimal"
+            />
+            <small v-if="submitted && form.longitude === null" class="error-text">{{ t('monitoring.longitude-required') }}</small>
+          </div>
         </div>
 
         <div class="form-actions">
@@ -213,6 +241,14 @@ function cancel() {
   gap: 0.5rem;
 }
 
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.form-row .form-group {
+  flex: 1;
+}
+
 .form-label {
   font-weight: 600;
   color: var(--text-primary);
@@ -280,6 +316,9 @@ function cancel() {
     padding: 1.5rem;
   }
   .form-actions {
+    flex-direction: column;
+  }
+  .form-row {
     flex-direction: column;
   }
 }
