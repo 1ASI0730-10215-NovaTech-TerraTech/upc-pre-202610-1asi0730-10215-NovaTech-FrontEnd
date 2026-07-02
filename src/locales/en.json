@@ -193,7 +193,13 @@
 		"loading-fields": "Loading fields...",
 		"no-fields-available": "No fields available. Please create a field first.",
 		"field-id-placeholder": "e.g., field_001, field_002",
-		"field-id-hint": "Enter the ID of the crop field this device belongs to"
+		"field-id-hint": "Enter the ID of the crop field this device belongs to",
+		"latitude": "Latitude",
+		"longitude": "Longitude",
+		"latitude-placeholder": "e.g., -9.9306",
+		"longitude-placeholder": "e.g., -76.2422",
+		"latitude-required": "Latitude is required",
+		"longitude-required": "Longitude is required"
 	},
 	"analytics": {
 		"title": "Analytics Dashboard - TerraTech",

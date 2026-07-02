@@ -12,7 +12,6 @@ const store = useMonitoringStore();
 const { fields, errors, fieldsLoaded } = toRefs(store);
 const { fetchFields, deleteField } = store;
 
-// Opciones dinámicas del filtro (valores originales del API)
 const soilTypeOptions = computed(() => {
   const uniqueTypes = [...new Set(fields.value.map(f => f.soil_type))];
   return [
@@ -105,7 +104,11 @@ const confirmDelete = (field) => {
             <span class="soil-badge">{{ data.soil_type }}</span>
           </template>
         </pv-column>
-        <pv-column field="location_lat_long" :header="t('monitoring.location')" style="width: 20%"></pv-column>
+        <pv-column :header="t('monitoring.location')" sortable style="width: 20%">
+          <template #body="{ data }">
+            {{ data.latitude }}, {{ data.longitude }}
+          </template>
+        </pv-column>
         <pv-column header="Actions" :header-style="{ width: '80px' }" style="width: 10%">
           <template #body="{ data }">
             <div class="action-buttons">
@@ -188,7 +191,6 @@ const confirmDelete = (field) => {
   gap: 0.75rem;
 }
 
-/* Estilos para botones - SIN NINGÚN EFECTO QUE CAMBIE TAMAÑO O POSICIÓN */
 .btn-primary,
 .btn-secondary {
   padding: 0.5rem 1.25rem;
@@ -198,7 +200,6 @@ const confirmDelete = (field) => {
   transition: background-color 0.2s ease;
 }
 
-/* Anular cualquier transformación, shadow, borde o margin de PrimeVue */
 .btn-primary:hover,
 .btn-secondary:hover,
 .btn-primary:active,
@@ -232,7 +233,6 @@ const confirmDelete = (field) => {
   background-color: #2563eb;
 }
 
-/* Ocultar el efecto ripple completamente */
 .btn-primary :deep(.p-ink),
 .btn-secondary :deep(.p-ink) {
   display: none !important;

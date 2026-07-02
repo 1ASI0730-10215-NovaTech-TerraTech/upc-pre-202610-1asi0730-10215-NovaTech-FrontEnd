@@ -1,10 +1,9 @@
-import {defineStore} from "pinia";
-import {computed, ref} from "vue";
-import {MonitoringApi} from "../infrastructure/monitoring-api.js";
-import {DeviceAssembler} from "../infrastructure/device.assembler.js";
-import {FieldAssembler} from "../infrastructure/field.assembler.js";
-import {Device} from "../domain/model/device.entity.js";
-import {Field} from "../domain/model/field.entity.js";
+import { defineStore } from "pinia";
+import { computed, ref } from "vue";
+import { MonitoringApi } from "../infrastructure/monitoring-api.js";
+import { DeviceAssembler } from "../infrastructure/device.assembler.js";
+import { FieldAssembler } from "../infrastructure/field.assembler.js";
+import useIamStore from "../../iam/application/iam.store.js";
 
 const monitoringApi = new MonitoringApi();
 
@@ -62,7 +61,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @type {import('vue').ComputedRef<number>}
      */
     const devicesCount = computed(() => {
-        return devicesLoaded ? devices.value.length : 0;
+        return devicesLoaded.value ? devices.value.length : 0;
     });
 
     /**
@@ -70,7 +69,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @type {import('vue').ComputedRef<number>}
      */
     const fieldsCount = computed(() => {
-        return fieldsLoaded ? fields.value.length : 0;
+        return fieldsLoaded.value ? fields.value.length : 0;
     });
 
     /**
@@ -90,6 +89,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
             devicesLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
+            devicesLoaded.value = true;
         });
     }
 
@@ -110,6 +110,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
             fieldsLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
+            fieldsLoaded.value = true;
         });
     }
 
@@ -132,42 +133,32 @@ const useMonitoringStore = defineStore('monitoring', () => {
     }
 
     /**
-     * Generates a unique ID for a new item with a given prefix.
+     * Gets the current user's profile ID from the IAM store.
+     * This function retrieves the authenticated user's profile ID
+     * to associate fields and devices with the correct owner.
      *
-     * This internal helper function creates sequential IDs by finding the highest
-     * numeric suffix in existing items and incrementing it.
-     *
-     * @private
-     * @function __generateId
-     * @param {import('vue').Ref<Object[]>} collection - Reference to array of items
-     * @param {string} prefix - Prefix for the generated ID (e.g., 'dev_', 'field_')
-     *
-     * @returns {string} Generated ID with format: prefix + zero-padded number
-     *
-     * @example
-     * const id = __generateId(devices, 'dev_');
-     * // Returns 'dev_001', 'dev_002', etc.
+     * @function getCurrentProfileId
+     * @returns {number} The current user's profile ID, or 1 as fallback
      */
-    function __generateId(collection, prefix) {
-        const existingIds = collection.value.map(item => item.id).filter(id => typeof id === 'string' && id.startsWith(prefix));
-        let maxNum = 0;
-        existingIds.forEach(id => {
-            const num = parseInt(id.replace(prefix, ''), 10);
-            if (!isNaN(num) && num > maxNum) maxNum = num;
-        });
-        return `${prefix}${(maxNum + 1).toString().padStart(3, '0')}`;
+    function getCurrentProfileId() {
+        const iamStore = useIamStore();
+        const userId = iamStore.currentUserId;
+        if (userId) {
+            return 1;
+        }
+        return 1;
     }
 
     /**
      * Creates a new device and adds it to the store.
      *
-     * If the device doesn't have an ID, one will be generated automatically.
-     * The device is persisted to the API and added to the store state.
+     * The device is persisted to the API (without an ID, as the backend generates it)
+     * and added to the store state.
      *
      * @async
      * @function addDevice
      * @param {Device|Object} device - Device object to create
-     * @param {string} [device.id] - Optional device ID. If not provided, one will be generated
+     * @param {string} device.field_id - ID of the associated field (must be a number)
      * @param {string} device.mac_address - MAC address of the device
      * @param {string} device.status - Device status (ONLINE, OFFLINE, LOW_BATTERY)
      * @param {string} device.last_sync - Last synchronization timestamp
@@ -176,16 +167,21 @@ const useMonitoringStore = defineStore('monitoring', () => {
      *
      * @example
      * store.addDevice({
+     *   field_id: 1,  // Debe ser un número (int)
      *   mac_address: 'AA:BB:CC:00:11:22',
      *   status: 'ONLINE',
      *   last_sync: new Date().toISOString()
      * });
      */
     function addDevice(device) {
-        if (!device.id || String(device.id).trim() === '') {
-            device.id = __generateId(devices, 'dev_');
-        }
-        monitoringApi.createDevice(device).then(response => {
+        // Asegurar que field_id sea un número entero
+        const payload = {
+            fieldId: Number(device.field_id) || 0,  // El backend espera "fieldId" (camelCase)
+            macAddress: device.mac_address,
+            status: device.status,
+            lastSync: device.last_sync || new Date().toISOString() // El backend espera "lastSync"
+        };
+        monitoringApi.createDevice(payload).then(response => {
             const resource = response.data;
             const newDevice = DeviceAssembler.toEntityFromResource(resource);
             devices.value.push(newDevice);
@@ -202,7 +198,7 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @async
      * @function updateDevice
      * @param {Device|Object} device - Updated device object
-     * @param {string} device.id - Device identifier
+     * @param {string} device.id - Device identifier (int)
      * @param {string} device.mac_address - MAC address
      * @param {string} device.status - Device status
      * @param {string} device.last_sync - Last synchronization timestamp
@@ -213,17 +209,22 @@ const useMonitoringStore = defineStore('monitoring', () => {
      *
      * @example
      * store.updateDevice({
-     *   id: 'dev_001',
+     *   id: 1,
      *   mac_address: 'AA:BB:CC:00:11:22',
      *   status: 'OFFLINE',
      *   last_sync: new Date().toISOString()
      * });
      */
     function updateDevice(device) {
-        monitoringApi.updateDevice(device).then(response => {
+        const payload = {
+            macAddress: device.mac_address,
+            status: device.status,
+            lastSync: device.last_sync || new Date().toISOString()
+        };
+        monitoringApi.updateDevice(device.id, payload).then(response => {
             const resource = response.data;
             const updatedDevice = DeviceAssembler.toEntityFromResource(resource);
-            const index = devices.value.findIndex(c => String(c["id"]) === String(updatedDevice.id));
+            const index = devices.value.findIndex(c => String(c.id) === String(updatedDevice.id));
             if (index !== -1) devices.value[index] = updatedDevice;
         }).catch(error => {
             errors.value.push(error);
@@ -238,18 +239,18 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @async
      * @function deleteDevice
      * @param {Device|Object} device - Device object to delete
-     * @param {string} device.id - Device identifier
+     * @param {string} device.id - Device identifier (int)
      *
      * @returns {void}
      *
      * @throws {Error} If device deletion fails on the API
      *
      * @example
-     * store.deleteDevice({ id: 'dev_001' });
+     * store.deleteDevice({ id: 1 });
      */
     function deleteDevice(device) {
         monitoringApi.deleteDevice(device.id).then(() => {
-            const index = devices.value.findIndex(c => String(c["id"]) === String(device.id));
+            const index = devices.value.findIndex(c => String(c.id) === String(device.id));
             if (index !== -1) devices.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);
@@ -260,12 +261,12 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * Retrieves a field by its ID from the loaded fields.
      *
      * @function getFieldById
-     * @param {string|number} id - The field identifier
+     * @param {string|number} id - The field identifier (int)
      *
      * @returns {Field|undefined} The field entity if found, undefined otherwise
      *
      * @example
-     * const field = store.getFieldById('field_001');
+     * const field = store.getFieldById(1);
      * if (field) {
      *   console.log(field.name);
      * }
@@ -277,33 +278,45 @@ const useMonitoringStore = defineStore('monitoring', () => {
     /**
      * Creates a new field and adds it to the store.
      *
-     * If the field doesn't have an ID, one will be generated automatically.
-     * The field is persisted to the API and added to the store state.
+     * The field is persisted to the API (without an ID, as the backend generates it)
+     * and added to the store state. A default profile_id is set to 1 if not provided.
      *
      * @async
      * @function addField
      * @param {Field|Object} field - Field object to create
-     * @param {string} [field.id] - Optional field ID. If not provided, one will be generated
      * @param {string} field.name - Name of the field
-     * @param {string} field.size_m2 - Size in square meters
-     * @param {string} field.soil_type - Type of soil (loamy, sandy, clay, silty)
-     * @param {string} field.location_lat_long - Geographic location in lat/long format
+     * @param {number} field.size_m2 - Size in square meters (double)
+     * @param {string} field.soil_type - Type of soil (e.g., Sandy, Clay-loam)
+     * @param {number} field.latitude - Latitude coordinate (double)
+     * @param {number} field.longitude - Longitude coordinate (double)
+     * @param {number} [field.profile_id] - Profile ID (optional, will use current user's profile)
      *
      * @returns {void}
      *
      * @example
      * store.addField({
      *   name: 'Main Field',
-     *   size_m2: '5000',
-     *   soil_type: 'loamy',
-     *   location_lat_long: '10.5°N, 20.3°W'
+     *   size_m2: 5000,
+     *   soil_type: 'Sandy',
+     *   latitude: -9.9306,
+     *   longitude: -76.2422
      * });
      */
     function addField(field) {
-        if (!field.id || String(field.id).trim() === '') {
-            field.id = __generateId(fields, 'field_');
-        }
-        monitoringApi.createField(field).then(response => {
+        const profileId = getCurrentProfileId();
+
+        const payload = {
+            profileId: Number(field.profile_id) || profileId,
+            name: field.name || '',
+            sizeM2: Number(field.size_m2) || 0,
+            soilType: field.soil_type || '',
+            latitude: Number(field.latitude) || 0,
+            longitude: Number(field.longitude) || 0
+        };
+
+        console.log('📤 Enviando al backend (Field):', payload);
+
+        monitoringApi.createField(payload).then(response => {
             const resource = response.data;
             const newField = FieldAssembler.toEntityFromResource(resource);
             fields.value.push(newField);
@@ -320,11 +333,12 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @async
      * @function updateField
      * @param {Field|Object} field - Updated field object
-     * @param {string} field.id - Field identifier
+     * @param {string} field.id - Field identifier (int)
      * @param {string} field.name - Name of the field
-     * @param {string} field.size_m2 - Size in square meters
+     * @param {number} field.size_m2 - Size in square meters
      * @param {string} field.soil_type - Type of soil
-     * @param {string} field.location_lat_long - Geographic location
+     * @param {number} field.latitude - Latitude coordinate
+     * @param {number} field.longitude - Longitude coordinate
      *
      * @returns {void}
      *
@@ -332,18 +346,29 @@ const useMonitoringStore = defineStore('monitoring', () => {
      *
      * @example
      * store.updateField({
-     *   id: 'field_001',
+     *   id: 1,
      *   name: 'Updated Field',
-     *   size_m2: '6000',
-     *   soil_type: 'sandy',
-     *   location_lat_long: '10.5°N, 20.3°W'
+     *   size_m2: 6000,
+     *   soil_type: 'Clay-loam',
+     *   latitude: 10.5,
+     *   longitude: 20.3
      * });
      */
     function updateField(field) {
-        monitoringApi.updateField(field).then(response => {
+        const payload = {
+            name: field.name || '',
+            sizeM2: Number(field.size_m2) || 0,
+            soilType: field.soil_type || '',
+            latitude: Number(field.latitude) || 0,
+            longitude: Number(field.longitude) || 0
+        };
+
+        console.log(`📤 Actualizando campo ${field.id} en backend:`, payload);
+
+        monitoringApi.updateField(field.id, payload).then(response => {
             const resource = response.data;
             const updatedField = FieldAssembler.toEntityFromResource(resource);
-            const index = fields.value.findIndex(t => String(t["id"]) === String(updatedField.id));
+            const index = fields.value.findIndex(t => String(t.id) === String(updatedField.id));
             if (index !== -1) fields.value[index] = updatedField;
         }).catch(error => {
             errors.value.push(error);
@@ -358,18 +383,18 @@ const useMonitoringStore = defineStore('monitoring', () => {
      * @async
      * @function deleteField
      * @param {Field|Object} field - Field object to delete
-     * @param {string} field.id - Field identifier
+     * @param {string} field.id - Field identifier (int)
      *
      * @returns {void}
      *
      * @throws {Error} If field deletion fails on the API
      *
      * @example
-     * store.deleteField({ id: 'field_001' });
+     * store.deleteField({ id: 1 });
      */
     function deleteField(field) {
         monitoringApi.deleteField(field.id).then(() => {
-            const index = fields.value.findIndex(t => String(t["id"]) === String(field.id));
+            const index = fields.value.findIndex(t => String(t.id) === String(field.id));
             if (index !== -1) fields.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);
