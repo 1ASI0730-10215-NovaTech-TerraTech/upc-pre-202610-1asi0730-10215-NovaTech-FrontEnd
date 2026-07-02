@@ -33,7 +33,7 @@ const isEdit = computed(() => !!route.params.id);
  */
 const profileData = ref({
   id: null,
-  profile_id: 'prof_001',
+  profile_id: 1,
   nickname: '',
   reputation_score: 0,
   public_bio: '',
@@ -49,7 +49,7 @@ onMounted(async () => {
     if (!store.profilesLoaded) {
       await store.fetchProfiles();
     }
-    const selected = store.getProfileById(route.params.id);
+    const selected = store.getProfileById(parseInt(route.params.id));
     if (selected) {
       profileData.value = { ...selected };
     }
