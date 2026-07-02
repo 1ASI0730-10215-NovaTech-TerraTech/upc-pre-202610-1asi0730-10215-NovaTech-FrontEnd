@@ -1,5 +1,5 @@
-import {BaseApi} from "../../shared/infrastructure/base-api.js";
-import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
+import { BaseApi } from "../../shared/infrastructure/base-api.js";
+import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
 const fieldsEndpointPath = import.meta.env.VITE_FIELDS_ENDPOINT_PATH;
 const devicesEndpointPath = import.meta.env.VITE_DEVICES_ENDPOINT_PATH;
@@ -119,8 +119,8 @@ export class MonitoringApi extends BaseApi {
      * Updates an existing crop field.
      *
      * @async
+     * @param {string|number} id - Field identifier
      * @param {Object} resource - Crop field data to update
-     * @param {string} resource.id - Field identifier
      * @param {string} resource.name - Field name
      * @param {string} resource.size_m2 - Size in square meters
      * @param {string} resource.soil_type - Soil type
@@ -138,8 +138,8 @@ export class MonitoringApi extends BaseApi {
      *
      * const response = await api.updateField(updatedField);
      */
-    updateField(resource) {
-        return this.#fieldsEndpointPath.update(resource.id, resource);
+    updateField(id, resource) {
+        return this.#fieldsEndpointPath.update(id, resource);
     }
 
     /**
@@ -228,8 +228,8 @@ export class MonitoringApi extends BaseApi {
      * Updates an existing device.
      *
      * @async
+     * @param {string|number} id - Device identifier
      * @param {Object} resource - Device data to update
-     * @param {string} resource.id - Device identifier
      * @param {string} resource.mac_address - MAC address
      * @param {string} resource.status - Device status
      * @param {string} resource.last_sync - Last synchronization date
@@ -247,8 +247,8 @@ export class MonitoringApi extends BaseApi {
      *
      * const response = await api.updateDevice(updatedDevice);
      */
-    updateDevice(resource) {
-        return this.#devicesEndpointPath.update(resource.id, resource);
+    updateDevice(id, resource) {
+        return this.#devicesEndpointPath.update(id, resource);
     }
 
     /**

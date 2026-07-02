@@ -9,7 +9,6 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const store = useMonitoringStore();
-
 const { errors, addDevice, updateDevice } = store;
 
 const form = ref({
