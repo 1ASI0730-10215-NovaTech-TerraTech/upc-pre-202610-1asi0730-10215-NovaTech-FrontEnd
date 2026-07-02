@@ -4,6 +4,7 @@ import { CommunityManagementApi } from '../infrastructure/community-management.a
 import { CommunityProfileAssembler } from '../infrastructure/community-profile.assembler.js';
 import { CommentAssembler } from '../infrastructure/comment.assembler.js';
 
+
 /**
  * API service instance for community management.
  * @type {CommunityManagementApi}
@@ -58,17 +59,15 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
      */
     function addProfile(profile) {
         const payload = {
-            id: `com_00${profiles.value.length + 1}`,
-            profile_id: profile.profile_id || 'prof_001',
+            profileId: parseInt(profile.profile_id) || 1,
             nickname: profile.nickname,
-            reputation_score: profile.reputation_score,
-            public_bio: profile.public_bio,
-            visibility_status: profile.visibility_status
+            reputationScore: parseInt(profile.reputation_score) || 0,
+            publicBio: profile.public_bio,
+            visibilityStatus: profile.visibility_status ? 1 : 0
         };
 
         return api.createCommunityProfile(payload).then(response => {
-            const resource = response.data;
-            const newProfile = CommunityProfileAssembler.toEntityFromResource(resource);
+            const newProfile = CommunityProfileAssembler.toEntityFromResource(response.data);
             profiles.value.push(newProfile);
             return true;
         }).catch(error => {
@@ -82,12 +81,18 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
      * @param {Object} profile - Profile entity with updated data.
      */
     function updateProfile(profile) {
-        return api.updateCommunityProfile(profile.id, profile)
-            .then(response => {
-                const resource = response.data;
-                const updatedProfile = CommunityProfileAssembler.toEntityFromResource(resource);
-                const index = profiles.value.findIndex(p => p.id === updatedProfile.id);
 
+        const payload = {
+            nickname: profile.nickname,
+            reputationScore: parseInt(profile.reputation_score) || 0,
+            publicBio: profile.public_bio,
+            visibilityStatus: profile.visibility_status ? 1 : 0
+        };
+
+        return api.updateCommunityProfile(profile.id, payload)
+            .then(response => {
+                const updatedProfile = CommunityProfileAssembler.toEntityFromResource(response.data);
+                const index = profiles.value.findIndex(p => p.id === updatedProfile.id);
                 if (index !== -1) {
                     profiles.value[index] = updatedProfile;
                 }
@@ -121,9 +126,12 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
      * @returns {Promise<void>}
      */
 
-    function fetchComments() {
-        return api.getComments().then(response => {
-            comments.value = CommentAssembler.toEntitiesFromResponse(response);
+    function fetchComments(targetProfileId) {
+        return api.getCommentsByTarget(targetProfileId).then(response => {
+
+            const newComments = CommentAssembler.toEntitiesFromResponse(response);
+            const otherComments = comments.value.filter(c => c.target_profile_id !== targetProfileId);
+            comments.value = [...otherComments, ...newComments];
             commentsLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
@@ -148,13 +156,12 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
      */
 
     function addComment(commentData) {
+
         const payload = {
-            id: `cmt_00${comments.value.length + 1}`,
-            author_profile_id: commentData.author_profile_id,
-            target_profile_id: commentData.target_profile_id,
+            authorProfileId: parseInt(commentData.author_profile_id) || 1, // Entero
+            targetProfileId: parseInt(commentData.target_profile_id), // Entero
             content: commentData.content,
-            rating: commentData.rating || 0,
-            created_at: commentData.created_at
+            rating: parseInt(commentData.rating) || 0
         };
 
         return api.createComment(payload).then(response => {
