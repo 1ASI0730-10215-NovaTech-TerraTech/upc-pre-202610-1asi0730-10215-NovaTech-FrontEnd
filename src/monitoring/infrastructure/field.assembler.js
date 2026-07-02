@@ -29,10 +29,11 @@ export class FieldAssembler {
      * @returns {Field[]} Field entities.
      */
     static toEntitiesFromResponse(response) {
-        if (response.status !== 200) {
+        if (response.status !== 200 && response.status !== 201) {
             return [];
         }
         let resources = response.data instanceof Array ? response.data : response.data['fields'];
+        if (!resources || !Array.isArray(resources)) return [];
         return resources.map(resource => this.toEntityFromResource(resource));
     }
 }
