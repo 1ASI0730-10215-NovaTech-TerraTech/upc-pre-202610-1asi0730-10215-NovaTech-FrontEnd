@@ -142,16 +142,11 @@ const useMonitoringStore = defineStore('monitoring', () => {
      */
     function getCurrentProfileId() {
         const iamStore = useIamStore();
-        // Intentar obtener el profile_id del usuario actual
-        // En un sistema real, esto vendría del perfil del usuario
-        // Por ahora, usamos un valor por defecto si no hay usuario autenticado
         const userId = iamStore.currentUserId;
         if (userId) {
-            // Idealmente, aquí se buscaría el perfil asociado al userId
-            // Pero como es un mock, devolvemos 1
             return 1;
         }
-        return 1; // Fallback para desarrollo
+        return 1;
     }
 
     /**
@@ -186,14 +181,12 @@ const useMonitoringStore = defineStore('monitoring', () => {
             status: device.status,
             lastSync: device.last_sync || new Date().toISOString() // El backend espera "lastSync"
         };
-        console.log('📤 Enviando al backend (Device):', payload);
         monitoringApi.createDevice(payload).then(response => {
             const resource = response.data;
             const newDevice = DeviceAssembler.toEntityFromResource(resource);
             devices.value.push(newDevice);
         }).catch(error => {
             errors.value.push(error);
-            console.error('❌ Error al crear dispositivo:', error);
         });
     }
 
@@ -228,7 +221,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             status: device.status,
             lastSync: device.last_sync || new Date().toISOString()
         };
-        console.log(`📤 Actualizando dispositivo ${device.id} en backend:`, payload);
         monitoringApi.updateDevice(device.id, payload).then(response => {
             const resource = response.data;
             const updatedDevice = DeviceAssembler.toEntityFromResource(resource);
@@ -236,7 +228,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             if (index !== -1) devices.value[index] = updatedDevice;
         }).catch(error => {
             errors.value.push(error);
-            console.error(`❌ Error al actualizar dispositivo ${device.id}:`, error);
         });
     }
 
@@ -263,7 +254,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             if (index !== -1) devices.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);
-            console.error(`❌ Error al eliminar dispositivo ${device.id}:`, error);
         });
     }
 
@@ -332,7 +322,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             fields.value.push(newField);
         }).catch(error => {
             errors.value.push(error);
-            console.error('❌ Error al crear campo:', error);
         });
     }
 
@@ -383,7 +372,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             if (index !== -1) fields.value[index] = updatedField;
         }).catch(error => {
             errors.value.push(error);
-            console.error(`❌ Error al actualizar campo ${field.id}:`, error);
         });
     }
 
@@ -410,7 +398,6 @@ const useMonitoringStore = defineStore('monitoring', () => {
             if (index !== -1) fields.value.splice(index, 1);
         }).catch(error => {
             errors.value.push(error);
-            console.error(`❌ Error al eliminar campo ${field.id}:`, error);
         });
     }
 
