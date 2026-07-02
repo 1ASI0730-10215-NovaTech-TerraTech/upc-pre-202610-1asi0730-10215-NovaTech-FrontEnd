@@ -12,7 +12,7 @@ export class CommunityManagementApi extends BaseApi {
      */
     constructor() {
         super();
-        this.resource = 'community_profiles';
+        this.resource = 'community-profiles';
     }
 
     /**
@@ -60,8 +60,8 @@ export class CommunityManagementApi extends BaseApi {
      *
      * @returns {Promise<import('axios').AxiosResponse>} The response from the server containing the list of comments.
      */
-    getComments() {
-        return this.http.get('/comments');
+    getCommentsByTarget(targetProfileId) {
+        return this.http.get(`/${this.resource}/${targetProfileId}/comments`);
     }
 
     /**
