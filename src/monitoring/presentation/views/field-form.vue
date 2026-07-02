@@ -4,11 +4,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { useMonitoringStore } from '../../application/monitoring.store.js';
 import { computed, onMounted, ref } from 'vue';
 import { Field } from '../../domain/model/field.entity.js';
+import useIamStore from "../../../iam/application/iam.store.js";
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const store = useMonitoringStore();
+const iamStore = useIamStore();
 const { errors, addField, updateField } = store;
 
 const form = ref({
@@ -58,7 +60,19 @@ function submit() {
     return;
   }
 
-  const field = new Field({ ...form.value });
+  // Obtener el profile_id del usuario actual desde el store de IAM
+  const currentUserId = iamStore.currentUserId || 1;
+
+  const fieldData = {
+    profile_id: currentUserId,
+    name: form.value.name,
+    size_m2: form.value.size_m2,
+    soil_type: form.value.soil_type,
+    latitude: form.value.latitude,
+    longitude: form.value.longitude
+  };
+
+  const field = new Field(fieldData);
 
   if (isEdit.value) {
     field.id = route.params.id;
@@ -128,7 +142,6 @@ function cancel() {
           <small v-if="submitted && !form.soil_type" class="error-text">{{ t('monitoring.soil-type-required') }}</small>
         </div>
 
-        <!-- Latitude and Longitude inputs side by side -->
         <div class="form-row">
           <div class="form-group">
             <label for="latitude" class="form-label required">{{ t('monitoring.latitude') }}</label>
