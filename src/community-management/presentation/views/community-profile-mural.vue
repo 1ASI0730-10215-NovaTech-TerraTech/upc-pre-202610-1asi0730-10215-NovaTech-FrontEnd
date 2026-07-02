@@ -58,7 +58,7 @@ onMounted(async () => {
   if (!store.profilesLoaded) await store.fetchProfiles();
   if (!store.commentsLoaded) await store.fetchComments();
 
-  profile.value = store.getProfileById(route.params.id);
+  profile.value = store.getProfileById(parseInt(route.params.id));
 
   if (!profile.value) {
     router.push({ name: 'community-profile-list' });
@@ -90,7 +90,7 @@ const publishReview = async () => {
   }
 
   const newComment = new Comment({
-    author_profile_id: 'prof_001',
+    author_profile_id: 1,
     target_profile_id: profile.value.profile_id,
     content: newCommentText.value,
     rating: userRating.value
