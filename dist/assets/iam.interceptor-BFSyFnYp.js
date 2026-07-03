@@ -1,0 +1,1 @@
+import{l as e}from"./index-DA80had3.js";var t=t=>{let{isSignedIn:n,currentToken:r}=e();return n&&(t.headers.Authorization=`Bearer ${r}`,console.log(t)),t};export{t as iamInterceptor};
