@@ -18,8 +18,9 @@
 		"add_title": "Agregar nuevo producto",
 		"product": "Producto",
 		"product_id": "ID del Producto",
-		"product_placeholder": "Ej: Tomate, Lechuga, Maíz",
+		"product_placeholder": "Ingresa el ID del producto",
 		"quantity": "Cantidad",
+		"quantity_placeholder": "Ingresa la cantidad en stock",
 		"unit": "Unidad",
 		"unit_und": "unidades",
 		"minimum_stock": "Stock mínimo",
@@ -40,7 +41,7 @@
 		"error_quantity": "Ingrese una cantidad válida",
 		"error_general": "Error al agregar producto",
 		"warehouse": "Almacén",
-		"warehouse_placeholder": "Ej: Almacén Central, Depósito Norte"
+		"warehouse_placeholder": "Ingresa el nombre o código del almacén"
 	},
 	"home": {
 		"title": "Inicio",
