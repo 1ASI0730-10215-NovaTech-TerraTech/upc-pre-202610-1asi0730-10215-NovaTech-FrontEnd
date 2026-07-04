@@ -1,8 +1,29 @@
+<!-- src/analytics/presentation/views/report-list.vue -->
 <template>
   <div class="analytics-container">
     <div class="analytics-header">
       <h2>{{ $t('analytics.title') }}</h2>
       <p>{{ $t('analytics.subtitle') }}</p>
+    </div>
+
+    <!-- Mostrar estadísticas de dispositivos e inventario -->
+    <div class="stats-summary">
+      <div class="stat-card">
+        <i class="pi pi-microchip"></i>
+        <div>
+          <span class="stat-number">{{ store.deviceStats.total }}</span>
+          <span class="stat-label">{{ $t('analytics.devices-stats') }}</span>
+          <span class="stat-detail">({{ store.deviceStats.online }} {{ $t('monitoring.online') }}, {{ store.deviceStats.offline }} {{ $t('monitoring.offline') }})</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="pi pi-box"></i>
+        <div>
+          <span class="stat-number">{{ store.inventoryStats.totalItems }}</span>
+          <span class="stat-label">{{ $t('analytics.products-stats') }}</span>
+          <span class="stat-detail">({{ store.inventoryStats.totalStock }} {{ $t('monitoring.units') }})</span>
+        </div>
+      </div>
     </div>
 
     <div v-if="store.loading" class="loading-state">
@@ -29,33 +50,42 @@
           </div>
           <div class="card-body">
             <div class="agricultural-map">
-              <div class="plot optimal">P1<span class="tooltip">dev_001: {{ $t('analytics.optimal') }}</span></div>
-              <div class="plot critical animate-pulse">P2<span class="tooltip">dev_003: {{ $t('analytics.critical') }}</span></div>
-              <div class="plot critical">P3<span class="tooltip">dev_004: {{ $t('analytics.critical') }}</span></div>
-              <div class="plot warning">P4<span class="tooltip">dev_005: {{ $t('analytics.warning') }}</span></div>
-              <div class="plot optimal">P5<span class="tooltip">dev_001: {{ $t('analytics.optimal') }}</span></div>
+              <!-- Usar dispositivos reales para el mapa -->
+              <div
+                  v-for="device in displayDevices"
+                  :key="device.id"
+                  class="plot"
+                  :class="{
+                  optimal: device.status === 'ONLINE',
+                  warning: device.status === 'LOW_BATTERY',
+                  critical: device.status === 'OFFLINE'
+                }"
+              >
+                {{ device.id }}
+                <span class="tooltip">{{ device.id }}: {{ device.status }}</span>
+              </div>
             </div>
             <div class="map-legend">
               <div class="legend-item">
                 <span class="legend-dot optimal"></span>
                 <span class="legend-label">{{ $t('analytics.optimal') }}</span>
-                <span class="legend-value">> 50%</span>
+                <span class="legend-value">{{ $t('monitoring.status-active') }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot warning"></span>
                 <span class="legend-label">{{ $t('analytics.warning') }}</span>
-                <span class="legend-value">30% - 50%</span>
+                <span class="legend-value">{{ $t('monitoring.status-error') }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot critical"></span>
                 <span class="legend-label">{{ $t('analytics.critical') }}</span>
-                <span class="legend-value">< 30%</span>
+                <span class="legend-value">{{ $t('monitoring.status-inactive') }}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Dashboard Metrics Card -->
+        <!-- Dashboard Metrics Card - Ahora con datos reales -->
         <div class="visual-card">
           <div class="card-header">
             <span class="icon-box"><i class="pi pi-chart-line"></i></span>
@@ -63,12 +93,27 @@
           </div>
           <div class="card-body chart-body">
             <div class="bar-chart">
-              <div v-for="rep in store.reportsList" :key="rep.id" class="chart-bar-wrapper">
-                <div class="bar-value">{{ rep.mean_value }}%</div>
+              <div
+                  v-for="item in store.averageHumidity"
+                  :key="item.id"
+                  class="chart-bar-wrapper"
+              >
+                <div class="bar-value">{{ Math.round(item.mean_value) }}%</div>
                 <div class="bar-container">
-                  <div class="bar" :style="{ height: rep.mean_value + '%' }"></div>
+                  <div
+                      class="bar"
+                      :style="{
+                      height: Math.min(Math.max(item.mean_value, 0), 100) + '%',
+                      background: item.mean_value > 70 ? 'linear-gradient(to top, #2e7d32, #4caf50)' :
+                                   item.mean_value > 40 ? 'linear-gradient(to top, #f57c00, #ffb300)' :
+                                   'linear-gradient(to top, #c62828, #ef5350)'
+                    }"
+                  ></div>
                 </div>
-                <div class="bar-label">{{ rep.standard_deviation }}</div>
+                <div class="bar-label">{{ item.device_id || item.id }}</div>
+              </div>
+              <div v-if="store.averageHumidity.length === 0" class="no-data">
+                {{ $t('monitoring.no-devices') }}
               </div>
             </div>
           </div>
@@ -99,6 +144,10 @@
               </div>
             </div>
           </div>
+          <div v-if="store.reportsList.length === 0" class="no-data-card">
+            <i class="pi pi-inbox"></i>
+            <p>{{ $t('monitoring.no-devices') }}</p>
+          </div>
         </div>
       </div>
 
@@ -119,13 +168,43 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useAnalyticsStore } from '../../application/analytics-management.store.js';
+import { useMonitoringStore } from '../../../monitoring/application/monitoring.store.js';
+import { useStockStore } from '../../../stock/application/stock.store.js';
 
+// Inicializar stores
 const store = useAnalyticsStore();
+const monitoringStore = useMonitoringStore();
+const stockStore = useStockStore();
 
-onMounted(() => {
-  store.fetchReports();
+// Computed para obtener los dispositivos a mostrar en el mapa
+const displayDevices = computed(() => {
+  // Si hay dispositivos en el store de monitoring, usar los primeros 5
+  if (monitoringStore.devices && monitoringStore.devices.length > 0) {
+    return monitoringStore.devices.slice(0, 5);
+  }
+  // Si no hay dispositivos, usar datos de ejemplo
+  return [
+    { id: 'dev_001', status: 'ONLINE' },
+    { id: 'dev_002', status: 'OFFLINE' },
+    { id: 'dev_003', status: 'ONLINE' },
+    { id: 'dev_004', status: 'LOW_BATTERY' },
+    { id: 'dev_005', status: 'ONLINE' }
+  ];
+});
+
+onMounted(async () => {
+  console.log('🔄 Iniciando carga de datos para Analytics...');
+
+  // Cargar datos de analytics (esto también carga monitoring y stock)
+  await store.fetchReports();
+
+  // Verificar que los datos se cargaron correctamente
+  console.log('📊 Estado final:');
+  console.log('  - Dispositivos:', monitoringStore.devices.length);
+  console.log('  - Inventario:', stockStore.inventory.length);
+  console.log('  - Reportes:', store.reportsList.length);
 });
 
 const triggerExportReport = () => {
@@ -136,7 +215,19 @@ const triggerExportReport = () => {
   reportContent += "Module: Analytics Management\n";
   reportContent += "System Status: Domain Event Executed Successfully\n\n";
   reportContent += "--------------------------------------------------------\n";
-  reportContent += "ANALYZED DEVICES SUMMARY\n";
+  reportContent += "DEVICES SUMMARY\n";
+  reportContent += "--------------------------------------------------------\n";
+  reportContent += `Total Devices: ${store.deviceStats.total}\n`;
+  reportContent += `  - Online: ${store.deviceStats.online}\n`;
+  reportContent += `  - Offline: ${store.deviceStats.offline}\n`;
+  reportContent += `  - Low Battery: ${store.deviceStats.lowBattery}\n\n`;
+  reportContent += "--------------------------------------------------------\n";
+  reportContent += "INVENTORY SUMMARY\n";
+  reportContent += "--------------------------------------------------------\n";
+  reportContent += `Total Products: ${store.inventoryStats.totalItems}\n`;
+  reportContent += `Total Stock Units: ${store.inventoryStats.totalStock}\n\n`;
+  reportContent += "--------------------------------------------------------\n";
+  reportContent += "ANALYZED REPORTS\n";
   reportContent += "--------------------------------------------------------\n";
 
   store.reportsList.forEach((rep, index) => {
@@ -151,7 +242,7 @@ const triggerExportReport = () => {
   reportContent += "\n\n--------------------------------------------------------\n";
   reportContent += "GENERAL IRRIGATION RECOMMENDATIONS\n";
   reportContent += "--------------------------------------------------------\n";
-  reportContent += "Optimize drip irrigation cycles as a priority in sectors controlled by dev_003 and dev_004 devices due to humidity readings below the tolerated critical threshold.\n\n";
+  reportContent += "Optimize drip irrigation cycles as a priority in sectors controlled by devices with low humidity readings.\n\n";
   reportContent += "========================================================\n";
   reportContent += "              END OF REPORT - TERRATECH 2026            \n";
   reportContent += "========================================================\n";
@@ -167,11 +258,67 @@ const triggerExportReport = () => {
 </script>
 
 <style scoped>
+/* Mantén todos tus estilos existentes */
+
 .analytics-container {
   padding: 30px;
   background-color: #f4f7f4;
   min-height: 90vh;
   font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Nuevos estilos para el resumen de estadísticas */
+.stats-summary {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #e0e0e0;
+  flex: 1;
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card i {
+  font-size: 1.8rem;
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1b5e20;
+  display: block;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.stat-detail {
+  font-size: 0.7rem;
+  color: #888;
+  margin-left: 0.5rem;
 }
 
 .loading-state {
@@ -183,18 +330,6 @@ const triggerExportReport = () => {
   gap: 1rem;
 }
 
-.analytics-header h2 {
-  color: #1b5e20;
-  margin: 0 0 5px 0;
-}
-
-.analytics-header p {
-  color: #666;
-  margin: 0 0 20px 0;
-  font-size: 14px;
-}
-
-/* Alerta */
 .alert-banner-critical {
   background-color: #f3e5f5;
   border-left: 5px solid #7b1fa2;
@@ -227,7 +362,6 @@ const triggerExportReport = () => {
   margin-bottom: 30px;
 }
 
-/* Tarjetas */
 .visual-card {
   background: white;
   border-radius: 16px;
@@ -270,7 +404,6 @@ const triggerExportReport = () => {
   padding: 20px;
 }
 
-/* Mapa agrícola */
 .agricultural-map {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -329,7 +462,6 @@ const triggerExportReport = () => {
   100% { opacity: 1; }
 }
 
-/* Leyenda mejorada - más limpia */
 .map-legend {
   display: flex;
   justify-content: space-around;
@@ -367,7 +499,6 @@ const triggerExportReport = () => {
   color: #888;
 }
 
-/* Gráfico de barras mejorado */
 .chart-body {
   display: flex;
   align-items: flex-end;
@@ -411,7 +542,6 @@ const triggerExportReport = () => {
 
 .bar {
   width: 100%;
-  background: linear-gradient(to top, #2e7d32, #4caf50);
   border-radius: 6px 6px 0 0;
   transition: height 0.3s ease;
 }
@@ -423,7 +553,28 @@ const triggerExportReport = () => {
   font-weight: 500;
 }
 
-/* Sección de reportes */
+.no-data {
+  width: 100%;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.no-data-card {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+.no-data-card i {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  color: #ddd;
+}
+
 .reports-section h3 {
   color: #2e7d32;
   margin-bottom: 20px;
@@ -446,7 +597,6 @@ const triggerExportReport = () => {
   gap: 20px;
 }
 
-/* Tarjetas de métricas */
 .card-metric {
   background: white;
   border: 1px solid #e0e0e0;
@@ -526,7 +676,6 @@ const triggerExportReport = () => {
   font-size: 10px;
 }
 
-/* Controles inferiores */
 .bottom-controls {
   margin-top: 30px;
   background: white;
@@ -593,6 +742,12 @@ const triggerExportReport = () => {
   }
   .btn-action-export {
     width: 100%;
+  }
+  .stats-summary {
+    flex-direction: column;
+  }
+  .stat-card {
+    min-width: auto;
   }
 }
 </style>
