@@ -18,8 +18,9 @@
 		"add_title": "Add new product",
 		"product": "Product",
 		"product_id": "Product ID",
-		"product_placeholder": "Ex: Tomato, Lettuce, Corn",
+		"product_placeholder": "Enter product ID number",
 		"quantity": "Quantity",
+		"quantity_placeholder": "Enter stock quantity",
 		"unit": "Unit",
 		"unit_und": "units",
 		"minimum_stock": "Minimum stock",
@@ -40,7 +41,7 @@
 		"error_quantity": "Enter a valid quantity",
 		"error_general": "Error adding product",
 		"warehouse": "Warehouse",
-		"warehouse_placeholder": "Ex: Main Warehouse, North Storage"
+		"warehouse_placeholder": "Enter warehouse name or code"
 	},
 	"home": {
 		"title": "Welcome",
