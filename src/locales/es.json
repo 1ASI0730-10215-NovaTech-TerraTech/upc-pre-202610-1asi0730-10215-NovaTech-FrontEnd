@@ -199,7 +199,10 @@
 		"latitude-placeholder": "ej., -9.9306",
 		"longitude-placeholder": "ej., -76.2422",
 		"latitude-required": "La latitud es obligatoria",
-		"longitude-required": "La longitud es obligatoria"
+		"longitude-required": "La longitud es obligatoria",
+		"online": "en línea",
+		"offline": "desconectados",
+		"units": "unidades"
 	},
 	"analytics": {
 		"title": "Dashboard de Analíticas - TerraTech",
@@ -220,7 +223,9 @@
 		"warning": "Advertencia",
 		"critical": "Crítico",
 		"humidity-above": "Humedad > 50%",
-		"humidity-below": "Humedad < 30%"
+		"humidity-below": "Humedad < 30%",
+		"devices-stats": "dispositivos",
+		"products-stats": "productos"
 	},
 	"profiles": {
 		"title": "Perfiles Agrícolas",
