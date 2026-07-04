@@ -120,7 +120,7 @@ onMounted(() => {
                 type="number"
                 min="1"
                 step="1"
-                placeholder="Ej: 1, 2, 3..."
+                :placeholder="t('stock.product_placeholder')"
                 autocomplete="off"
             />
           </div>
@@ -132,7 +132,7 @@ onMounted(() => {
                 type="number"
                 min="1"
                 step="1"
-                placeholder="Ej: 10, 50, 100"
+                :placeholder="t('stock.quantity_placeholder')"
             />
           </div>
 
