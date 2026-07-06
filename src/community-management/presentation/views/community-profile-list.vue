@@ -6,30 +6,54 @@ import { useCommunityManagementStore } from "../../application/community-managem
 import { onMounted, toRefs, ref, computed } from "vue";
 import InputText from 'primevue/inputtext';
 
+import useIamStore from "../../../iam/application/iam.store.js";
+import { useProfileManagementStore } from "../../../profile-management/application/profile-management.store.js";
+
 const { t } = useI18n();
 const router = useRouter();
 const confirm = useConfirm();
+
 const store = useCommunityManagementStore();
+const iamStore = useIamStore();
+const profileStore = useProfileManagementStore();
 
 const { profiles, profilesLoaded } = toRefs(store);
 const { fetchProfiles, deleteProfile } = store;
 
 const searchQuery = ref('');
 
+const myGeneralProfileId = computed(() => {
+  const myGeneralProfile = profileStore.profiles.find(p => p.user_id === iamStore.currentUserId);
+  return myGeneralProfile ? myGeneralProfile.id : null;
+});
+
 /**
  * Computed property that filters profiles based on the search query.
  * Represents the "Buscar usuario" command.
  */
 const filteredProfiles = computed(() => {
-  if (!searchQuery.value) return profiles.value;
-  return profiles.value.filter(p =>
+
+  let visibleProfiles = profiles.value.filter(p => {
+
+    return p.visibility_status === true || p.visibility_status === 1 || p.profile_id === myGeneralProfileId.value;
+  });
+
+
+  if (!searchQuery.value) return visibleProfiles;
+
+  return visibleProfiles.filter(p =>
       p.nickname.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
-onMounted(() => {
+onMounted(async () => {
+
   if (!store.profilesLoaded) {
-    fetchProfiles();
+    await fetchProfiles();
+  }
+
+  if (!profileStore.profilesLoaded) {
+    await profileStore.fetchProfiles();
   }
 });
 
@@ -72,7 +96,7 @@ const confirmDelete = (profile) => {
     </div>
 
     <div v-if="searchQuery && filteredProfiles.length === 0" class="not-found-message">
-      <i class="pi pi-info-circle"></i> No se encontraron usuarios con ese nickname.
+      <i class="pi pi-info-circle"></i> {{ t('community.profiles.no-users-found') }}
     </div>
 
     <pv-data-table v-else :loading="!profilesLoaded" :rows="5" :value="filteredProfiles" paginator class="profiles-table">
@@ -81,9 +105,12 @@ const confirmDelete = (profile) => {
 
       <pv-column :header="t('community.profiles.actions')">
         <template #body="slotProps">
-          <pv-button icon="pi pi-user" rounded severity="info" text @click="navigateToMural(slotProps.data.id)" v-tooltip="'Ver Mural'"/>
-          <pv-button icon="pi pi-pencil" rounded text @click="navigateToEdit(slotProps.data.id)"/>
-          <pv-button icon="pi pi-trash" rounded severity="danger" text @click="confirmDelete(slotProps.data)"/>
+          <pv-button icon="pi pi-user" rounded severity="info" text @click="navigateToMural(slotProps.data.id)" v-tooltip="t('community.profiles.view-mural')"/>
+
+          <template v-if="slotProps.data.profile_id === myGeneralProfileId">
+            <pv-button icon="pi pi-pencil" rounded text @click="navigateToEdit(slotProps.data.id)"/>
+            <pv-button icon="pi pi-trash" rounded severity="danger" text @click="confirmDelete(slotProps.data)"/>
+          </template>
         </template>
       </pv-column>
     </pv-data-table>
@@ -112,7 +139,7 @@ h1 {
   margin-bottom: 0.5rem;
 }
 
-/* Contenedor que mantiene el espacio reservado y evita cambios de layout */
+
 .button-container {
   display: inline-block;
   width: fit-content;
@@ -123,18 +150,17 @@ h1 {
   background-color: #4fd1c5;
   border: none;
   transition: background-color 0.2s ease;
-  /* Fijar dimensiones constantes */
   min-width: 120px;
   height: 42px;
   padding: 0.75rem 1.25rem;
 }
 
-/* Mantener las mismas dimensiones en hover y eliminar efectos */
+
 .add-button:hover {
   background-color: #38b2ac;
 }
 
-/* Forzar que no haya cambios de padding, margin, border, box-shadow o transform */
+
 .add-button:hover,
 .add-button:focus,
 .add-button:active {
@@ -146,12 +172,12 @@ h1 {
   outline: none !important;
 }
 
-/* Eliminar el efecto ripple que causa cambios de tamaño */
+
 .add-button :deep(.p-ink) {
   display: none !important;
 }
 
-/* Prevenir cambios en el ícono y texto */
+
 .add-button :deep(.p-button-label),
 .add-button :deep(.p-icon),
 .add-button :deep(.pi) {
@@ -159,13 +185,13 @@ h1 {
   transform: none !important;
 }
 
-/* Prevenir cualquier efecto de escala o transformación */
+
 .add-button :deep(.p-button-icon),
 .add-button :deep(.p-button-label) {
   transform: none !important;
 }
 
-/* Contenedor de búsqueda personalizado */
+
 .search-container {
   position: relative;
   width: 300px;
@@ -220,13 +246,13 @@ h1 {
   transition: none;
 }
 
-/* Asegurar que la tabla nunca cambie su posición */
+
 .profiles-table :deep(.p-datatable-wrapper) {
   transition: none !important;
   transform: none !important;
 }
 
-/* Forzar que los botones de acciones no afecten el layout y eliminar doble hover */
+
 .profiles-table :deep(.p-button) {
   transition: none !important;
   box-shadow: none !important;
@@ -238,12 +264,12 @@ h1 {
   box-shadow: none !important;
 }
 
-/* Eliminar el ripple de los botones de la tabla */
+
 .profiles-table :deep(.p-ink) {
   display: none !important;
 }
 
-/* Prevenir cualquier reflow en las filas */
+
 .profiles-table :deep(.p-datatable-tbody > tr) {
   transform: translateZ(0);
   backface-visibility: hidden;

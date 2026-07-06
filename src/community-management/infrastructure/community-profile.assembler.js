@@ -12,7 +12,14 @@ export class CommunityProfileAssembler {
      * @returns {CommunityProfile} CommunityProfile entity.
      */
     static toEntityFromResource(resource) {
-        return new CommunityProfile({...resource});
+        return new CommunityProfile({
+            id: resource.id,
+            profile_id: resource.profileId,
+            nickname: resource.nickname,
+            reputation_score: resource.reputationScore,
+            public_bio: resource.publicBio,
+            visibility_status: resource.visibilityStatus === 1
+        });
     }
 
     /**
@@ -21,13 +28,8 @@ export class CommunityProfileAssembler {
      * @returns {CommunityProfile[]} CommunityProfile entities.
      */
     static toEntitiesFromResponse(response) {
-        if (response.status !== 200) {
-            return [];
-        }
-        let resources = response.data instanceof Array ? response.data : response.data['community_profiles'];
-
-        if (!resources) resources = response.data;
-
+        if (response.status !== 200) return [];
+        let resources = response.data;
         return resources.map(resource => this.toEntityFromResource(resource));
     }
 }
