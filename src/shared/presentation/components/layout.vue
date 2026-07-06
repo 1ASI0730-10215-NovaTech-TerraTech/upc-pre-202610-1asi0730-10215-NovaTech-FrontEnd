@@ -3,6 +3,7 @@ import LanguageSwitcher from "./language-switcher.vue";
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
+import useIamStore from "../../../iam/application/iam.store.js";
 
 const router = useRouter()
 const route  = useRoute()
@@ -23,6 +24,13 @@ const items = [
   { label: "nav.notifications", to: "/notifications", icon: "pi pi-bell" },
   { label: "nav.community", to: "/community", icon: "pi pi-users" }
 ];
+
+const iamStore = useIamStore();
+
+const handleSignOut = () => {
+  iamStore.signOut();
+  router.push({ path: "/auth/login" });
+}
 </script>
 
 <template>
@@ -79,6 +87,10 @@ const items = [
 
         <div class="topbar-right">
           <language-switcher />
+          <button class="logout-button" @click="handleSignOut" :title="t('nav.logout || Log Out')">
+            <i class="pi pi-sign-out logout-icon"></i>
+            <span class="logout-label">Log out</span>
+          </button>
         </div>
 
       </header>
@@ -269,7 +281,38 @@ const items = [
   flex: 1;
   padding: 2.5rem 3rem;
 }
+/* =========================================================
+   LOG OUT
+========================================================= */
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
 
+.logout-button:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.logout-icon {
+  font-size: 1rem;
+}
+
+.content {
+  flex: 1;
+  padding: 2.5rem 3rem;
+}
 /* =========================================================
    RESPONSIVE - TABLET
 ========================================================= */
@@ -278,15 +321,12 @@ const items = [
   .sidebar {
     width: 200px;
   }
-
   .main-area {
     margin-left: 200px;
   }
-
   .content {
     padding: 2rem;
   }
-
   .topbar {
     padding: 1rem 1.5rem;
   }
@@ -296,40 +336,18 @@ const items = [
    RESPONSIVE - MOBILE
 ========================================================= */
 @media (max-width: 600px) {
-
-  .sidebar {
-    width: 70px;
-  }
-
-  .main-area {
-    margin-left: 70px;
-  }
-
-  .brand-name,
-  .nav-label {
+  .sidebar { width: 70px; }
+  .main-area { margin-left: 70px; }
+  .brand-name, .nav-label, .logout-label {
     display: none;
   }
-
-  .nav-item {
-    justify-content: center;
-    padding: 0.8rem 0;
+  .logout-button {
+    padding: 0.5rem;
   }
-
-  .nav-icon {
-    width: auto;
-    font-size: 1.2rem;
-  }
-
-  .sidebar-header {
-    padding-bottom: 1.5rem;
-  }
-
-  .content {
-    padding: 1.25rem;
-  }
-
-  .page-title {
-    font-size: 1rem;
-  }
+  .nav-item { justify-content: center; padding: 0.8rem 0; }
+  .nav-icon { width: auto; font-size: 1.2rem; }
+  .sidebar-header { padding-bottom: 1.5rem; }
+  .content { padding: 1.25rem; }
+  .page-title { font-size: 1rem; }
 }
 </style>

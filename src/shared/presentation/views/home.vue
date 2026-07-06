@@ -328,7 +328,6 @@ onMounted(() => {
   margin: 0;
 }
 
-/* Tarjetas de resumen */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -415,8 +414,6 @@ onMounted(() => {
   letter-spacing: 0.3px;
   white-space: nowrap;
 }
-
-/* Gráficos */
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -490,8 +487,6 @@ onMounted(() => {
   text-align: right;
   flex-shrink: 0;
 }
-
-/* Tabla */
 .table-card {
   background: white;
   border-radius: 12px;
