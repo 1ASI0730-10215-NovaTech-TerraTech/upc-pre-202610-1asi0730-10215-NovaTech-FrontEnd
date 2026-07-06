@@ -59,7 +59,7 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
      */
     function addProfile(profile) {
         const payload = {
-            profileId: parseInt(profile.profile_id) || 1,
+            profileId: parseInt(profile.profile_id),
             nickname: profile.nickname,
             reputationScore: parseInt(profile.reputation_score) || 0,
             publicBio: profile.public_bio,
@@ -141,12 +141,11 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
 
     /**
      * Filters and retrieves comments directed to a specific profile.
-     * @param {string} targetProfileId - Identifier of the profile receiving the comments.
+     * @param {string|number} targetProfileId - Identifier of the profile receiving the comments.
      * @returns {Array} List of comments associated with the target profile.
      */
-
     function getCommentsByTargetProfileId(targetProfileId) {
-        return comments.value.filter(c => c.target_profile_id === targetProfileId);
+        return comments.value.filter(c => Number(c.target_profile_id) === Number(targetProfileId));
     }
 
     /**
@@ -174,6 +173,44 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
         });
     }
 
+    /**
+     * Updates a comment and synchronizes local state.
+     */
+    function updateComment(comment) {
+        const payload = {
+            content: comment.content,
+            rating: parseInt(comment.rating) || 0
+        };
+
+        return api.updateComment(comment.id, payload).then(response => {
+            const updatedComment = CommentAssembler.toEntityFromResource(response.data);
+            const index = comments.value.findIndex(c => c.id === updatedComment.id);
+            if (index !== -1) {
+                comments.value[index] = updatedComment;
+            }
+            return true;
+        }).catch(error => {
+            errors.value.push(error);
+            return false;
+        });
+    }
+
+    /**
+     * Deletes a comment and removes it from the local state.
+     */
+    function deleteComment(commentId) {
+        return api.deleteComment(commentId).then(() => {
+            const index = comments.value.findIndex(c => c.id === commentId);
+            if (index !== -1) {
+                comments.value.splice(index, 1);
+            }
+            return true;
+        }).catch(error => {
+            errors.value.push(error);
+            return false;
+        });
+    }
+
     return {
         profiles,
         profilesLoaded,
@@ -188,6 +225,8 @@ export const useCommunityManagementStore = defineStore('communityManagement', ()
         commentsLoaded,
         fetchComments,
         getCommentsByTargetProfileId,
-        addComment
+        addComment,
+        updateComment,
+        deleteComment
     };
 });
