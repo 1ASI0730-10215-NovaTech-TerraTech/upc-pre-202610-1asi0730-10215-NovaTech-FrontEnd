@@ -12,7 +12,7 @@ export class CommunityManagementApi extends BaseApi {
      */
     constructor() {
         super();
-        this.resource = 'community_profiles';
+        this.resource = 'community-profiles';
     }
 
     /**
@@ -60,8 +60,8 @@ export class CommunityManagementApi extends BaseApi {
      *
      * @returns {Promise<import('axios').AxiosResponse>} The response from the server containing the list of comments.
      */
-    getComments() {
-        return this.http.get('/comments');
+    getCommentsByTarget(targetProfileId) {
+        return this.http.get(`/${this.resource}/${targetProfileId}/comments`);
     }
 
     /**
@@ -72,6 +72,23 @@ export class CommunityManagementApi extends BaseApi {
      */
     createComment(payload) {
         return this.http.post('/comments', payload);
+    }
+
+    /**
+     * Updates an existing comment.
+     * @param {string|number} id - Comment identifier.
+     * @param {Object} payload - Updated comment data.
+     */
+    updateComment(id, payload) {
+        return this.http.put(`/comments/${id}`, payload);
+    }
+
+    /**
+     * Deletes a comment by its identifier.
+     * @param {string|number} id - Comment identifier.
+     */
+    deleteComment(id) {
+        return this.http.delete(`/comments/${id}`);
     }
 
 }

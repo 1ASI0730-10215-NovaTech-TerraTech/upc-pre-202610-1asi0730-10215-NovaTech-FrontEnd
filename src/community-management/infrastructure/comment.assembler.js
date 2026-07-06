@@ -12,7 +12,14 @@ export class CommentAssembler {
      * @returns {Comment} Comment entity.
      */
     static toEntityFromResource(resource) {
-        return new Comment({...resource});
+        return new Comment({
+            id: resource.id,
+            author_profile_id: resource.authorProfileId,
+            target_profile_id: resource.targetProfileId,
+            content: resource.content,
+            rating: resource.rating,
+            created_at: resource.createdAt
+        });
     }
 
     /**
@@ -22,10 +29,7 @@ export class CommentAssembler {
      */
     static toEntitiesFromResponse(response) {
         if (response.status !== 200) return [];
-
-        let resources = response.data instanceof Array ? response.data : response.data['comments'];
-        if (!resources) resources = response.data;
-
+        let resources = response.data;
         return resources.map(resource => this.toEntityFromResource(resource));
     }
 }

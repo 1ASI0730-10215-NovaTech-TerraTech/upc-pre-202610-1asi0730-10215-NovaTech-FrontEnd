@@ -9,7 +9,8 @@ import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import { useCommunityManagementStore } from '../../application/community-management.store.js';
-
+import { useProfileManagementStore } from '../../../profile-management/application/profile-management.store.js';
+import useIamStore from '../../../iam/application/iam.store.js';
 /**
  * Component for creating or editing Community Profiles.
  * Uses Vue I18n for internationalization and Pinia for state management.
@@ -20,6 +21,10 @@ const toast = useToast();
 const store = useCommunityManagementStore();
 const route = useRoute();
 const router = useRouter();
+
+
+const profileStore = useProfileManagementStore();
+const iamStore = useIamStore();
 
 /**
  * Computed property to determine if the component is in edit mode.
@@ -33,9 +38,9 @@ const isEdit = computed(() => !!route.params.id);
  */
 const profileData = ref({
   id: null,
-  profile_id: 'prof_001',
+  profile_id: null,
   nickname: '',
-  reputation_score: 0,
+  reputation_score: 50,
   public_bio: '',
   visibility_status: true
 });
@@ -45,13 +50,34 @@ const profileData = ref({
  * Fetches existing profile data if in edit mode.
  */
 onMounted(async () => {
+  if (!profileStore.profilesLoaded) {
+    await profileStore.fetchProfiles();
+  }
+
   if (isEdit.value) {
     if (!store.profilesLoaded) {
       await store.fetchProfiles();
     }
-    const selected = store.getProfileById(route.params.id);
+    const selected = store.getProfileById(parseInt(route.params.id));
     if (selected) {
       profileData.value = { ...selected };
+    }
+  }else {
+
+    const currentUserId = iamStore.currentUserId;
+    const userGeneralProfile = profileStore.profiles.find(p => p.user_id === currentUserId);
+
+    if (userGeneralProfile) {
+      profileData.value.profile_id = userGeneralProfile.id;
+    } else {
+
+      toast.add({
+        severity: 'warn',
+        summary: t('community.profiles.warn-title'),
+        detail: t('community.profiles.profile-required'),
+        life: 4000
+      });
+
     }
   }
 });
@@ -62,6 +88,17 @@ onMounted(async () => {
  * @returns {Promise<void>}
  */
 const handleSave = async () => {
+
+  if (!profileData.value.profile_id) {
+    toast.add({
+      severity: 'error',
+      summary: t('notifications.error'),
+      detail: t('community.profiles.missing-profile-id'),
+      life: 3000
+    });
+    return;
+  }
+
   let isSuccess = false;
 
   if (isEdit.value) {
@@ -73,16 +110,16 @@ const handleSave = async () => {
   if (isSuccess) {
     toast.add({
       severity: 'success',
-      summary: isEdit.value ? 'Actualizado' : 'Creado',
-      detail: 'Operación exitosa',
+      summary: isEdit.value ? t('community.profiles.updated') : t('community.profiles.created'),
+      detail: t('community.profiles.success-detail'),
       life: 2000
     });
     setTimeout(() => router.push({ name: 'community-profile-list' }), 2000);
   } else {
     toast.add({
       severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudo guardar la información',
+      summary: t('notifications.error'),
+      detail: t('community.profiles.save-error'),
       life: 3000
     });
   }
@@ -108,7 +145,7 @@ const handleCancel = () => {
 
         <div class="field-group">
           <label for="reputation" class="field-label">{{ t('community.profiles.reputationScore') }}</label>
-          <InputText id="reputation" v-model.number="profileData.reputation_score" type="number" class="full-width" />
+          <InputText id="reputation" v-model.number="profileData.reputation_score" type="number" class="full-width" readonly />
         </div>
 
         <div class="field-group">

@@ -262,7 +262,16 @@
 			"update-button": "Update",
 			"cancel-button": "Cancel",
 			"confirm-delete": "Are you sure you want to delete {name}?",
-			"delete-header": "Confirm Deletion"
+			"delete-header": "Confirm Deletion",
+			"warn-title": "Attention",
+			"profile-required": "You must create a General Profile before joining the Community",
+			"missing-profile-id": "Base Profile ID is missing",
+			"updated": "Updated",
+			"created": "Created",
+			"success-detail": "Operation successful",
+			"save-error": "Could not save the information",
+			"no-users-found": "No users found with that nickname.",
+			"view-mural": "View Mural"
 		},
 		"mural": {
 			"back": "Back",
@@ -277,7 +286,18 @@
 			"success": "Success",
 			"successPublished": "Review published successfully",
 			"error": "Error",
-			"errorPublishing": "Could not publish the review"
+			"errorPublishing": "Could not publish the review",
+			"updated": "Updated",
+			"comment-updated": "Comment updated successfully",
+			"update-error": "Could not update the comment",
+			"confirm-delete-comment": "Are you sure you want to delete this comment?",
+			"delete-comment-title": "Confirm Deletion",
+			"deleted": "Deleted",
+			"comment-deleted": "Comment deleted successfully",
+			"delete-error": "Could not delete the comment",
+			"user-label": "User {id}",
+			"save": "Save",
+			"cancel": "Cancel"
 		}
 	},
 	"notifications": {

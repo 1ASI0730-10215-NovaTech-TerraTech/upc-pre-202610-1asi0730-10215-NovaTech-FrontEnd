@@ -262,7 +262,16 @@
 			"update-button": "Actualizar",
 			"cancel-button": "Cancelar",
 			"confirm-delete": "¿Estás seguro de que deseas eliminar a {name}?",
-			"delete-header": "Confirmar Eliminación"
+			"delete-header": "Confirmar Eliminación",
+			"warn-title": "Atención",
+			"profile-required": "Debes crear un Perfil General antes de unirte a la Comunidad",
+			"missing-profile-id": "Falta el Profile ID base",
+			"updated": "Actualizado",
+			"created": "Creado",
+			"success-detail": "Operación exitosa",
+			"save-error": "No se pudo guardar la información",
+			"no-users-found": "No se encontraron usuarios con ese nickname.",
+			"view-mural": "Ver Mural"
 		},
 		"mural": {
 			"back": "Volver",
@@ -277,7 +286,18 @@
 			"success": "Éxito",
 			"successPublished": "Reseña publicada correctamente",
 			"error": "Error",
-			"errorPublishing": "No se pudo publicar la reseña"
+			"errorPublishing": "No se pudo publicar la reseña",
+			"updated": "Actualizado",
+			"comment-updated": "Comentario actualizado correctamente",
+			"update-error": "No se pudo actualizar el comentario",
+			"confirm-delete-comment": "¿Estás seguro de que quieres eliminar este comentario?",
+			"delete-comment-title": "Confirmar Eliminación",
+			"deleted": "Eliminado",
+			"comment-deleted": "Comentario eliminado correctamente",
+			"delete-error": "No se pudo eliminar el comentario",
+			"user-label": "Usuario {id}",
+			"save": "Guardar",
+			"cancel": "Cancelar"
 		}
 	},
 	"notifications": {
