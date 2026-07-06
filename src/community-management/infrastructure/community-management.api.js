@@ -74,4 +74,21 @@ export class CommunityManagementApi extends BaseApi {
         return this.http.post('/comments', payload);
     }
 
+    /**
+     * Updates an existing comment.
+     * @param {string|number} id - Comment identifier.
+     * @param {Object} payload - Updated comment data.
+     */
+    updateComment(id, payload) {
+        return this.http.put(`/comments/${id}`, payload);
+    }
+
+    /**
+     * Deletes a comment by its identifier.
+     * @param {string|number} id - Comment identifier.
+     */
+    deleteComment(id) {
+        return this.http.delete(`/comments/${id}`);
+    }
+
 }
