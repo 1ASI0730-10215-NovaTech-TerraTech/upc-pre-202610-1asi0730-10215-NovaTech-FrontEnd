@@ -85,16 +85,16 @@ const handleSave = async () => {
   if (isSuccess) {
     toast.add({
       severity: 'success',
-      summary: isEdit.value ? 'Updated' : 'Created',
-      detail: 'Operation successful',
+      summary: isEdit.value ? t('profiles.update-button') : t('profiles.create-button'),
+      detail: t('profiles.success-detail'),
       life: 2000
     });
     setTimeout(() => router.push({ name: 'profile-list' }), 2000);
   } else {
     toast.add({
       severity: 'error',
-      summary: 'Error',
-      detail: 'Error while saving/creating profile',
+      summary: t('profiles.error-header'),
+      detail: t('profiles.error-detail'),
       life: 3000
     });
   }
