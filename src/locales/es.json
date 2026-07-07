@@ -229,21 +229,21 @@
 		"products-stats": "productos"
 	},
 	"profiles": {
-		"title": "Perfiles Agrícolas",
-		"new": "Nuevo Perfil",
-		"new-title": "Crear Nuevo Perfil",
+		"title": "Perfiles",
 		"edit-title": "Editar Perfil",
-		"id": "ID",
+		"new-title": "Nuevo Perfil",
 		"fundoName": "Nombre del Fundo",
 		"contactPhone": "Teléfono de Contacto",
-		"moistureThreshold": "Umbral de Humedad (%)",
-		"tempThreshold": "Umbral de Temp (°C)",
-		"actions": "Acciones",
-		"create-button": "Crear Perfil",
-		"update-button": "Actualizar Perfil",
+		"moistureThreshold": "Umbral de Humedad",
+		"tempThreshold": "Umbral de Temperatura",
+		"update-button": "Actualizar",
+		"create-button": "Crear",
 		"cancel-button": "Cancelar",
+		"new": "Nuevo Perfil",
+		"id": "ID",
+		"actions": "Acciones",
 		"delete-header": "Confirmar Eliminación",
-		"confirm-delete": "¿Estás seguro de que deseas eliminar {name}?"
+		"confirm-delete": "¿Estás seguro de que deseas eliminar el perfil del fundo {name}?"
 	},
 	"community": {
 		"profiles": {
