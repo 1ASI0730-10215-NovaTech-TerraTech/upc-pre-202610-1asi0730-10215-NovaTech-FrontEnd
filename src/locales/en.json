@@ -229,21 +229,21 @@
 		"products-stats": "products"
 	},
 	"profiles": {
-		"title": "Agricultural Profiles",
-		"new": "New Profile",
-		"new-title": "Create New Profile",
+		"title": "Profiles",
 		"edit-title": "Edit Profile",
-		"id": "ID",
+		"new-title": "New Profile",
 		"fundoName": "Fundo Name",
 		"contactPhone": "Contact Phone",
-		"moistureThreshold": "Moisture Threshold (%)",
-		"tempThreshold": "Temp Threshold (°C)",
-		"actions": "Actions",
-		"create-button": "Create Profile",
-		"update-button": "Update Profile",
+		"moistureThreshold": "Moisture Threshold",
+		"tempThreshold": "Temperature Threshold",
+		"update-button": "Update",
+		"create-button": "Create",
 		"cancel-button": "Cancel",
+		"new": "New Profile",
+		"id": "ID",
+		"actions": "Actions",
 		"delete-header": "Confirm Deletion",
-		"confirm-delete": "Are you sure you want to delete {name}?"
+		"confirm-delete": "Are you sure you want to delete the profile for fundo {name}?"
 	},
 	"community": {
 		"profiles": {
