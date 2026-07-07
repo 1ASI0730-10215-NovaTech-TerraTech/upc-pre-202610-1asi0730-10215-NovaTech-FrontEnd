@@ -108,11 +108,18 @@
 </template>
 
 <script setup>
+import { ref, onMounted, computed } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 import { useCommercialStore } from '../../application/commercial-management.store.js';
+import useIamStore from '../../../iam/application/iam.store.js';
+import { useProfileManagementStore } from '../../../profile-management/application/profile-management.store.js';
 
+const iamStore = useIamStore();
+const profileStore = useProfileManagementStore();
+const toast = useToast();
 const { t } = useI18n();
 const store = useCommercialStore();
 const router = useRouter();
@@ -121,7 +128,18 @@ const paymentMethod = ref('CreditCard');
 const showSuccess = ref(false);
 const isSubmitting = ref(false);
 
-// Map de IDs de producto a claves de traducción (mismo que en product-list)
+onMounted(async () => {
+  if (!profileStore.profilesLoaded) {
+    await profileStore.fetchProfiles();
+  }
+});
+
+
+const currentProfile = computed(() => {
+  return profileStore.profiles.find(p => p.user_id === Number(iamStore.currentUserId));
+});
+
+
 const productTranslationMap = {
   'prod_001': 'lora-moisture-sensor',
   'prod_002': 'terratech-plus',
@@ -160,13 +178,21 @@ const formatPrice = (price) => {
 const confirmOrder = async () => {
   if (!store.selectedProduct) return;
 
+  if (!currentProfile.value) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Perfil requerido',
+      detail: 'Debes configurar tu perfil antes de realizar una compra.',
+      life: 4000
+    });
+    return;
+  }
+
   isSubmitting.value = true;
 
-  const profileId = 'prof_001';
-
   const orderData = {
-    profileId: profileId,
-    productId: store.selectedProduct.id,
+    profileId: Number(currentProfile.value.id),
+    productId: Number(store.selectedProduct.id),
     quantity: 1,
     paymentMethod: paymentMethod.value,
     isSubscription: store.selectedProduct.type === 'SUBSCRIPTION'
@@ -176,6 +202,13 @@ const confirmOrder = async () => {
 
   if (success) {
     showSuccess.value = true;
+  }else {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Hubo un problema al procesar la orden.',
+      life: 3000
+    });
   }
 
   isSubmitting.value = false;
